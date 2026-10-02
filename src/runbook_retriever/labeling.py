@@ -16,8 +16,14 @@ from typing import Any, Literal
 
 from runbook_retriever.io import read_jsonl
 
-Task = Literal["test_pairs", "so_questions", "train_audit", "negatives_audit"]
-TASKS: tuple[Task, ...] = ("test_pairs", "so_questions", "train_audit", "negatives_audit")
+Task = Literal["test_pairs", "so_questions", "train_audit", "negatives_audit", "spot_check"]
+TASKS: tuple[Task, ...] = (
+    "test_pairs",
+    "so_questions",
+    "train_audit",
+    "negatives_audit",
+    "spot_check",
+)
 
 # Verdict values per task.
 TEST_VERDICTS = ("correct", "wrong", "ambiguous")

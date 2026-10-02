@@ -21,6 +21,7 @@ PAGES = [
     "app_pages/so_questions.py",
     "app_pages/train_audit.py",
     "app_pages/negatives.py",
+    "app_pages/spot_check.py",
 ]
 
 

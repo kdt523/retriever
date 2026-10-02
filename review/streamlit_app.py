@@ -11,6 +11,7 @@ page = st.navigation(
         st.Page("app_pages/so_questions.py", title="Stack Overflow", icon=":material/forum:"),
         st.Page("app_pages/train_audit.py", title="Train audit", icon=":material/fact_check:"),
         st.Page("app_pages/negatives.py", title="Negatives", icon=":material/do_not_disturb_on:"),
+        st.Page("app_pages/spot_check.py", title="Spot check", icon=":material/visibility_off:"),
     ],
     position="top",
 )

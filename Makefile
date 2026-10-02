@@ -6,10 +6,11 @@ RUN := $(UV) run
 
 .PHONY: help setup check-env lint format typecheck test cov check fetch inspect \
         cluster-up cluster-down faults \
-        corpus data review freeze baseline-val baseline train evaluate export serve
+        corpus data review label-export label-import label-spot-check label-agreement \
+        freeze baseline-val baseline train evaluate export serve
 
 help: ## Show targets
-	@grep -E '^[a-zA-Z_-]+:.*## ' $(MAKEFILE_LIST) | awk 'BEGIN {FS = ":.*## "}; {printf "  %-12s %s\n", $$1, $$2}'
+	@grep -E '^[a-zA-Z_-]+:.*## ' $(MAKEFILE_LIST) | awk 'BEGIN {FS = ":.*## "}; {printf "  %-17s %s\n", $$1, $$2}'
 
 # --- Setup & quality ------------------------------------------------------------------
 
@@ -91,6 +92,18 @@ data: queries ## Queries -> filtered pairs, incident queries, hard negatives, re
 
 review: ## Open the labeling app (hand-check test set, SO mapping, audits)
 	$(RUN) streamlit run review/streamlit_app.py
+
+label-export: ## Write Claude labeling batches to data/llm_labeling/batches/
+	$(RUN) python -m runbook_retriever.llm_labels export
+
+label-import: ## Validate and load Claude's replies from data/llm_labeling/answers/
+	$(RUN) python -m runbook_retriever.llm_labels import
+
+label-spot-check: ## Pick 30 Claude-labeled test pairs for a blind check in the app
+	$(RUN) python -m runbook_retriever.llm_labels spot-check
+
+label-agreement: ## Human vs Claude agreement -> results/label_agreement.json
+	$(RUN) python -m runbook_retriever.llm_labels agreement
 
 freeze: ## Freeze test/val/ood sets from reviewed labels (once)
 	$(RUN) python -m runbook_retriever.freeze_testset

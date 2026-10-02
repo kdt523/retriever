@@ -31,7 +31,7 @@ def queue(task: Task) -> list[dict[str, Any]]:
 def require_queue(task: Task) -> list[dict[str, Any]]:
     items = queue(task)
     if not items:
-        st.info("This queue is empty. Run `make review-sets` first.", icon=":material/info:")
+        st.info("This queue is empty. Run `make data` first.", icon=":material/info:")
         st.stop()
     return items
 

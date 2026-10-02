@@ -35,3 +35,6 @@ Thumbs.db
 # Phase 2 intermediates (rebuilt in about a minute by `make data`)
 data/queries/filtered.jsonl
 data/queries/test_candidates.jsonl
+
+# Claude labeling batches (rebuilt by `make label-export`); answers are committed
+data/llm_labeling/batches/

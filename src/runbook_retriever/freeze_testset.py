@@ -69,6 +69,21 @@ def from_test_pairs(
     return queries, qrels, outcome
 
 
+def with_spot_check(
+    labels: dict[str, dict[str, Any]], spot: dict[str, dict[str, Any]]
+) -> dict[str, dict[str, Any]]:
+    """Blind human re-checks override the earlier (Claude) verdict on the same test pair."""
+    out = dict(labels)
+    for item_id, human in spot.items():
+        if item_id in out:
+            out[item_id] = out[item_id] | {"verdict": human["verdict"], "labeler": "human"}
+    return out
+
+
+def labelers(labels: dict[str, dict[str, Any]]) -> dict[str, int]:
+    return dict(Counter(lab.get("labeler", "human") for lab in labels.values()))
+
+
 def from_incidents(
     rows: list[dict[str, Any]], doc_chunks: dict[str, list[str]], split: str
 ) -> tuple[list[Query], list[Qrel]]:
@@ -191,14 +206,18 @@ def main(argv: list[str] | None = None) -> int:
     review_dir = paths.data / "review"
     incidents = list(read_jsonl(paths.data / "queries" / "incident_queries.jsonl"))
 
-    gen_q, gen_r, outcome = from_test_pairs(
-        load_queue(review_dir / "test_pairs.jsonl"),
+    test_labels = with_spot_check(
         LabelStore(labels_dir / "test_pairs.jsonl").all(),
+        LabelStore(labels_dir / "spot_check.jsonl").all(),
+    )
+    so_labels = LabelStore(labels_dir / "so_questions.jsonl").all()
+    gen_q, gen_r, outcome = from_test_pairs(
+        load_queue(review_dir / "test_pairs.jsonl"), test_labels
     )
     inc_q, inc_r = from_incidents(incidents, doc_chunks, "test")
     so_q, so_r, ood_val, ood_test = from_stackoverflow(
         load_queue(review_dir / "so_questions.jsonl"),
-        LabelStore(labels_dir / "so_questions.jsonl").all(),
+        so_labels,
         settings.seed,
     )
     hand_q, hand_r = from_handwritten(labels_dir / "handwritten.jsonl")
@@ -225,6 +244,7 @@ def main(argv: list[str] | None = None) -> int:
     manifest = {
         "corpus_sha256": sha256_file(paths.corpus),
         "test_pair_review": dict(outcome),
+        "labelers": {"test_pairs": labelers(test_labels), "so_questions": labelers(so_labels)},
         "test_slices": dict(Counter(q["slice"] for q in test_q)),
         "val_slices": dict(Counter(q["slice"] for q in val_q)),
         "files": {
