@@ -1,5 +1,6 @@
 id: statefulset-update-stuck
 runbook: statefulset-rollout-stuck
+also_relevant: [image-pull-backoff]
 description: A StatefulSet is updated to a broken image; the highest ordinal never becomes Ready and the update halts.
 manifests: |
   apiVersion: v1

@@ -1,5 +1,6 @@
 id: networkpolicy-default-deny
 runbook: networkpolicy-blocking-traffic
+also_relevant: [dependency-down]
 description: A default-deny ingress NetworkPolicy is applied without an allow rule for the gateway.
 manifests: |
   apiVersion: apps/v1

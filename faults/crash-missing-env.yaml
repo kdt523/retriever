@@ -1,5 +1,6 @@
 id: crash-missing-env
 runbook: crashloop-missing-config
+also_relevant: [crashloop-app-error]
 description: A required environment variable was removed in a deploy; the app exits at startup.
 manifests: |
   apiVersion: apps/v1

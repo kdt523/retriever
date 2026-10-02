@@ -14,7 +14,7 @@ help: ## Show targets
 # --- Setup & quality ------------------------------------------------------------------
 
 setup: ## Install Python 3.12 env (CUDA torch + dev tools)
-	$(UV) sync --extra ml --python 3.12
+	$(UV) sync --extra ml --extra label --python 3.12
 
 check-env: ## Print Python/torch/GPU/settings; fails without a GPU
 	$(RUN) python -m runbook_retriever.env_check --require-gpu
@@ -75,7 +75,27 @@ cluster-down: ## Delete the k3d cluster
 faults: ## Inject faults and record real output to data/incidents/ (ONLY=id1,id2)
 	$(RUN) python -m runbook_retriever.fault_capture --context k3d-$(CLUSTER) $(if $(ONLY),--only $(ONLY))
 
+# --- Phase 2: training and evaluation data ------------------------------------------
+
+splits: ## Assign docs to train/val/test (once; frozen afterwards)
+	$(RUN) python -m runbook_retriever.splits
+
+queries: ## Generate queries with Gemini (cached + resumable; rerun until complete)
+	$(RUN) python -m runbook_retriever.gen_queries
+
+data: queries ## Queries -> filtered pairs, incident queries, hard negatives, review queues
+	$(RUN) python -m runbook_retriever.filter_pairs
+	$(RUN) python -m runbook_retriever.incident_queries
+	$(RUN) python -m runbook_retriever.mine_negatives
+	$(RUN) python -m runbook_retriever.build_review_sets
+
+review: ## Open the labeling app (hand-check test set, SO mapping, audits)
+	$(RUN) streamlit run review/streamlit_app.py
+
+freeze: ## Freeze test/val/ood sets from reviewed labels (once)
+	$(RUN) python -m runbook_retriever.freeze_testset
+
 # --- Later phases --------------------------------------------------------------------
 
-data baseline train evaluate export serve:
+baseline train evaluate export serve:
 	@echo "'make $@' is not implemented yet (see docs/PLAN.md for its phase)" >&2; exit 1

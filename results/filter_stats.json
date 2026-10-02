@@ -1,0 +1,54 @@
+{
+  "train": {
+    "generated": 6407,
+    "kept": 5251,
+    "dropped": {
+      "round_trip": 770,
+      "overlap": 335,
+      "ambiguous": 51
+    },
+    "kept_by_style": {
+      "how_to": 2080,
+      "error_string": 477,
+      "symptom": 1809,
+      "incident_snapshot": 188,
+      "kubectl_output": 697
+    },
+    "kept_chunks": 2118
+  },
+  "val": {
+    "generated": 879,
+    "kept": 707,
+    "dropped": {
+      "overlap": 45,
+      "round_trip": 110,
+      "ambiguous": 17
+    },
+    "kept_by_style": {
+      "symptom": 251,
+      "how_to": 283,
+      "error_string": 51,
+      "kubectl_output": 101,
+      "incident_snapshot": 21
+    },
+    "kept_chunks": 293
+  },
+  "test": {
+    "generated": 1157,
+    "kept": 935,
+    "dropped": {
+      "round_trip": 145,
+      "overlap": 73,
+      "near_duplicate": 1,
+      "ambiguous": 3
+    },
+    "kept_by_style": {
+      "how_to": 378,
+      "symptom": 339,
+      "kubectl_output": 126,
+      "incident_snapshot": 24,
+      "error_string": 68
+    },
+    "kept_chunks": 381
+  }
+}

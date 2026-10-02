@@ -1,5 +1,6 @@
 id: service-selector-mismatch
 runbook: service-no-endpoints
+also_relevant: [dependency-down]
 description: Pods were relabelled app=orders-v2 but the Service still selects app=orders.
 manifests: |
   apiVersion: apps/v1

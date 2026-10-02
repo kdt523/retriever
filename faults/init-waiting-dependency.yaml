@@ -1,5 +1,6 @@
 id: init-waiting-dependency
 runbook: init-container-stuck
+also_relevant: [dependency-down]
 description: An init container waits forever for a postgres Service that does not exist.
 manifests: |
   apiVersion: apps/v1

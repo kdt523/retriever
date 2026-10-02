@@ -1,5 +1,6 @@
 id: dns-wrong-service-name
 runbook: dns-resolution-failure
+also_relevant: [dependency-down]
 description: A config change sets ORDERS_URL to http://order:8000 (the Service is named orders).
 manifests: |
   apiVersion: v1

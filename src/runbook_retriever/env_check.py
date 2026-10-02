@@ -24,7 +24,7 @@ def main(argv: list[str] | None = None) -> int:
     print(f"base model    {BASE_MODEL} (max_seq_length={MAX_SEQ_LENGTH})")
     print(f"query prefix  {QUERY_PREFIX!r}")
     key_state = "set" if settings.gemini_api_key else "NOT SET"
-    models = f"{settings.gemini_model} -> {settings.gemini_fallback_model}"
+    models = " -> ".join(settings.gemini_models)
     print(f"gemini        {models}, key {key_state}")
     print(f"llm mode      {settings.llm_mode}, rpm={settings.llm_rpm}")
 

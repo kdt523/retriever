@@ -31,3 +31,7 @@ models/
 Thumbs.db
 .idea/
 .vscode/
+
+# Phase 2 intermediates (rebuilt in about a minute by `make data`)
+data/queries/filtered.jsonl
+data/queries/test_candidates.jsonl

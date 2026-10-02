@@ -1,5 +1,6 @@
 id: rollout-progress-deadline
 runbook: rollout-stuck
+also_relevant: [image-pull-backoff]
 description: A healthy deployment is updated to a broken image and the rollout exceeds its progress deadline.
 manifests: |
   apiVersion: apps/v1

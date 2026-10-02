@@ -1,5 +1,6 @@
 id: quota-exceeded
 runbook: resource-quota-exceeded
+also_relevant: [rollout-stuck]
 description: A namespace memory-limit quota leaves room for only two of three replicas.
 manifests: |
   apiVersion: v1

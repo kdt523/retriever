@@ -11,6 +11,7 @@ from __future__ import annotations
 import json
 import logging
 import re
+import threading
 import time
 from collections.abc import Callable, Sequence
 from dataclasses import dataclass
@@ -32,12 +33,32 @@ class CacheMissError(LLMError):
     """Raised in ``cache_only`` mode when a prompt was never generated."""
 
 
+class AllModelsExhaustedError(LLMError):
+    """Every configured model hit its daily quota or is unavailable; stop the run."""
+
+
 class CallBudgetExceededError(LLMError):
     """Raised when this process has used up ``llm_max_calls``."""
 
 
 class RateLimitedError(LLMError):
     """HTTP 429 / RESOURCE_EXHAUSTED. Retried with backoff, then fails over."""
+
+    def __init__(self, message: str, retry_after_s: float | None = None) -> None:
+        super().__init__(message)
+        self.retry_after_s = retry_after_s
+
+
+_RETRY_IN = re.compile(r"retry in (?:(\d+)h)?(?:(\d+)m)?(?:([\d.]+)s)?", re.IGNORECASE)
+
+
+def parse_retry_after(message: str) -> float | None:
+    """Seconds from Gemini's "Please retry in 14h7m22.8s" hint, if present."""
+    m = _RETRY_IN.search(message)
+    if not m or not any(m.groups()):
+        return None
+    hours, minutes, seconds = (float(g) if g else 0.0 for g in m.groups())
+    return hours * 3600 + minutes * 60 + seconds
 
 
 class TransientLLMError(LLMError):
@@ -48,8 +69,24 @@ class BadRequestError(LLMError):
     """4xx other than 429. Never retried."""
 
 
+class ModelUnavailableError(LLMError):
+    """404: the model does not exist for this key. Skip it and try the next model."""
+
+
+# A 429 asking to wait longer than this is a daily quota, not a per-minute limit.
+DAILY_QUOTA_RETRY_S = 300.0
+
+
 class Transport(Protocol):
-    def __call__(self, *, model: str, prompt: str, temperature: float, json_output: bool) -> str:
+    def __call__(
+        self,
+        *,
+        model: str,
+        prompt: str,
+        temperature: float,
+        json_output: bool,
+        schema: dict[str, Any] | None = None,
+    ) -> str:
         """Send one prompt and return the raw text response."""
         ...
 
@@ -57,12 +94,20 @@ class Transport(Protocol):
 class GeminiTransport:
     """Real transport over ``google-genai``. The client is created lazily."""
 
-    def __init__(self, api_key: str, timeout_s: float = 60.0) -> None:
+    def __init__(self, api_key: str, timeout_s: float = 120.0) -> None:
         self._api_key = api_key
         self._timeout_ms = int(timeout_s * 1000)
         self._client: Any = None
 
-    def __call__(self, *, model: str, prompt: str, temperature: float, json_output: bool) -> str:
+    def __call__(
+        self,
+        *,
+        model: str,
+        prompt: str,
+        temperature: float,
+        json_output: bool,
+        schema: dict[str, Any] | None = None,
+    ) -> str:
         from google import genai
         from google.genai import errors, types
 
@@ -73,6 +118,8 @@ class GeminiTransport:
         config = types.GenerateContentConfig(
             temperature=temperature,
             response_mime_type="application/json" if json_output else "text/plain",
+            response_json_schema=schema,
+            automatic_function_calling=types.AutomaticFunctionCallingConfig(disable=True),
         )
         try:
             response = self._client.models.generate_content(
@@ -81,7 +128,9 @@ class GeminiTransport:
         except errors.APIError as e:
             code = getattr(e, "code", None)
             if code == 429:
-                raise RateLimitedError(str(e)) from e
+                raise RateLimitedError(str(e), parse_retry_after(str(e))) from e
+            if code == 404:
+                raise ModelUnavailableError(str(e)) from e
             if isinstance(code, int) and 400 <= code < 500:
                 raise BadRequestError(str(e)) from e
             raise TransientLLMError(str(e)) from e
@@ -94,7 +143,8 @@ class GeminiTransport:
 
 
 class RateLimiter:
-    """Spaces calls at least ``60 / rpm`` seconds apart."""
+    """Spaces calls at least ``60 / rpm`` seconds apart. Thread-safe: each caller reserves
+    the next free slot under a lock, then sleeps outside it."""
 
     def __init__(
         self,
@@ -106,15 +156,15 @@ class RateLimiter:
         self._clock = clock
         self._sleep = sleep
         self._last: float | None = None
+        self._lock = threading.Lock()
 
     def wait(self) -> None:
-        now = self._clock()
-        if self._last is not None:
-            delay = self._last + self.interval - now
-            if delay > 0:
-                self._sleep(delay)
-                now += delay
-        self._last = now
+        with self._lock:
+            now = self._clock()
+            slot = now if self._last is None else max(now, self._last + self.interval)
+            self._last = slot
+        if slot > now:
+            self._sleep(slot - now)
 
 
 @dataclass(frozen=True)
@@ -125,6 +175,8 @@ class LLMResult:
 
 
 class CachedLLM:
+    TRIP_AFTER = 2
+
     def __init__(
         self,
         *,
@@ -149,6 +201,9 @@ class CachedLLM:
         self.max_attempts = max_attempts
         self.backoff_base_s = backoff_base_s
         self.calls_made = 0
+        self._budget_lock = threading.Lock()
+        self.tripped: set[str] = set()
+        self._rate_limit_streak: dict[str, int] = {}
         self._sleep = sleep
         self._limiter = RateLimiter(rpm, clock=clock, sleep=sleep)
 
@@ -163,23 +218,29 @@ class CachedLLM:
         return cls(
             cache=DiskCache(settings.paths.cache / namespace),
             transport=transport,
-            models=[settings.gemini_model, settings.gemini_fallback_model],
+            models=settings.gemini_models,
             mode=settings.llm_mode,
             rpm=settings.llm_rpm,
             max_calls=settings.llm_max_calls,
         )
 
     def generate(
-        self, prompt: str, *, temperature: float = 0.7, json_output: bool = True
+        self,
+        prompt: str,
+        *,
+        temperature: float = 0.7,
+        json_output: bool = True,
+        schema: dict[str, Any] | None = None,
     ) -> LLMResult:
-        key = DiskCache.key(
-            {
-                "v": CACHE_SCHEMA_VERSION,
-                "prompt": prompt,
-                "temperature": temperature,
-                "json_output": json_output,
-            }
-        )
+        payload: dict[str, Any] = {
+            "v": CACHE_SCHEMA_VERSION,
+            "prompt": prompt,
+            "temperature": temperature,
+            "json_output": json_output,
+        }
+        if schema is not None:
+            payload["schema"] = schema
+        key = DiskCache.key(payload)
         hit = self.cache.get(key)
         if hit is not None:
             return LLMResult(text=str(hit["text"]), model=str(hit["model"]), cached=True)
@@ -188,17 +249,36 @@ class CachedLLM:
 
         last_error: LLMError | None = None
         for model in self.models:
+            if model in self.tripped:
+                continue
+            rate_limited_every_attempt = True
             for attempt in range(self.max_attempts):
-                if self.calls_made >= self.max_calls:
-                    raise CallBudgetExceededError(f"reached llm_max_calls={self.max_calls}")
+                with self._budget_lock:
+                    if self.calls_made >= self.max_calls:
+                        raise CallBudgetExceededError(f"reached llm_max_calls={self.max_calls}")
+                    self.calls_made += 1
                 self._limiter.wait()
-                self.calls_made += 1
                 try:
                     text = self.transport(
-                        model=model, prompt=prompt, temperature=temperature, json_output=json_output
+                        model=model,
+                        prompt=prompt,
+                        temperature=temperature,
+                        json_output=json_output,
+                        schema=schema,
                     )
+                except ModelUnavailableError as e:
+                    last_error = e
+                    self._trip(model, "not available for this key (404)")
+                    break
                 except (RateLimitedError, TransientLLMError) as e:
                     last_error = e
+                    rate_limited_every_attempt &= isinstance(e, RateLimitedError)
+                    retry_after = getattr(e, "retry_after_s", None)
+                    if retry_after is not None and retry_after > DAILY_QUOTA_RETRY_S:
+                        self._trip(
+                            model, f"daily quota exhausted (retry in {retry_after / 3600:.1f}h)"
+                        )
+                        break
                     delay = min(self.backoff_base_s * 2**attempt, 60.0)
                     log.warning(
                         "llm %s attempt %d failed (%s); retrying in %.0fs",
@@ -210,12 +290,40 @@ class CachedLLM:
                     self._sleep(delay)
                     continue
                 self.cache.put(key, {"text": text, "model": model, "prompt": prompt})
+                with self._budget_lock:
+                    self._rate_limit_streak[model] = 0
                 return LLMResult(text=text, model=model, cached=False)
+            if model in self.tripped:
+                continue
+            self._record_exhausted(model, rate_limited_every_attempt)
             log.warning("llm %s exhausted retries; failing over", model)
+        if set(self.models) <= self.tripped:
+            raise AllModelsExhaustedError(
+                f"every model is out of quota or unavailable: {last_error}"
+            )
         raise LLMError(f"all models failed; last error: {last_error}")
 
-    def generate_json(self, prompt: str, *, temperature: float = 0.7) -> Any:
-        return parse_json(self.generate(prompt, temperature=temperature, json_output=True).text)
+    def _trip(self, model: str, reason: str) -> None:
+        with self._budget_lock:
+            if model not in self.tripped:
+                self.tripped.add(model)
+                log.warning("llm %s %s; skipping it for this run", model, reason)
+
+    def _record_exhausted(self, model: str, rate_limited: bool) -> None:
+        """Circuit breaker: a model that is rate-limited on every attempt of TRIP_AFTER
+        consecutive requests has most likely hit its daily quota; stop calling it."""
+        with self._budget_lock:
+            streak = self._rate_limit_streak.get(model, 0) + 1 if rate_limited else 0
+            self._rate_limit_streak[model] = streak
+            if streak >= self.TRIP_AFTER and model not in self.tripped:
+                self.tripped.add(model)
+                log.warning("llm %s keeps returning 429; skipping it for this run", model)
+
+    def generate_json(
+        self, prompt: str, *, temperature: float = 0.7, schema: dict[str, Any] | None = None
+    ) -> Any:
+        result = self.generate(prompt, temperature=temperature, json_output=True, schema=schema)
+        return parse_json(result.text)
 
 
 _FENCE = re.compile(r"^\s*```(?:json)?\s*(.*?)\s*```\s*$", re.DOTALL)

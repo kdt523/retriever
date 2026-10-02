@@ -67,6 +67,8 @@ class Scenario(BaseModel):
 
     id: str = Field(pattern=r"^[a-z0-9]+(?:-[a-z0-9]+)*$", max_length=50)
     runbook: str
+    # Other runbooks that directly address the visible symptom (also relevant in qrels).
+    also_relevant: list[str] = []
     description: str
     manifests: str = ""
     steps: list[Step] = []

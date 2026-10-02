@@ -1,21 +1,25 @@
 from __future__ import annotations
 
 from pathlib import Path
+from typing import Any
 
 import pytest
 
 from runbook_retriever.cache import DiskCache
 from runbook_retriever.config import Settings
 from runbook_retriever.llm import (
+    AllModelsExhaustedError,
     BadRequestError,
     CachedLLM,
     CacheMissError,
     CallBudgetExceededError,
     LLMError,
+    ModelUnavailableError,
     RateLimitedError,
     RateLimiter,
     TransientLLMError,
     parse_json,
+    parse_retry_after,
 )
 
 
@@ -26,7 +30,15 @@ class FakeTransport:
         self.script = list(script)
         self.calls: list[str] = []
 
-    def __call__(self, *, model: str, prompt: str, temperature: float, json_output: bool) -> str:
+    def __call__(
+        self,
+        *,
+        model: str,
+        prompt: str,
+        temperature: float,
+        json_output: bool,
+        schema: dict[str, Any] | None = None,
+    ) -> str:
         self.calls.append(model)
         item = self.script.pop(0)
         if isinstance(item, Exception):
@@ -150,3 +162,62 @@ def test_rate_limiter_spaces_calls() -> None:
 def test_parse_json_handles_fences() -> None:
     assert parse_json('```json\n{"a": [1]}\n```') == {"a": [1]}
     assert parse_json('[{"q": "x"}]') == [{"q": "x"}]
+
+
+def test_cache_key_depends_on_schema(tmp_path: Path) -> None:
+    llm, transport, _ = make_llm(tmp_path, ["a", "b"])
+    assert llm.generate("p").text == "a"
+    assert llm.generate("p", schema={"type": "object"}).text == "b"
+    assert llm.generate("p", schema={"type": "object"}).cached
+    assert len(transport.calls) == 2
+
+
+def test_circuit_breaker_skips_quota_exhausted_model(tmp_path: Path) -> None:
+    limited: list[str | Exception] = [RateLimitedError("429"), RateLimitedError("429")]
+    script: list[str | Exception] = [*limited, "a"]  # p1: primary x2, then fallback
+    script += [*limited, "b"]  # p2: primary x2 again, then trips
+    script += ["c"]  # p3: goes straight to fallback
+    llm, transport, _ = make_llm(tmp_path, script, max_attempts=2)
+    assert llm.generate("p1").model == "fallback"
+    assert llm.generate("p2").model == "fallback"
+    assert llm.tripped == {"primary"}
+    assert llm.generate("p3").model == "fallback"
+    assert transport.calls[-1] == "fallback" and transport.calls.count("primary") == 4
+
+
+def test_success_resets_rate_limit_streak(tmp_path: Path) -> None:
+    script: list[str | Exception] = [RateLimitedError("429"), "a", RateLimitedError("429"), "b"]
+    llm, _, _ = make_llm(tmp_path, script, max_attempts=1)
+    llm.generate("p1")  # primary 429 -> fallback ok
+    assert llm.tripped == set()
+
+
+def test_parse_retry_after() -> None:
+    assert parse_retry_after("Please retry in 14h7m22.806758221s.") == pytest.approx(50842.8, 0.01)
+    assert parse_retry_after("Please retry in 37.5s") == 37.5
+    assert parse_retry_after("quota exceeded") is None
+
+
+def test_daily_quota_trips_model_without_retrying(tmp_path: Path) -> None:
+    daily = RateLimitedError("429 retry in 14h7m", retry_after_s=50_000)
+    llm, transport, clock = make_llm(tmp_path, [daily, "ok"], max_attempts=4)
+    assert llm.generate("p").model == "fallback"
+    assert transport.calls == ["primary", "fallback"]  # no backoff retries on primary
+    assert llm.tripped == {"primary"}
+    assert all(s <= 1.0 for s in clock.sleeps)  # only the 60-rpm spacing, no backoff
+
+
+def test_unavailable_model_is_skipped(tmp_path: Path) -> None:
+    llm, _, _ = make_llm(tmp_path, [ModelUnavailableError("404"), "ok"])
+    assert llm.generate("p").model == "fallback"
+    assert llm.tripped == {"primary"}
+
+
+def test_all_models_exhausted(tmp_path: Path) -> None:
+    daily = RateLimitedError("429", retry_after_s=50_000)
+    llm, transport, _ = make_llm(tmp_path, [daily, daily])
+    with pytest.raises(AllModelsExhaustedError):
+        llm.generate("p1")
+    with pytest.raises(AllModelsExhaustedError):
+        llm.generate("p2")  # no further API calls
+    assert len(transport.calls) == 2

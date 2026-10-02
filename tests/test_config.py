@@ -38,3 +38,13 @@ def test_settings_reject_bad_mode(monkeypatch: pytest.MonkeyPatch) -> None:
     monkeypatch.setenv("RR_LLM_MODE", "yolo")
     with pytest.raises(ValueError):
         Settings(_env_file=None)  # type: ignore[call-arg]
+
+
+def test_network_is_blocked_but_loopback_allowed() -> None:
+    import socket
+
+    with pytest.raises(RuntimeError, match="network access is disabled"):
+        socket.create_connection(("example.com", 443), timeout=1)
+    a, b = socket.socketpair()  # loopback, used by asyncio on Windows
+    a.close()
+    b.close()

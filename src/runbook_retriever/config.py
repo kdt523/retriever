@@ -114,14 +114,22 @@ class Settings(BaseSettings):
     gemini_api_key: SecretStr | None = Field(
         default=None, validation_alias=AliasChoices("RR_GEMINI_API_KEY", "GEMINI_API_KEY")
     )
-    gemini_model: str = "gemini-2.5-flash"
-    gemini_fallback_model: str = "gemini-2.5-flash-lite"
+    # Tried in order; each model has its own free-tier daily quota, so a chain multiplies
+    # daily capacity. Comma-separated in RR_GEMINI_MODELS.
+    gemini_models_csv: str = Field(
+        default="gemini-3.5-flash-lite,gemini-3.1-flash-lite,gemini-2.5-flash",
+        validation_alias=AliasChoices("RR_GEMINI_MODELS", "gemini_models_csv"),
+    )
     # live: call the API on cache miss. cache_only: never touch the network (tests, reruns).
     llm_mode: LLMMode = "live"
     # Free-tier limits are low and change over time; stay under them by default.
     llm_rpm: int = Field(default=8, ge=1)
     # Hard cap on API calls per process, so a bug can't burn the daily quota.
     llm_max_calls: int = Field(default=200, ge=0)
+
+    @property
+    def gemini_models(self) -> list[str]:
+        return [m.strip() for m in self.gemini_models_csv.split(",") if m.strip()]
 
     @property
     def paths(self) -> Paths:
