@@ -24,8 +24,8 @@ from collections import Counter, defaultdict
 from pathlib import Path
 from typing import Any
 
-from runbook_retriever.config import get_settings
-from runbook_retriever.corpus import load_corpus
+from runbook_retriever.config import Paths, get_settings
+from runbook_retriever.corpus import Chunk, load_corpus
 from runbook_retriever.io import read_jsonl, sha256_file, write_jsonl, write_text_atomic
 from runbook_retriever.labeling import LabelStore, load_queue
 from runbook_retriever.logging_setup import setup_logging
@@ -143,6 +143,21 @@ def from_handwritten(path: Path) -> tuple[list[Query], list[Qrel]]:
     return queries, qrels
 
 
+def doc_chunk_ids(corpus: list[Chunk]) -> dict[str, list[str]]:
+    out: dict[str, list[str]] = defaultdict(list)
+    for c in corpus:
+        out[c.doc_id].append(c.chunk_id)
+    return out
+
+
+def build_val_set(paths: Paths, corpus: list[Chunk]) -> tuple[list[Query], list[Qrel]]:
+    """Model-selection set; needs no human labels, so it can be built before freezing."""
+    incidents = list(read_jsonl(paths.data / "queries" / "incident_queries.jsonl"))
+    val_q, val_r = from_val_pairs(list(read_jsonl(paths.splits / "val_pairs.jsonl")))
+    inc_q, inc_r = from_incidents(incidents, doc_chunk_ids(corpus), "val")
+    return val_q + inc_q, val_r + inc_r
+
+
 def validate(queries: list[Query], qrels: list[Qrel], known_chunks: set[str]) -> None:
     qids = [q["qid"] for q in queries]
     if len(qids) != len(set(qids)):
@@ -171,9 +186,7 @@ def main(argv: list[str] | None = None) -> int:
         return 1
 
     corpus = load_corpus(paths.corpus)
-    doc_chunks: dict[str, list[str]] = defaultdict(list)
-    for c in corpus:
-        doc_chunks[c.doc_id].append(c.chunk_id)
+    doc_chunks = doc_chunk_ids(corpus)
     labels_dir = paths.data / "labels"
     review_dir = paths.data / "review"
     incidents = list(read_jsonl(paths.data / "queries" / "incident_queries.jsonl"))
@@ -190,15 +203,10 @@ def main(argv: list[str] | None = None) -> int:
     )
     hand_q, hand_r = from_handwritten(labels_dir / "handwritten.jsonl")
     test_q = gen_q + inc_q + so_q + hand_q
-    test_r = gen_r + inc_r + so_r
-    test_r += hand_r
+    test_r = gen_r + inc_r + so_r + hand_r
+    val_q, val_r = build_val_set(paths, corpus)
 
-    val_q, val_r = from_val_pairs(list(read_jsonl(paths.splits / "val_pairs.jsonl")))
-    vinc_q, vinc_r = from_incidents(incidents, doc_chunks, "val")
-    val_q += vinc_q
-    val_r += vinc_r
-
-    known = set(doc_chunks.get("", [])) | {c.chunk_id for c in corpus}
+    known = {c.chunk_id for c in corpus}
     validate(test_q, test_r, known)
     validate(val_q, val_r, known)
     if outcome["unlabeled"]:

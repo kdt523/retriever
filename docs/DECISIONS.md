@@ -130,3 +130,15 @@ runbook, plus `also_relevant` runbooks that directly address the visible symptom
 with no match become out-of-scope sets, split 50/50 into calibration (val) and reporting (test)
 for the "no runbook matches" threshold. `data/splits/MANIFEST.json` stores sha256 of every frozen
 file and a test fails if any changes.
+
+## D19: Metrics and known evaluation biases (2026-10-02)
+Retrieval is over the whole corpus (3,340 chunks). Reported: hit@1/5/10 (at least one
+relevant chunk in the top k; equals recall@k when one chunk is relevant), MRR@10 and binary
+NDCG@10, per slice plus `all` and `low_overlap` (generated queries sharing at most half their
+content words with the positive: the hardest synthetic ones). Fractional recall is not used:
+incident queries count every chunk of the right runbook as relevant, so it would punish a
+retriever for not returning the whole runbook. For the same reason NDCG understates
+real-incident slices; read hit@k and MRR there. Known bias: generated val/test queries passed a
+bge-base round trip (D16), so bge-base is slightly favoured on generated slices; the
+real-incident, Stack Overflow and handwritten slices are free of it. `make baseline` refuses to
+run unless every frozen file matches MANIFEST.json.

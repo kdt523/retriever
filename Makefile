@@ -6,7 +6,7 @@ RUN := $(UV) run
 
 .PHONY: help setup check-env lint format typecheck test cov check fetch inspect \
         cluster-up cluster-down faults \
-        corpus data baseline train evaluate export serve
+        corpus data review freeze baseline-val baseline train evaluate export serve
 
 help: ## Show targets
 	@grep -E '^[a-zA-Z_-]+:.*## ' $(MAKEFILE_LIST) | awk 'BEGIN {FS = ":.*## "}; {printf "  %-12s %s\n", $$1, $$2}'
@@ -95,7 +95,15 @@ review: ## Open the labeling app (hand-check test set, SO mapping, audits)
 freeze: ## Freeze test/val/ood sets from reviewed labels (once)
 	$(RUN) python -m runbook_retriever.freeze_testset
 
+# --- Phase 3: baselines --------------------------------------------------------------
+
+baseline-val: ## Score all baselines on val (no labels needed) -> results/baseline_val.csv
+	$(RUN) python -m runbook_retriever.evaluate --split val
+
+baseline: ## Score all baselines on the frozen test set -> results/baseline.csv
+	$(RUN) python -m runbook_retriever.evaluate --split test
+
 # --- Later phases --------------------------------------------------------------------
 
-baseline train evaluate export serve:
+train evaluate export serve:
 	@echo "'make $@' is not implemented yet (see docs/PLAN.md for its phase)" >&2; exit 1
