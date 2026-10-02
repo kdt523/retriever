@@ -1,0 +1,32 @@
+{
+ "id": "admission-policy-denied",
+ "runbook": "admission-denied",
+ "description": "A ValidatingAdmissionPolicy rejects a deployment with too many replicas.",
+ "status": "ok",
+ "missing": [],
+ "error": "",
+ "captured_at": "2026-10-02T06:15:03+00:00",
+ "seconds": 3.3,
+ "versions": {
+  "client": "v1.34.1",
+  "server": "v1.35.5+k3s1"
+ },
+ "namespace": "rr-admission-policy-denied",
+ "sections": [
+  {
+   "title": "pods",
+   "command": "kubectl get pods -n rr-admission-policy-denied -o wide",
+   "output": "No resources found in rr-admission-policy-denied namespace."
+  },
+  {
+   "title": "events",
+   "command": "kubectl get events -n rr-admission-policy-denied --sort-by=.lastTimestamp",
+   "output": "No resources found in rr-admission-policy-denied namespace."
+  },
+  {
+   "title": "create deployment",
+   "command": "kubectl create deployment batch-workers --image=nginx:1.27-alpine --replicas=10 -n rr-admission-policy-denied --dry-run=server",
+   "output": "error: failed to create deployment: deployments.apps \"batch-workers\" is forbidden: ValidatingAdmissionPolicy 'max-replicas-rr-admission-policy-denied' with binding 'max-replicas-rr-admission-policy-denied' denied request: replicas must be 5 or fewer in this namespace"
+  }
+ ]
+}

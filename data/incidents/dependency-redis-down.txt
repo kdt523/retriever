@@ -1,0 +1,104 @@
+# dependency-redis-down -> runbook/dependency-down [ok]
+# Redis was scaled to zero; the cart service cannot connect.
+
+### pods
+$ kubectl get pods -n rr-dependency-redis-down -o wide
+NAME                    READY   STATUS    RESTARTS   AGE   IP           NODE                    NOMINATED NODE   READINESS GATES
+cart-684799ccb6-cp6fr   1/1     Running   0          9s    10.42.1.10   k3d-rr-faults-agent-0   <none>           <none>
+
+### describe pods
+$ kubectl describe pods -n rr-dependency-redis-down
+Name:             cart-684799ccb6-cp6fr
+Namespace:        rr-dependency-redis-down
+Priority:         0
+Service Account:  default
+Node:             k3d-rr-faults-agent-0/172.21.0.4
+Start Time:       Fri, 02 Oct 2026 11:45:01 +0530
+Labels:           app=cart
+                  pod-template-hash=684799ccb6
+Annotations:      <none>
+Status:           Running
+IP:               10.42.1.10
+IPs:
+  IP:           10.42.1.10
+Controlled By:  ReplicaSet/cart-684799ccb6
+Containers:
+  cart:
+    Container ID:  containerd://c6ff73e95a91f9dabf39a2b0ec47fe7ac8b0c1c5f9c78ce655687c9ad84dd546
+    Image:         python:3.12-alpine
+    Image ID:      sha256:979e5a8a56846771598d47ebf1f8a75b46155104e168a0b237c0783c1dedff8a
+    Port:          <none>
+    Host Port:     <none>
+    Command:
+      python
+      -c
+    Args:
+      # Prints connection failures in the same format redis-py uses, from the real socket error.
+      import socket, time
+      while True:
+          try:
+              socket.create_connection(("redis", 6379), timeout=3).close()
+              print("connected to redis:6379", flush=True)
+          except OSError as e:
+              print(f"redis.exceptions.ConnectionError: Error {e.errno} connecting to redis:6379. {e.strerror}.", flush=True)
+          time.sleep(3)
+      
+    State:          Running
+      Started:      Fri, 02 Oct 2026 11:45:03 +0530
+    Ready:          True
+    Restart Count:  0
+    Environment:    <none>
+    Mounts:
+      /var/run/secrets/kubernetes.io/serviceaccount from kube-api-access-6f4sb (ro)
+Conditions:
+  Type                        Status
+  PodReadyToStartContainers   True 
+  Initialized                 True 
+  Ready                       True 
+  ContainersReady             True 
+  PodScheduled                True 
+Volumes:
+  kube-api-access-6f4sb:
+    Type:                    Projected (a volume that contains injected data from multiple sources)
+    TokenExpirationSeconds:  3607
+    ConfigMapName:           kube-root-ca.crt
+    Optional:                false
+    DownwardAPI:             true
+QoS Class:                   BestEffort
+Node-Selectors:              <none>
+Tolerations:                 node.kubernetes.io/not-ready:NoExecute op=Exists for 300s
+                             node.kubernetes.io/unreachable:NoExecute op=Exists for 300s
+Events:
+  Type    Reason     Age   From               Message
+  ----    ------     ----  ----               -------
+  Normal  Scheduled  9s    default-scheduler  Successfully assigned rr-dependency-redis-down/cart-684799ccb6-cp6fr to k3d-rr-faults-agent-0
+  Normal  Pulled     7s    kubelet            Container image "python:3.12-alpine" already present on machine and can be accessed by the pod
+  Normal  Created    7s    kubelet            Container created
+  Normal  Started    7s    kubelet            Container started
+
+### events
+$ kubectl get events -n rr-dependency-redis-down --sort-by=.lastTimestamp
+LAST SEEN   TYPE     REASON              OBJECT                       MESSAGE
+9s          Normal   Scheduled           pod/cart-684799ccb6-cp6fr    Successfully assigned rr-dependency-redis-down/cart-684799ccb6-cp6fr to k3d-rr-faults-agent-0
+10s         Normal   SuccessfulCreate    replicaset/cart-684799ccb6   Created pod: cart-684799ccb6-cp6fr
+10s         Normal   ScalingReplicaSet   deployment/cart              Scaled up replica set cart-684799ccb6 from 0 to 1
+7s          Normal   Pulled              pod/cart-684799ccb6-cp6fr    Container image "python:3.12-alpine" already present on machine and can be accessed by the pod
+7s          Normal   Created             pod/cart-684799ccb6-cp6fr    Container created
+7s          Normal   Started             pod/cart-684799ccb6-cp6fr    Container started
+
+### logs cart-684799ccb6-cp6fr/cart
+$ kubectl logs cart-684799ccb6-cp6fr -n rr-dependency-redis-down -c cart --tail=30
+redis.exceptions.ConnectionError: Error 111 connecting to redis:6379. Connection refused.
+redis.exceptions.ConnectionError: Error 111 connecting to redis:6379. Connection refused.
+redis.exceptions.ConnectionError: Error 111 connecting to redis:6379. Connection refused.
+
+### get deploy
+$ kubectl get deploy -n rr-dependency-redis-down
+NAME    READY   UP-TO-DATE   AVAILABLE   AGE
+cart    1/1     1            1           10s
+redis   0/0     0            0           10s
+
+### get endpointslices
+$ kubectl get endpointslices -n rr-dependency-redis-down -l kubernetes.io/service-name=redis
+NAME          ADDRESSTYPE   PORTS     ENDPOINTS   AGE
+redis-nhxpj   IPv4          <unset>   <unset>     11s

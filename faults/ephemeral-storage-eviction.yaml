@@ -1,0 +1,27 @@
+id: ephemeral-storage-eviction
+runbook: node-pressure-eviction
+description: A pod writes 80MB of temp files with a 20Mi ephemeral-storage limit and is evicted.
+manifests: |
+  apiVersion: apps/v1
+  kind: Deployment
+  metadata: {name: thumbnailer, labels: {app: thumbnailer}}
+  spec:
+    replicas: 1
+    selector: {matchLabels: {app: thumbnailer}}
+    template:
+      metadata: {labels: {app: thumbnailer}}
+      spec:
+        terminationGracePeriodSeconds: 2
+        containers:
+          - name: thumbnailer
+            image: busybox:1.36
+            command: ["sh", "-c", "echo writing render cache; dd if=/dev/zero of=/tmp/render-cache.bin bs=1M count=80; echo cache written; sleep 3600"]
+            resources:
+              requests: {ephemeral-storage: 10Mi}
+              limits: {ephemeral-storage: 20Mi}
+capture:
+  - [get, pods, -n, "{ns}", --field-selector, status.phase=Failed]
+expect:
+  - 'Evicted'
+  - 'ephemeral local storage usage exceeds the total limit of containers 20Mi'
+timeout_s: 240

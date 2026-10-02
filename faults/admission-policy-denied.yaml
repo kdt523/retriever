@@ -1,0 +1,36 @@
+id: admission-policy-denied
+runbook: admission-denied
+description: A ValidatingAdmissionPolicy rejects a deployment with too many replicas.
+manifests: |
+  apiVersion: admissionregistration.k8s.io/v1
+  kind: ValidatingAdmissionPolicy
+  metadata: {name: "max-replicas-{ns}"}
+  spec:
+    failurePolicy: Fail
+    matchConstraints:
+      resourceRules:
+        - apiGroups: [apps]
+          apiVersions: [v1]
+          operations: [CREATE, UPDATE]
+          resources: [deployments]
+    validations:
+      - expression: "object.spec.replicas <= 5"
+        message: "replicas must be 5 or fewer in this namespace"
+  ---
+  apiVersion: admissionregistration.k8s.io/v1
+  kind: ValidatingAdmissionPolicyBinding
+  metadata: {name: "max-replicas-{ns}"}
+  spec:
+    policyName: "max-replicas-{ns}"
+    validationActions: [Deny]
+    matchResources:
+      namespaceSelector:
+        matchLabels: {kubernetes.io/metadata.name: "{ns}"}
+capture:
+  - [create, deployment, batch-workers, --image=nginx:1.27-alpine, --replicas=10, -n, "{ns}", --dry-run=server]
+expect:
+  - 'is forbidden: ValidatingAdmissionPolicy'
+  - 'denied request: replicas must be 5 or fewer in this namespace'
+cleanup:
+  - run: [kubectl, delete, validatingadmissionpolicybinding, "max-replicas-{ns}", --ignore-not-found]
+  - run: [kubectl, delete, validatingadmissionpolicy, "max-replicas-{ns}", --ignore-not-found]

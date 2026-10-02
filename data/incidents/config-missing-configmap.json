@@ -1,0 +1,32 @@
+{
+ "id": "config-missing-configmap",
+ "runbook": "create-container-config-error",
+ "description": "envFrom references a ConfigMap that was never applied to this namespace.",
+ "status": "ok",
+ "missing": [],
+ "error": "",
+ "captured_at": "2026-10-02T06:09:22+00:00",
+ "seconds": 10.4,
+ "versions": {
+  "client": "v1.34.1",
+  "server": "v1.35.5+k3s1"
+ },
+ "namespace": "rr-config-missing-configmap",
+ "sections": [
+  {
+   "title": "pods",
+   "command": "kubectl get pods -n rr-config-missing-configmap -o wide",
+   "output": "NAME                        READY   STATUS                       RESTARTS   AGE   IP          NODE                     NOMINATED NODE   READINESS GATES\npayments-85889d676c-nlwnh   0/1     CreateContainerConfigError   0          8s    10.42.0.5   k3d-rr-faults-server-0   <none>           <none>"
+  },
+  {
+   "title": "describe pods",
+   "command": "kubectl describe pods -n rr-config-missing-configmap",
+   "output": "Name:             payments-85889d676c-nlwnh\nNamespace:        rr-config-missing-configmap\nPriority:         0\nService Account:  default\nNode:             k3d-rr-faults-server-0/172.21.0.3\nStart Time:       Fri, 02 Oct 2026 11:39:13 +0530\nLabels:           app=payments\n                  pod-template-hash=85889d676c\nAnnotations:      <none>\nStatus:           Pending\nIP:               10.42.0.5\nIPs:\n  IP:           10.42.0.5\nControlled By:  ReplicaSet/payments-85889d676c\nContainers:\n  payments:\n    Container ID:   \n    Image:          nginx:1.27-alpine\n    Image ID:       \n    Port:           <none>\n    Host Port:      <none>\n    State:          Waiting\n      Reason:       CreateContainerConfigError\n    Ready:          False\n    Restart Count:  0\n    Environment Variables from:\n      payments-config  ConfigMap  Optional: false\n    Environment:       <none>\n    Mounts:\n      /var/run/secrets/kubernetes.io/serviceaccount from kube-api-access-9g9f5 (ro)\nConditions:\n  Type                        Status\n  PodReadyToStartContainers   True \n  Initialized                 True \n  Ready                       False \n  ContainersReady             False \n  PodScheduled                True \nVolumes:\n  kube-api-access-9g9f5:\n    Type:                    Projected (a volume that contains injected data from multiple sources)\n    TokenExpirationSeconds:  3607\n    ConfigMapName:           kube-root-ca.crt\n    Optional:                false\n    DownwardAPI:             true\nQoS Class:                   BestEffort\nNode-Selectors:              <none>\nTolerations:                 node.kubernetes.io/not-ready:NoExecute op=Exists for 300s\n                             node.kubernetes.io/unreachable:NoExecute op=Exists for 300s\nEvents:\n  Type     Reason     Age              From               Message\n  ----     ------     ----             ----               -------\n  Normal   Scheduled  8s               default-scheduler  Successfully assigned rr-config-missing-configmap/payments-85889d676c-nlwnh to k3d-rr-faults-server-0\n  Normal   Pulled     7s (x2 over 7s)  kubelet            Container image \"nginx:1.27-alpine\" already present on machine and can be accessed by the pod\n  Warning  Failed     7s (x2 over 7s)  kubelet            Error: configmap \"payments-config\" not found"
+  },
+  {
+   "title": "events",
+   "command": "kubectl get events -n rr-config-missing-configmap --sort-by=.lastTimestamp",
+   "output": "LAST SEEN   TYPE      REASON              OBJECT                           MESSAGE\n8s          Normal    Scheduled           pod/payments-85889d676c-nlwnh    Successfully assigned rr-config-missing-configmap/payments-85889d676c-nlwnh to k3d-rr-faults-server-0\n9s          Normal    ScalingReplicaSet   deployment/payments              Scaled up replica set payments-85889d676c from 0 to 1\n8s          Normal    SuccessfulCreate    replicaset/payments-85889d676c   Created pod: payments-85889d676c-nlwnh\n7s          Normal    Pulled              pod/payments-85889d676c-nlwnh    Container image \"nginx:1.27-alpine\" already present on machine and can be accessed by the pod\n7s          Warning   Failed              pod/payments-85889d676c-nlwnh    Error: configmap \"payments-config\" not found"
+  }
+ ]
+}

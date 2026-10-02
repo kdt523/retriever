@@ -1,0 +1,77 @@
+# image-tag-not-found -> runbook/image-pull-backoff [ok]
+# A deploy references an nginx tag that was never published.
+
+### pods
+$ kubectl get pods -n rr-image-tag-not-found -o wide
+NAME                      READY   STATUS         RESTARTS   AGE   IP          NODE                    NOMINATED NODE   READINESS GATES
+orders-6855f5d7f6-tfbc9   0/1     ErrImagePull   0          8s    10.42.1.6   k3d-rr-faults-agent-0   <none>           <none>
+
+### describe pods
+$ kubectl describe pods -n rr-image-tag-not-found
+Name:             orders-6855f5d7f6-tfbc9
+Namespace:        rr-image-tag-not-found
+Priority:         0
+Service Account:  default
+Node:             k3d-rr-faults-agent-0/172.21.0.4
+Start Time:       Fri, 02 Oct 2026 11:39:23 +0530
+Labels:           app=orders
+                  pod-template-hash=6855f5d7f6
+Annotations:      <none>
+Status:           Pending
+IP:               10.42.1.6
+IPs:
+  IP:           10.42.1.6
+Controlled By:  ReplicaSet/orders-6855f5d7f6
+Containers:
+  orders:
+    Container ID:   
+    Image:          nginx:1.27.99-does-not-exist
+    Image ID:       
+    Port:           <none>
+    Host Port:      <none>
+    State:          Waiting
+      Reason:       ErrImagePull
+    Ready:          False
+    Restart Count:  0
+    Environment:    <none>
+    Mounts:
+      /var/run/secrets/kubernetes.io/serviceaccount from kube-api-access-szkmj (ro)
+Conditions:
+  Type                        Status
+  PodReadyToStartContainers   True 
+  Initialized                 True 
+  Ready                       False 
+  ContainersReady             False 
+  PodScheduled                True 
+Volumes:
+  kube-api-access-szkmj:
+    Type:                    Projected (a volume that contains injected data from multiple sources)
+    TokenExpirationSeconds:  3607
+    ConfigMapName:           kube-root-ca.crt
+    Optional:                false
+    DownwardAPI:             true
+QoS Class:                   BestEffort
+Node-Selectors:              <none>
+Tolerations:                 node.kubernetes.io/not-ready:NoExecute op=Exists for 300s
+                             node.kubernetes.io/unreachable:NoExecute op=Exists for 300s
+Events:
+  Type     Reason     Age   From               Message
+  ----     ------     ----  ----               -------
+  Normal   Scheduled  10s   default-scheduler  Successfully assigned rr-image-tag-not-found/orders-6855f5d7f6-tfbc9 to k3d-rr-faults-agent-0
+  Normal   Pulling    8s    kubelet            Pulling image "nginx:1.27.99-does-not-exist"
+  Warning  Failed     7s    kubelet            Failed to pull image "nginx:1.27.99-does-not-exist": rpc error: code = NotFound desc = failed to pull and unpack image "docker.io/library/nginx:1.27.99-does-not-exist": failed to resolve reference "docker.io/library/nginx:1.27.99-does-not-exist": docker.io/library/nginx:1.27.99-does-not-exist: not found
+  Warning  Failed     7s    kubelet            Error: ErrImagePull
+  Normal   BackOff    6s    kubelet            Back-off pulling image "nginx:1.27.99-does-not-exist"
+  Warning  Failed     6s    kubelet            Error: ImagePullBackOff
+
+### events
+$ kubectl get events -n rr-image-tag-not-found --sort-by=.lastTimestamp
+LAST SEEN   TYPE      REASON              OBJECT                         MESSAGE
+10s         Normal    Scheduled           pod/orders-6855f5d7f6-tfbc9    Successfully assigned rr-image-tag-not-found/orders-6855f5d7f6-tfbc9 to k3d-rr-faults-agent-0
+11s         Normal    SuccessfulCreate    replicaset/orders-6855f5d7f6   Created pod: orders-6855f5d7f6-tfbc9
+11s         Normal    ScalingReplicaSet   deployment/orders              Scaled up replica set orders-6855f5d7f6 from 0 to 1
+9s          Normal    Pulling             pod/orders-6855f5d7f6-tfbc9    Pulling image "nginx:1.27.99-does-not-exist"
+8s          Warning   Failed              pod/orders-6855f5d7f6-tfbc9    Failed to pull image "nginx:1.27.99-does-not-exist": rpc error: code = NotFound desc = failed to pull and unpack image "docker.io/library/nginx:1.27.99-does-not-exist": failed to resolve reference "docker.io/library/nginx:1.27.99-does-not-exist": docker.io/library/nginx:1.27.99-does-not-exist: not found
+8s          Warning   Failed              pod/orders-6855f5d7f6-tfbc9    Error: ErrImagePull
+7s          Normal    BackOff             pod/orders-6855f5d7f6-tfbc9    Back-off pulling image "nginx:1.27.99-does-not-exist"
+7s          Warning   Failed              pod/orders-6855f5d7f6-tfbc9    Error: ImagePullBackOff

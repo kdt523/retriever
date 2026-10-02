@@ -1,0 +1,33 @@
+id: readiness-wrong-path
+runbook: readiness-probe-failing
+description: The readiness probe path has a typo (/healthzz), so pods never become Ready.
+manifests: |
+  apiVersion: apps/v1
+  kind: Deployment
+  metadata: {name: inventory, labels: {app: inventory}}
+  spec:
+    replicas: 2
+    selector: {matchLabels: {app: inventory}}
+    template:
+      metadata: {labels: {app: inventory}}
+      spec:
+        terminationGracePeriodSeconds: 2
+        containers:
+          - name: inventory
+            image: nginx:1.27-alpine
+            ports: [{containerPort: 80}]
+            readinessProbe:
+              httpGet: {path: /healthzz, port: 80}
+              periodSeconds: 3
+  ---
+  apiVersion: v1
+  kind: Service
+  metadata: {name: inventory}
+  spec:
+    selector: {app: inventory}
+    ports: [{port: 8000, targetPort: 80}]
+capture:
+  - [get, endpointslices, -n, "{ns}", -l, kubernetes.io/service-name=inventory, -o, wide]
+  - [describe, service, inventory, -n, "{ns}"]
+expect:
+  - 'Readiness probe failed: HTTP probe failed with statuscode: 404'

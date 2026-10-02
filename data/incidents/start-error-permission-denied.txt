@@ -1,0 +1,87 @@
+# start-error-permission-denied -> runbook/container-start-error [ok]
+# The entrypoint exists but is not executable.
+
+### pods
+$ kubectl get pods -n rr-start-error-permission-denied -o wide
+NAME                        READY   STATUS              RESTARTS     AGE   IP          NODE                     NOMINATED NODE   READINESS GATES
+reporter-579fc65884-kzr5n   0/1     RunContainerError   1 (4s ago)   7s    10.42.0.8   k3d-rr-faults-server-0   <none>           <none>
+
+### describe pods
+$ kubectl describe pods -n rr-start-error-permission-denied
+Name:             reporter-579fc65884-kzr5n
+Namespace:        rr-start-error-permission-denied
+Priority:         0
+Service Account:  default
+Node:             k3d-rr-faults-server-0/172.21.0.3
+Start Time:       Fri, 02 Oct 2026 11:39:24 +0530
+Labels:           app=reporter
+                  pod-template-hash=579fc65884
+Annotations:      <none>
+Status:           Running
+IP:               10.42.0.8
+IPs:
+  IP:           10.42.0.8
+Controlled By:  ReplicaSet/reporter-579fc65884
+Containers:
+  reporter:
+    Container ID:  containerd://cad134befccf6f1bec59c7955e74879e29ce4e64dd3622e68c5957eef432956b
+    Image:         busybox:1.36
+    Image ID:      sha256:b116e155074440ffd9e449559433feb4cd2341eb3554b1da1c638c976e56451d
+    Port:          <none>
+    Host Port:     <none>
+    Command:
+      /etc/hostname
+    State:          Waiting
+      Reason:       RunContainerError
+    Last State:     Terminated
+      Reason:       StartError
+      Message:      failed to create containerd task: failed to create shim task: OCI runtime create failed: runc create failed: unable to start container process: error during container init: exec: "/etc/hostname": permission denied
+      Exit Code:    128
+      Started:      Thu, 01 Jan 1970 05:30:00 +0530
+      Finished:     Fri, 02 Oct 2026 11:39:27 +0530
+    Ready:          False
+    Restart Count:  1
+    Environment:    <none>
+    Mounts:
+      /var/run/secrets/kubernetes.io/serviceaccount from kube-api-access-q2ldh (ro)
+Conditions:
+  Type                        Status
+  PodReadyToStartContainers   True 
+  Initialized                 True 
+  Ready                       False 
+  ContainersReady             False 
+  PodScheduled                True 
+Volumes:
+  kube-api-access-q2ldh:
+    Type:                    Projected (a volume that contains injected data from multiple sources)
+    TokenExpirationSeconds:  3607
+    ConfigMapName:           kube-root-ca.crt
+    Optional:                false
+    DownwardAPI:             true
+QoS Class:                   BestEffort
+Node-Selectors:              <none>
+Tolerations:                 node.kubernetes.io/not-ready:NoExecute op=Exists for 300s
+                             node.kubernetes.io/unreachable:NoExecute op=Exists for 300s
+Events:
+  Type     Reason     Age              From               Message
+  ----     ------     ----             ----               -------
+  Normal   Scheduled  9s               default-scheduler  Successfully assigned rr-start-error-permission-denied/reporter-579fc65884-kzr5n to k3d-rr-faults-server-0
+  Normal   Pulled     6s (x2 over 8s)  kubelet            Container image "busybox:1.36" already present on machine and can be accessed by the pod
+  Normal   Created    6s (x2 over 8s)  kubelet            Container created
+  Warning  Failed     6s (x2 over 7s)  kubelet            Error: failed to create containerd task: failed to create shim task: OCI runtime create failed: runc create failed: unable to start container process: error during container init: exec: "/etc/hostname": permission denied
+  Warning  BackOff    5s               kubelet            Back-off restarting failed container reporter in pod reporter-579fc65884-kzr5n_rr-start-error-permission-denied(40de5e0f-0325-46e9-8e03-aa5b3a26b5ec)
+
+### events
+$ kubectl get events -n rr-start-error-permission-denied --sort-by=.lastTimestamp
+LAST SEEN   TYPE      REASON              OBJECT                           MESSAGE
+9s          Normal    Scheduled           pod/reporter-579fc65884-kzr5n    Successfully assigned rr-start-error-permission-denied/reporter-579fc65884-kzr5n to k3d-rr-faults-server-0
+11s         Normal    ScalingReplicaSet   deployment/reporter              Scaled up replica set reporter-579fc65884 from 0 to 1
+10s         Normal    SuccessfulCreate    replicaset/reporter-579fc65884   Created pod: reporter-579fc65884-kzr5n
+7s          Normal    Pulled              pod/reporter-579fc65884-kzr5n    Container image "busybox:1.36" already present on machine and can be accessed by the pod
+7s          Normal    Created             pod/reporter-579fc65884-kzr5n    Container created
+7s          Warning   Failed              pod/reporter-579fc65884-kzr5n    Error: failed to create containerd task: failed to create shim task: OCI runtime create failed: runc create failed: unable to start container process: error during container init: exec: "/etc/hostname": permission denied
+6s          Warning   BackOff             pod/reporter-579fc65884-kzr5n    Back-off restarting failed container reporter in pod reporter-579fc65884-kzr5n_rr-start-error-permission-denied(40de5e0f-0325-46e9-8e03-aa5b3a26b5ec)
+
+### logs reporter-579fc65884-kzr5n/reporter (previous)
+$ kubectl logs reporter-579fc65884-kzr5n -n rr-start-error-permission-denied -c reporter --tail=30 --previous
+

@@ -1,0 +1,73 @@
+# config-missing-configmap -> runbook/create-container-config-error [ok]
+# envFrom references a ConfigMap that was never applied to this namespace.
+
+### pods
+$ kubectl get pods -n rr-config-missing-configmap -o wide
+NAME                        READY   STATUS                       RESTARTS   AGE   IP          NODE                     NOMINATED NODE   READINESS GATES
+payments-85889d676c-nlwnh   0/1     CreateContainerConfigError   0          8s    10.42.0.5   k3d-rr-faults-server-0   <none>           <none>
+
+### describe pods
+$ kubectl describe pods -n rr-config-missing-configmap
+Name:             payments-85889d676c-nlwnh
+Namespace:        rr-config-missing-configmap
+Priority:         0
+Service Account:  default
+Node:             k3d-rr-faults-server-0/172.21.0.3
+Start Time:       Fri, 02 Oct 2026 11:39:13 +0530
+Labels:           app=payments
+                  pod-template-hash=85889d676c
+Annotations:      <none>
+Status:           Pending
+IP:               10.42.0.5
+IPs:
+  IP:           10.42.0.5
+Controlled By:  ReplicaSet/payments-85889d676c
+Containers:
+  payments:
+    Container ID:   
+    Image:          nginx:1.27-alpine
+    Image ID:       
+    Port:           <none>
+    Host Port:      <none>
+    State:          Waiting
+      Reason:       CreateContainerConfigError
+    Ready:          False
+    Restart Count:  0
+    Environment Variables from:
+      payments-config  ConfigMap  Optional: false
+    Environment:       <none>
+    Mounts:
+      /var/run/secrets/kubernetes.io/serviceaccount from kube-api-access-9g9f5 (ro)
+Conditions:
+  Type                        Status
+  PodReadyToStartContainers   True 
+  Initialized                 True 
+  Ready                       False 
+  ContainersReady             False 
+  PodScheduled                True 
+Volumes:
+  kube-api-access-9g9f5:
+    Type:                    Projected (a volume that contains injected data from multiple sources)
+    TokenExpirationSeconds:  3607
+    ConfigMapName:           kube-root-ca.crt
+    Optional:                false
+    DownwardAPI:             true
+QoS Class:                   BestEffort
+Node-Selectors:              <none>
+Tolerations:                 node.kubernetes.io/not-ready:NoExecute op=Exists for 300s
+                             node.kubernetes.io/unreachable:NoExecute op=Exists for 300s
+Events:
+  Type     Reason     Age              From               Message
+  ----     ------     ----             ----               -------
+  Normal   Scheduled  8s               default-scheduler  Successfully assigned rr-config-missing-configmap/payments-85889d676c-nlwnh to k3d-rr-faults-server-0
+  Normal   Pulled     7s (x2 over 7s)  kubelet            Container image "nginx:1.27-alpine" already present on machine and can be accessed by the pod
+  Warning  Failed     7s (x2 over 7s)  kubelet            Error: configmap "payments-config" not found
+
+### events
+$ kubectl get events -n rr-config-missing-configmap --sort-by=.lastTimestamp
+LAST SEEN   TYPE      REASON              OBJECT                           MESSAGE
+8s          Normal    Scheduled           pod/payments-85889d676c-nlwnh    Successfully assigned rr-config-missing-configmap/payments-85889d676c-nlwnh to k3d-rr-faults-server-0
+9s          Normal    ScalingReplicaSet   deployment/payments              Scaled up replica set payments-85889d676c from 0 to 1
+8s          Normal    SuccessfulCreate    replicaset/payments-85889d676c   Created pod: payments-85889d676c-nlwnh
+7s          Normal    Pulled              pod/payments-85889d676c-nlwnh    Container image "nginx:1.27-alpine" already present on machine and can be accessed by the pod
+7s          Warning   Failed              pod/payments-85889d676c-nlwnh    Error: configmap "payments-config" not found

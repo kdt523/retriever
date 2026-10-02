@@ -1,0 +1,212 @@
+# quota-exceeded -> runbook/resource-quota-exceeded [ok]
+# A namespace memory-limit quota leaves room for only two of three replicas.
+
+### pods
+$ kubectl get pods -n rr-quota-exceeded -o wide
+NAME                       READY   STATUS              RESTARTS   AGE   IP       NODE                     NOMINATED NODE   READINESS GATES
+reports-568d8d5496-bwmhg   0/1     ContainerCreating   0          0s    <none>   k3d-rr-faults-server-0   <none>           <none>
+reports-568d8d5496-tqk8m   0/1     ContainerCreating   0          0s    <none>   k3d-rr-faults-agent-0    <none>           <none>
+
+### describe pods
+$ kubectl describe pods -n rr-quota-exceeded
+Name:             reports-568d8d5496-bwmhg
+Namespace:        rr-quota-exceeded
+Priority:         0
+Service Account:  default
+Node:             k3d-rr-faults-server-0/172.21.0.3
+Start Time:       Fri, 02 Oct 2026 11:45:30 +0530
+Labels:           app=reports
+                  pod-template-hash=568d8d5496
+Annotations:      <none>
+Status:           Pending
+IP:               
+IPs:              <none>
+Controlled By:    ReplicaSet/reports-568d8d5496
+Containers:
+  reports:
+    Container ID:   
+    Image:          nginx:1.27-alpine
+    Image ID:       
+    Port:           <none>
+    Host Port:      <none>
+    State:          Waiting
+      Reason:       ContainerCreating
+    Ready:          False
+    Restart Count:  0
+    Limits:
+      memory:  128Mi
+    Requests:
+      cpu:        10m
+      memory:     96Mi
+    Environment:  <none>
+    Mounts:
+      /var/run/secrets/kubernetes.io/serviceaccount from kube-api-access-cgr88 (ro)
+Conditions:
+  Type                        Status
+  PodReadyToStartContainers   False 
+  Initialized                 True 
+  Ready                       False 
+  ContainersReady             False 
+  PodScheduled                True 
+Volumes:
+  kube-api-access-cgr88:
+    Type:                    Projected (a volume that contains injected data from multiple sources)
+    TokenExpirationSeconds:  3607
+    ConfigMapName:           kube-root-ca.crt
+    Optional:                false
+    DownwardAPI:             true
+QoS Class:                   Burstable
+Node-Selectors:              <none>
+Tolerations:                 node.kubernetes.io/not-ready:NoExecute op=Exists for 300s
+                             node.kubernetes.io/unreachable:NoExecute op=Exists for 300s
+Events:
+  Type    Reason     Age   From               Message
+  ----    ------     ----  ----               -------
+  Normal  Scheduled  1s    default-scheduler  Successfully assigned rr-quota-exceeded/reports-568d8d5496-bwmhg to k3d-rr-faults-server-0
+  Normal  Pulled     0s    kubelet            Container image "nginx:1.27-alpine" already present on machine and can be accessed by the pod
+  Normal  Created    0s    kubelet            Container created
+
+
+Name:             reports-568d8d5496-tqk8m
+Namespace:        rr-quota-exceeded
+Priority:         0
+Service Account:  default
+Node:             k3d-rr-faults-agent-0/172.21.0.4
+Start Time:       Fri, 02 Oct 2026 11:45:30 +0530
+Labels:           app=reports
+                  pod-template-hash=568d8d5496
+Annotations:      <none>
+Status:           Pending
+IP:               
+IPs:              <none>
+Controlled By:    ReplicaSet/reports-568d8d5496
+Containers:
+  reports:
+    Container ID:   
+    Image:          nginx:1.27-alpine
+    Image ID:       
+    Port:           <none>
+    Host Port:      <none>
+    State:          Waiting
+      Reason:       ContainerCreating
+    Ready:          False
+    Restart Count:  0
+    Limits:
+      memory:  128Mi
+    Requests:
+      cpu:        10m
+      memory:     96Mi
+    Environment:  <none>
+    Mounts:
+      /var/run/secrets/kubernetes.io/serviceaccount from kube-api-access-8kgd7 (ro)
+Conditions:
+  Type                        Status
+  PodReadyToStartContainers   False 
+  Initialized                 True 
+  Ready                       False 
+  ContainersReady             False 
+  PodScheduled                True 
+Volumes:
+  kube-api-access-8kgd7:
+    Type:                    Projected (a volume that contains injected data from multiple sources)
+    TokenExpirationSeconds:  3607
+    ConfigMapName:           kube-root-ca.crt
+    Optional:                false
+    DownwardAPI:             true
+QoS Class:                   Burstable
+Node-Selectors:              <none>
+Tolerations:                 node.kubernetes.io/not-ready:NoExecute op=Exists for 300s
+                             node.kubernetes.io/unreachable:NoExecute op=Exists for 300s
+Events:
+  Type    Reason     Age   From               Message
+  ----    ------     ----  ----               -------
+  Normal  Scheduled  1s    default-scheduler  Successfully assigned rr-quota-exceeded/reports-568d8d5496-tqk8m to k3d-rr-faults-agent-0
+  Normal  Pulled     0s    kubelet            Container image "nginx:1.27-alpine" already present on machine and can be accessed by the pod
+
+### events
+$ kubectl get events -n rr-quota-exceeded --sort-by=.lastTimestamp
+LAST SEEN   TYPE      REASON              OBJECT                          MESSAGE
+1s          Normal    Scheduled           pod/reports-568d8d5496-tqk8m    Successfully assigned rr-quota-exceeded/reports-568d8d5496-tqk8m to k3d-rr-faults-agent-0
+1s          Normal    Scheduled           pod/reports-568d8d5496-bwmhg    Successfully assigned rr-quota-exceeded/reports-568d8d5496-bwmhg to k3d-rr-faults-server-0
+1s          Warning   FailedCreate        replicaset/reports-568d8d5496   Error creating: pods "reports-568d8d5496-4xh9r" is forbidden: exceeded quota: compute-quota, requested: limits.memory=128Mi,requests.memory=96Mi, used: limits.memory=256Mi,requests.memory=192Mi, limited: limits.memory=256Mi,requests.memory=256Mi
+1s          Warning   FailedCreate        replicaset/reports-568d8d5496   Error creating: pods "reports-568d8d5496-xdwx4" is forbidden: exceeded quota: compute-quota, requested: limits.memory=128Mi,requests.memory=96Mi, used: limits.memory=256Mi,requests.memory=192Mi, limited: limits.memory=256Mi,requests.memory=256Mi
+1s          Normal    ScalingReplicaSet   deployment/reports              Scaled up replica set reports-568d8d5496 from 0 to 3
+1s          Warning   FailedCreate        replicaset/reports-568d8d5496   Error creating: pods "reports-568d8d5496-fr7x5" is forbidden: exceeded quota: compute-quota, requested: limits.memory=128Mi,requests.memory=96Mi, used: limits.memory=256Mi,requests.memory=192Mi, limited: limits.memory=256Mi,requests.memory=256Mi
+1s          Warning   FailedCreate        replicaset/reports-568d8d5496   Error creating: pods "reports-568d8d5496-kq5gt" is forbidden: exceeded quota: compute-quota, requested: limits.memory=128Mi,requests.memory=96Mi, used: limits.memory=256Mi,requests.memory=192Mi, limited: limits.memory=256Mi,requests.memory=256Mi
+1s          Normal    SuccessfulCreate    replicaset/reports-568d8d5496   Created pod: reports-568d8d5496-tqk8m
+1s          Warning   FailedCreate        replicaset/reports-568d8d5496   Error creating: pods "reports-568d8d5496-2ngqq" is forbidden: exceeded quota: compute-quota, requested: limits.memory=128Mi,requests.memory=96Mi, used: limits.memory=256Mi,requests.memory=192Mi, limited: limits.memory=256Mi,requests.memory=256Mi
+1s          Normal    SuccessfulCreate    replicaset/reports-568d8d5496   Created pod: reports-568d8d5496-bwmhg
+1s          Warning   FailedCreate        replicaset/reports-568d8d5496   Error creating: pods "reports-568d8d5496-9h5ml" is forbidden: exceeded quota: compute-quota, requested: limits.memory=128Mi,requests.memory=96Mi, used: limits.memory=256Mi,requests.memory=192Mi, limited: limits.memory=256Mi,requests.memory=256Mi
+1s          Warning   FailedCreate        replicaset/reports-568d8d5496   Error creating: pods "reports-568d8d5496-9l67v" is forbidden: exceeded quota: compute-quota, requested: limits.memory=128Mi,requests.memory=96Mi, used: limits.memory=256Mi,requests.memory=192Mi, limited: limits.memory=256Mi,requests.memory=256Mi
+0s          Normal    Started             pod/reports-568d8d5496-bwmhg    Container started
+0s          Normal    Pulled              pod/reports-568d8d5496-bwmhg    Container image "nginx:1.27-alpine" already present on machine and can be accessed by the pod
+0s          Normal    Created             pod/reports-568d8d5496-tqk8m    Container created
+0s          Normal    Pulled              pod/reports-568d8d5496-tqk8m    Container image "nginx:1.27-alpine" already present on machine and can be accessed by the pod
+0s          Warning   FailedCreate        replicaset/reports-568d8d5496   Error creating: pods "reports-568d8d5496-zv9gm" is forbidden: exceeded quota: compute-quota, requested: limits.memory=128Mi,requests.memory=96Mi, used: limits.memory=256Mi,requests.memory=192Mi, limited: limits.memory=256Mi,requests.memory=256Mi
+0s          Warning   FailedCreate        replicaset/reports-568d8d5496   Error creating: pods "reports-568d8d5496-z9skm" is forbidden: exceeded quota: compute-quota, requested: limits.memory=128Mi,requests.memory=96Mi, used: limits.memory=256Mi,requests.memory=192Mi, limited: limits.memory=256Mi,requests.memory=256Mi
+0s          Normal    Created             pod/reports-568d8d5496-bwmhg    Container created
+
+### describe resourcequota
+$ kubectl describe resourcequota compute-quota -n rr-quota-exceeded
+Name:            compute-quota
+Namespace:       rr-quota-exceeded
+Resource         Used   Hard
+--------         ----   ----
+limits.memory    256Mi  256Mi
+requests.memory  192Mi  256Mi
+
+### describe rs
+$ kubectl describe rs -n rr-quota-exceeded
+Name:           reports-568d8d5496
+Namespace:      rr-quota-exceeded
+Selector:       app=reports,pod-template-hash=568d8d5496
+Labels:         app=reports
+                pod-template-hash=568d8d5496
+Annotations:    deployment.kubernetes.io/desired-replicas: 3
+                deployment.kubernetes.io/max-replicas: 4
+                deployment.kubernetes.io/revision: 1
+Controlled By:  Deployment/reports
+Replicas:       2 current / 3 desired
+Pods Status:    2 Running / 0 Waiting / 0 Succeeded / 0 Failed
+Pod Template:
+  Labels:  app=reports
+           pod-template-hash=568d8d5496
+  Containers:
+   reports:
+    Image:      nginx:1.27-alpine
+    Port:       <none>
+    Host Port:  <none>
+    Limits:
+      memory:  128Mi
+    Requests:
+      cpu:         10m
+      memory:      96Mi
+    Environment:   <none>
+    Mounts:        <none>
+  Volumes:         <none>
+  Node-Selectors:  <none>
+  Tolerations:     <none>
+Conditions:
+  Type             Status  Reason
+  ----             ------  ------
+  ReplicaFailure   True    FailedCreate
+Events:
+  Type     Reason            Age              From                   Message
+  ----     ------            ----             ----                   -------
+  Normal   SuccessfulCreate  2s               replicaset-controller  Created pod: reports-568d8d5496-tqk8m
+  Warning  FailedCreate      2s               replicaset-controller  Error creating: pods "reports-568d8d5496-4xh9r" is forbidden: exceeded quota: compute-quota, requested: limits.memory=128Mi,requests.memory=96Mi, used: limits.memory=256Mi,requests.memory=192Mi, limited: limits.memory=256Mi,requests.memory=256Mi
+  Normal   SuccessfulCreate  2s               replicaset-controller  Created pod: reports-568d8d5496-bwmhg
+  Warning  FailedCreate      2s               replicaset-controller  Error creating: pods "reports-568d8d5496-9h5ml" is forbidden: exceeded quota: compute-quota, requested: limits.memory=128Mi,requests.memory=96Mi, used: limits.memory=256Mi,requests.memory=192Mi, limited: limits.memory=256Mi,requests.memory=256Mi
+  Warning  FailedCreate      2s               replicaset-controller  Error creating: pods "reports-568d8d5496-xdwx4" is forbidden: exceeded quota: compute-quota, requested: limits.memory=128Mi,requests.memory=96Mi, used: limits.memory=256Mi,requests.memory=192Mi, limited: limits.memory=256Mi,requests.memory=256Mi
+  Warning  FailedCreate      2s               replicaset-controller  Error creating: pods "reports-568d8d5496-9l67v" is forbidden: exceeded quota: compute-quota, requested: limits.memory=128Mi,requests.memory=96Mi, used: limits.memory=256Mi,requests.memory=192Mi, limited: limits.memory=256Mi,requests.memory=256Mi
+  Warning  FailedCreate      2s               replicaset-controller  Error creating: pods "reports-568d8d5496-2ngqq" is forbidden: exceeded quota: compute-quota, requested: limits.memory=128Mi,requests.memory=96Mi, used: limits.memory=256Mi,requests.memory=192Mi, limited: limits.memory=256Mi,requests.memory=256Mi
+  Warning  FailedCreate      2s               replicaset-controller  Error creating: pods "reports-568d8d5496-kq5gt" is forbidden: exceeded quota: compute-quota, requested: limits.memory=128Mi,requests.memory=96Mi, used: limits.memory=256Mi,requests.memory=192Mi, limited: limits.memory=256Mi,requests.memory=256Mi
+  Warning  FailedCreate      2s               replicaset-controller  Error creating: pods "reports-568d8d5496-fr7x5" is forbidden: exceeded quota: compute-quota, requested: limits.memory=128Mi,requests.memory=96Mi, used: limits.memory=256Mi,requests.memory=192Mi, limited: limits.memory=256Mi,requests.memory=256Mi
+  Warning  FailedCreate      1s               replicaset-controller  Error creating: pods "reports-568d8d5496-zv9gm" is forbidden: exceeded quota: compute-quota, requested: limits.memory=128Mi,requests.memory=96Mi, used: limits.memory=256Mi,requests.memory=192Mi, limited: limits.memory=256Mi,requests.memory=256Mi
+  Warning  FailedCreate      1s               replicaset-controller  Error creating: pods "reports-568d8d5496-z9skm" is forbidden: exceeded quota: compute-quota, requested: limits.memory=128Mi,requests.memory=96Mi, used: limits.memory=256Mi,requests.memory=192Mi, limited: limits.memory=256Mi,requests.memory=256Mi
+  Warning  FailedCreate      0s (x4 over 0s)  replicaset-controller  (combined from similar events): Error creating: pods "reports-568d8d5496-28f4d" is forbidden: exceeded quota: compute-quota, requested: limits.memory=128Mi,requests.memory=96Mi, used: limits.memory=256Mi,requests.memory=192Mi, limited: limits.memory=256Mi,requests.memory=256Mi
+
+### get deploy
+$ kubectl get deploy reports -n rr-quota-exceeded
+NAME      READY   UP-TO-DATE   AVAILABLE   AGE
+reports   2/3     2            2           2s

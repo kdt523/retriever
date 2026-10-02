@@ -1,0 +1,27 @@
+{
+  "k8s_commit": "7a1c866f252e2d62a0bcdd3ea23a0052e6674679",
+  "max_tokens": 256,
+  "docs": 232,
+  "chunks": 3340,
+  "by_source": {
+    "k8s_docs": {
+      "docs": 197,
+      "chunks": 3175
+    },
+    "runbook": {
+      "docs": 35,
+      "chunks": 165
+    }
+  },
+  "tokens": {
+    "min": 20,
+    "p50": 179,
+    "p90": 248,
+    "max": 256
+  },
+  "dropped": {
+    "duplicate_chunks": 3,
+    "empty_docs": 6
+  },
+  "corpus_sha256": "fcd836454bc2391a33fe4631d7f4b4e948daed8853cb35b7d5bc1a6d28c1db60"
+}

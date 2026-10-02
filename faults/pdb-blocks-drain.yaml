@@ -1,0 +1,36 @@
+id: pdb-blocks-drain
+runbook: pdb-blocking-drain
+description: Draining a node for maintenance stalls because a PDB allows zero disruptions.
+node_level: true
+order: 1
+manifests: |
+  apiVersion: apps/v1
+  kind: Deployment
+  metadata: {name: ledger, labels: {app: ledger}}
+  spec:
+    replicas: 1
+    selector: {matchLabels: {app: ledger}}
+    template:
+      metadata: {labels: {app: ledger}}
+      spec:
+        terminationGracePeriodSeconds: 2
+        nodeSelector: {kubernetes.io/hostname: "{agent}"}
+        containers:
+          - name: ledger
+            image: nginx:1.27-alpine
+  ---
+  apiVersion: policy/v1
+  kind: PodDisruptionBudget
+  metadata: {name: ledger}
+  spec:
+    minAvailable: 1
+    selector: {matchLabels: {app: ledger}}
+steps:
+  - run: [kubectl, rollout, status, deployment/ledger, -n, "{ns}", --timeout=120s]
+capture:
+  - [get, pdb, -n, "{ns}"]
+  - [drain, "{agent}", --pod-selector=app=ledger, --ignore-daemonsets, --delete-emptydir-data, --timeout=20s]
+expect:
+  - "Cannot evict pod as it would violate the pod's disruption budget"
+cleanup:
+  - run: [kubectl, uncordon, "{agent}"]

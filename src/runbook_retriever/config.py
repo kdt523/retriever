@@ -36,6 +36,17 @@ def format_query(query: str) -> str:
     return query if query.startswith(QUERY_PREFIX) else QUERY_PREFIX + query
 
 
+def format_passage(title: str, section: str, text: str, *, with_heading: bool = True) -> str:
+    """The exact text embedded for a corpus chunk: ``"<title> > <section>\\n\\n<text>"``.
+
+    ``with_heading=False`` exists only for the title-prefix ablation (Phase 5).
+    """
+    if not with_heading:
+        return text
+    heading = f"{title} > {section}" if section else title
+    return f"{heading}\n\n{text}"
+
+
 # --- Paths ---------------------------------------------------------------------------
 
 

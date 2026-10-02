@@ -1,0 +1,47 @@
+{
+ "id": "pdb-blocks-drain",
+ "runbook": "pdb-blocking-drain",
+ "description": "Draining a node for maintenance stalls because a PDB allows zero disruptions.",
+ "status": "ok",
+ "missing": [],
+ "error": "",
+ "captured_at": "2026-10-02T06:18:46+00:00",
+ "seconds": 26.7,
+ "versions": {
+  "client": "v1.34.1",
+  "server": "v1.35.5+k3s1"
+ },
+ "namespace": "rr-pdb-blocks-drain",
+ "sections": [
+  {
+   "title": "pods",
+   "command": "kubectl get pods -n rr-pdb-blocks-drain -o wide",
+   "output": "NAME                      READY   STATUS    RESTARTS   AGE   IP           NODE                    NOMINATED NODE   READINESS GATES\nledger-77bf7b65bc-q6bvq   1/1     Running   0          3s    10.42.1.26   k3d-rr-faults-agent-0   <none>           <none>"
+  },
+  {
+   "title": "describe pods",
+   "command": "kubectl describe pods -n rr-pdb-blocks-drain",
+   "output": "Name:             ledger-77bf7b65bc-q6bvq\nNamespace:        rr-pdb-blocks-drain\nPriority:         0\nService Account:  default\nNode:             k3d-rr-faults-agent-0/172.21.0.4\nStart Time:       Fri, 02 Oct 2026 11:48:19 +0530\nLabels:           app=ledger\n                  pod-template-hash=77bf7b65bc\nAnnotations:      <none>\nStatus:           Running\nIP:               10.42.1.26\nIPs:\n  IP:           10.42.1.26\nControlled By:  ReplicaSet/ledger-77bf7b65bc\nContainers:\n  ledger:\n    Container ID:   containerd://f2235bdd899e93e675a7b63a4b168ef224955b4993098675bb5233cad12d7b13\n    Image:          nginx:1.27-alpine\n    Image ID:       sha256:6769dc3a703c719c1d2756bda113659be28ae16cf0da58dd5fd823d6b9a050ea\n    Port:           <none>\n    Host Port:      <none>\n    State:          Running\n      Started:      Fri, 02 Oct 2026 11:48:21 +0530\n    Ready:          True\n    Restart Count:  0\n    Environment:    <none>\n    Mounts:\n      /var/run/secrets/kubernetes.io/serviceaccount from kube-api-access-7p7nx (ro)\nConditions:\n  Type                        Status\n  PodReadyToStartContainers   True \n  Initialized                 True \n  Ready                       True \n  ContainersReady             True \n  PodScheduled                True \nVolumes:\n  kube-api-access-7p7nx:\n    Type:                    Projected (a volume that contains injected data from multiple sources)\n    TokenExpirationSeconds:  3607\n    ConfigMapName:           kube-root-ca.crt\n    Optional:                false\n    DownwardAPI:             true\nQoS Class:                   BestEffort\nNode-Selectors:              kubernetes.io/hostname=k3d-rr-faults-agent-0\nTolerations:                 node.kubernetes.io/not-ready:NoExecute op=Exists for 300s\n                             node.kubernetes.io/unreachable:NoExecute op=Exists for 300s\nEvents:\n  Type    Reason     Age   From               Message\n  ----    ------     ----  ----               -------\n  Normal  Scheduled  3s    default-scheduler  Successfully assigned rr-pdb-blocks-drain/ledger-77bf7b65bc-q6bvq to k3d-rr-faults-agent-0\n  Normal  Pulled     3s    kubelet            Container image \"nginx:1.27-alpine\" already present on machine and can be accessed by the pod\n  Normal  Created    2s    kubelet            Container created\n  Normal  Started    2s    kubelet            Container started"
+  },
+  {
+   "title": "events",
+   "command": "kubectl get events -n rr-pdb-blocks-drain --sort-by=.lastTimestamp",
+   "output": "LAST SEEN   TYPE     REASON              OBJECT                         MESSAGE\n3s          Normal   Scheduled           pod/ledger-77bf7b65bc-q6bvq    Successfully assigned rr-pdb-blocks-drain/ledger-77bf7b65bc-q6bvq to k3d-rr-faults-agent-0\n4s          Normal   SuccessfulCreate    replicaset/ledger-77bf7b65bc   Created pod: ledger-77bf7b65bc-q6bvq\n4s          Normal   ScalingReplicaSet   deployment/ledger              Scaled up replica set ledger-77bf7b65bc from 0 to 1\n3s          Normal   Pulled              pod/ledger-77bf7b65bc-q6bvq    Container image \"nginx:1.27-alpine\" already present on machine and can be accessed by the pod\n2s          Normal   Created             pod/ledger-77bf7b65bc-q6bvq    Container created\n2s          Normal   Started             pod/ledger-77bf7b65bc-q6bvq    Container started"
+  },
+  {
+   "title": "logs ledger-77bf7b65bc-q6bvq/ledger",
+   "command": "kubectl logs ledger-77bf7b65bc-q6bvq -n rr-pdb-blocks-drain -c ledger --tail=30",
+   "output": "/docker-entrypoint.sh: /docker-entrypoint.d/ is not empty, will attempt to perform configuration\n/docker-entrypoint.sh: Looking for shell scripts in /docker-entrypoint.d/\n/docker-entrypoint.sh: Launching /docker-entrypoint.d/10-listen-on-ipv6-by-default.sh\n10-listen-on-ipv6-by-default.sh: info: Getting the checksum of /etc/nginx/conf.d/default.conf\n10-listen-on-ipv6-by-default.sh: info: Enabled listen on IPv6 in /etc/nginx/conf.d/default.conf\n/docker-entrypoint.sh: Sourcing /docker-entrypoint.d/15-local-resolvers.envsh\n/docker-entrypoint.sh: Launching /docker-entrypoint.d/20-envsubst-on-templates.sh\n/docker-entrypoint.sh: Launching /docker-entrypoint.d/30-tune-worker-processes.sh\n/docker-entrypoint.sh: Configuration complete; ready for start up\n2026/10/02 06:18:21 [notice] 1#1: using the \"epoll\" event method\n2026/10/02 06:18:21 [notice] 1#1: nginx/1.27.5\n2026/10/02 06:18:21 [notice] 1#1: built by gcc 14.2.0 (Alpine 14.2.0) \n2026/10/02 06:18:21 [notice] 1#1: OS: Linux 6.6.87.2-microsoft-standard-WSL2\n2026/10/02 06:18:21 [notice] 1#1: getrlimit(RLIMIT_NOFILE): 1048576:1048576\n2026/10/02 06:18:21 [notice] 1#1: start worker processes\n2026/10/02 06:18:21 [notice] 1#1: start worker process 30\n2026/10/02 06:18:21 [notice] 1#1: start worker process 31\n2026/10/02 06:18:21 [notice] 1#1: start worker process 32\n2026/10/02 06:18:21 [notice] 1#1: start worker process 33\n2026/10/02 06:18:21 [notice] 1#1: start worker process 34\n2026/10/02 06:18:21 [notice] 1#1: start worker process 35\n2026/10/02 06:18:21 [notice] 1#1: start worker process 36\n2026/10/02 06:18:21 [notice] 1#1: start worker process 37"
+  },
+  {
+   "title": "get pdb",
+   "command": "kubectl get pdb -n rr-pdb-blocks-drain",
+   "output": "NAME     MIN AVAILABLE   MAX UNAVAILABLE   ALLOWED DISRUPTIONS   AGE\nledger   1               N/A               0                     4s"
+  },
+  {
+   "title": "drain k3d-rr-faults-agent-0",
+   "command": "kubectl drain k3d-rr-faults-agent-0 --pod-selector=app=ledger --ignore-daemonsets --delete-emptydir-data --timeout=20s",
+   "output": "node/k3d-rr-faults-agent-0 cordoned\nevicting pod rr-pdb-blocks-drain/ledger-77bf7b65bc-q6bvq\nevicting pod rr-pdb-blocks-drain/ledger-77bf7b65bc-q6bvq\nevicting pod rr-pdb-blocks-drain/ledger-77bf7b65bc-q6bvq\nevicting pod rr-pdb-blocks-drain/ledger-77bf7b65bc-q6bvq\nevicting pod rr-pdb-blocks-drain/ledger-77bf7b65bc-q6bvq\nerror when evicting pods/\"ledger-77bf7b65bc-q6bvq\" -n \"rr-pdb-blocks-drain\" (will retry after 5s): Cannot evict pod as it would violate the pod's disruption budget.\nerror when evicting pods/\"ledger-77bf7b65bc-q6bvq\" -n \"rr-pdb-blocks-drain\" (will retry after 5s): Cannot evict pod as it would violate the pod's disruption budget.\nerror when evicting pods/\"ledger-77bf7b65bc-q6bvq\" -n \"rr-pdb-blocks-drain\" (will retry after 5s): Cannot evict pod as it would violate the pod's disruption budget.\nerror when evicting pods/\"ledger-77bf7b65bc-q6bvq\" -n \"rr-pdb-blocks-drain\" (will retry after 5s): Cannot evict pod as it would violate the pod's disruption budget.\nThere are pending pods in node \"k3d-rr-faults-agent-0\" when an error occurred: error when evicting pods/\"ledger-77bf7b65bc-q6bvq\" -n \"rr-pdb-blocks-drain\": global timeout reached: 20s\npod/ledger-77bf7b65bc-q6bvq\nerror: unable to drain node \"k3d-rr-faults-agent-0\" due to error: error when evicting pods/\"ledger-77bf7b65bc-q6bvq\" -n \"rr-pdb-blocks-drain\": global timeout reached: 20s, continuing command...\nThere are pending nodes to be drained:\n k3d-rr-faults-agent-0\nerror when evicting pods/\"ledger-77bf7b65bc-q6bvq\" -n \"rr-pdb-blocks-drain\": global timeout reached: 20s"
+  }
+ ]
+}

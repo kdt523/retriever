@@ -1,0 +1,15 @@
+id: rbac-forbidden
+runbook: rbac-forbidden
+description: A workload's ServiceAccount has no Role allowing it to list pods.
+manifests: |
+  apiVersion: v1
+  kind: ServiceAccount
+  metadata: {name: deploy-bot}
+capture:
+  # Same API response an in-cluster client using this ServiceAccount receives.
+  - ["--as=system:serviceaccount:{ns}:deploy-bot", get, pods, -n, "{ns}"]
+  - ["--as=system:serviceaccount:{ns}:deploy-bot", rollout, restart, deployment/web, -n, "{ns}"]
+  - [auth, can-i, list, pods, -n, "{ns}", "--as=system:serviceaccount:{ns}:deploy-bot"]
+  - [get, rolebindings, -n, "{ns}"]
+expect:
+  - 'Error from server \(Forbidden\): pods is forbidden: User "system:serviceaccount:[a-z0-9-]+:deploy-bot" cannot list resource "pods"'

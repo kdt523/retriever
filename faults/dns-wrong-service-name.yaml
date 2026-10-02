@@ -1,0 +1,42 @@
+id: dns-wrong-service-name
+runbook: dns-resolution-failure
+description: A config change sets ORDERS_URL to http://order:8000 (the Service is named orders).
+manifests: |
+  apiVersion: v1
+  kind: Service
+  metadata: {name: orders}
+  spec:
+    selector: {app: orders}
+    ports: [{port: 8000, targetPort: 80}]
+  ---
+  apiVersion: apps/v1
+  kind: Deployment
+  metadata: {name: gateway, labels: {app: gateway}}
+  spec:
+    replicas: 1
+    selector: {matchLabels: {app: gateway}}
+    template:
+      metadata: {labels: {app: gateway}}
+      spec:
+        terminationGracePeriodSeconds: 2
+        containers:
+          - name: gateway
+            image: python:3.12-alpine
+            env: [{name: ORDERS_URL, value: "http://order:8000"}]
+            command: ["python", "-c"]
+            args:
+              - |
+                import os, time, urllib.request
+                url = os.environ["ORDERS_URL"] + "/api/orders"
+                while True:
+                    try:
+                        urllib.request.urlopen(url, timeout=3)
+                        print(f"GET {url} -> 200", flush=True)
+                    except Exception as e:
+                        print(f"ERROR GET {url} failed: {e!r}", flush=True)
+                    time.sleep(3)
+capture:
+  - [run, dnscheck, -n, "{ns}", --rm, -i, --restart=Never, --image=busybox:1.36, --, nslookup, order]
+expect:
+  - 'ERROR GET http://order:8000/api/orders failed'
+  - 'Name does not resolve|Name or service not known|NXDOMAIN'

@@ -1,0 +1,54 @@
+id: dependency-redis-down
+runbook: dependency-down
+description: Redis was scaled to zero; the cart service cannot connect.
+manifests: |
+  apiVersion: apps/v1
+  kind: Deployment
+  metadata: {name: redis, labels: {app: redis}}
+  spec:
+    replicas: 0
+    selector: {matchLabels: {app: redis}}
+    template:
+      metadata: {labels: {app: redis}}
+      spec:
+        containers:
+          - name: redis
+            image: redis:7-alpine
+  ---
+  apiVersion: v1
+  kind: Service
+  metadata: {name: redis}
+  spec:
+    selector: {app: redis}
+    ports: [{port: 6379}]
+  ---
+  apiVersion: apps/v1
+  kind: Deployment
+  metadata: {name: cart, labels: {app: cart}}
+  spec:
+    replicas: 1
+    selector: {matchLabels: {app: cart}}
+    template:
+      metadata: {labels: {app: cart}}
+      spec:
+        terminationGracePeriodSeconds: 2
+        containers:
+          - name: cart
+            image: python:3.12-alpine
+            command: ["python", "-c"]
+            args:
+              - |
+                # Prints connection failures in the same format redis-py uses, from the real socket error.
+                import socket, time
+                while True:
+                    try:
+                        socket.create_connection(("redis", 6379), timeout=3).close()
+                        print("connected to redis:6379", flush=True)
+                    except OSError as e:
+                        print(f"redis.exceptions.ConnectionError: Error {e.errno} connecting to redis:6379. {e.strerror}.", flush=True)
+                    time.sleep(3)
+capture:
+  - [get, deploy, -n, "{ns}"]
+  - [get, endpointslices, -n, "{ns}", -l, kubernetes.io/service-name=redis]
+expect:
+  - 'redis\.exceptions\.ConnectionError: Error 111 connecting to redis:6379\. Connection refused'

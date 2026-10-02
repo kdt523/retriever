@@ -1,0 +1,30 @@
+id: job-backoff-limit
+runbook: job-backoff-limit
+description: A nightly export Job fails every attempt and hits its backoffLimit.
+manifests: |
+  apiVersion: batch/v1
+  kind: Job
+  metadata: {name: nightly-export}
+  spec:
+    backoffLimit: 2
+    template:
+      spec:
+        restartPolicy: Never
+        terminationGracePeriodSeconds: 2
+        containers:
+          - name: export
+            image: python:3.12-alpine
+            command: ["python", "-c"]
+            args:
+              - |
+                import sys
+                print("nightly-export: exporting orders for 2026-10-01", flush=True)
+                print("ERROR: upload to s3://reports-bucket/orders/2026-10-01.csv failed: 403 AccessDenied", flush=True)
+                sys.exit(2)
+capture:
+  - [get, jobs, -n, "{ns}"]
+  - [describe, job, nightly-export, -n, "{ns}"]
+expect:
+  - 'BackoffLimitExceeded'
+  - 'Job has reached the specified backoff limit'
+timeout_s: 300

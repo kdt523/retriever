@@ -1,0 +1,7 @@
+# Runbooks with no fault scenario, and why. Every runbook must be covered by a
+# scenario or listed here (enforced by tests/test_fault_capture.py).
+bad-release-5xx: Needs an HTTP error-rate metric pipeline; the symptom is a metric, not a Kubernetes message.
+certificate-expiry: Needs cert-manager and an expired certificate; TLS errors come from clients, not Kubernetes.
+cpu-throttling-latency: Needs load generation and cAdvisor throttling metrics; no Kubernetes message is emitted.
+ingress-502-503-504: The capture cluster runs without an ingress controller (traefik disabled to save memory).
+helm-upgrade-failed: Helm is not part of the capture toolchain.

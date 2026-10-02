@@ -1,0 +1,64 @@
+id: networkpolicy-default-deny
+runbook: networkpolicy-blocking-traffic
+description: A default-deny ingress NetworkPolicy is applied without an allow rule for the gateway.
+manifests: |
+  apiVersion: apps/v1
+  kind: Deployment
+  metadata: {name: payments, labels: {app: payments}}
+  spec:
+    replicas: 1
+    selector: {matchLabels: {app: payments}}
+    template:
+      metadata: {labels: {app: payments}}
+      spec:
+        terminationGracePeriodSeconds: 2
+        containers:
+          - name: payments
+            image: nginx:1.27-alpine
+            ports: [{containerPort: 80}]
+  ---
+  apiVersion: v1
+  kind: Service
+  metadata: {name: payments}
+  spec:
+    selector: {app: payments}
+    ports: [{port: 8000, targetPort: 80}]
+  ---
+  apiVersion: networking.k8s.io/v1
+  kind: NetworkPolicy
+  metadata: {name: default-deny-ingress}
+  spec:
+    podSelector: {}
+    policyTypes: [Ingress]
+  ---
+  apiVersion: apps/v1
+  kind: Deployment
+  metadata: {name: gateway, labels: {app: gateway}}
+  spec:
+    replicas: 1
+    selector: {matchLabels: {app: gateway}}
+    template:
+      metadata: {labels: {app: gateway}}
+      spec:
+        terminationGracePeriodSeconds: 2
+        containers:
+          - name: gateway
+            image: python:3.12-alpine
+            command: ["python", "-c"]
+            args:
+              - |
+                import time, urllib.request
+                while True:
+                    try:
+                        urllib.request.urlopen("http://payments:8000/", timeout=5)
+                        print("GET http://payments:8000/ -> 200", flush=True)
+                    except Exception as e:
+                        print(f"ERROR GET http://payments:8000/ failed: {e!r}", flush=True)
+                    time.sleep(2)
+capture:
+  - [get, networkpolicy, -n, "{ns}"]
+  - [describe, networkpolicy, default-deny-ingress, -n, "{ns}"]
+  - [get, endpointslices, -n, "{ns}", -l, kubernetes.io/service-name=payments]
+expect:
+  - 'ERROR GET http://payments:8000/ failed'
+  - 'Connection refused|timed out'

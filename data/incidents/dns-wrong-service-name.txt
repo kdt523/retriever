@@ -1,0 +1,119 @@
+# dns-wrong-service-name -> runbook/dns-resolution-failure [ok]
+# A config change sets ORDERS_URL to http://order:8000 (the Service is named orders).
+
+### pods
+$ kubectl get pods -n rr-dns-wrong-service-name -o wide
+NAME                      READY   STATUS    RESTARTS   AGE   IP          NODE                    NOMINATED NODE   READINESS GATES
+gateway-bb4d5d5d4-wd4h9   1/1     Running   0          11s   10.42.1.9   k3d-rr-faults-agent-0   <none>           <none>
+
+### describe pods
+$ kubectl describe pods -n rr-dns-wrong-service-name
+Name:             gateway-bb4d5d5d4-wd4h9
+Namespace:        rr-dns-wrong-service-name
+Priority:         0
+Service Account:  default
+Node:             k3d-rr-faults-agent-0/172.21.0.4
+Start Time:       Fri, 02 Oct 2026 11:45:00 +0530
+Labels:           app=gateway
+                  pod-template-hash=bb4d5d5d4
+Annotations:      <none>
+Status:           Running
+IP:               10.42.1.9
+IPs:
+  IP:           10.42.1.9
+Controlled By:  ReplicaSet/gateway-bb4d5d5d4
+Containers:
+  gateway:
+    Container ID:  containerd://9aefa7427b1a3091f99555200fbfed49061768036e48ed710e4f7907667958d4
+    Image:         python:3.12-alpine
+    Image ID:      sha256:979e5a8a56846771598d47ebf1f8a75b46155104e168a0b237c0783c1dedff8a
+    Port:          <none>
+    Host Port:     <none>
+    Command:
+      python
+      -c
+    Args:
+      import os, time, urllib.request
+      url = os.environ["ORDERS_URL"] + "/api/orders"
+      while True:
+          try:
+              urllib.request.urlopen(url, timeout=3)
+              print(f"GET {url} -> 200", flush=True)
+          except Exception as e:
+              print(f"ERROR GET {url} failed: {e!r}", flush=True)
+          time.sleep(3)
+      
+    State:          Running
+      Started:      Fri, 02 Oct 2026 11:45:03 +0530
+    Ready:          True
+    Restart Count:  0
+    Environment:
+      ORDERS_URL:  http://order:8000
+    Mounts:
+      /var/run/secrets/kubernetes.io/serviceaccount from kube-api-access-8vjkl (ro)
+Conditions:
+  Type                        Status
+  PodReadyToStartContainers   True 
+  Initialized                 True 
+  Ready                       True 
+  ContainersReady             True 
+  PodScheduled                True 
+Volumes:
+  kube-api-access-8vjkl:
+    Type:                    Projected (a volume that contains injected data from multiple sources)
+    TokenExpirationSeconds:  3607
+    ConfigMapName:           kube-root-ca.crt
+    Optional:                false
+    DownwardAPI:             true
+QoS Class:                   BestEffort
+Node-Selectors:              <none>
+Tolerations:                 node.kubernetes.io/not-ready:NoExecute op=Exists for 300s
+                             node.kubernetes.io/unreachable:NoExecute op=Exists for 300s
+Events:
+  Type    Reason     Age   From               Message
+  ----    ------     ----  ----               -------
+  Normal  Scheduled  11s   default-scheduler  Successfully assigned rr-dns-wrong-service-name/gateway-bb4d5d5d4-wd4h9 to k3d-rr-faults-agent-0
+  Normal  Pulled     9s    kubelet            Container image "python:3.12-alpine" already present on machine and can be accessed by the pod
+  Normal  Created    9s    kubelet            Container created
+  Normal  Started    9s    kubelet            Container started
+
+### events
+$ kubectl get events -n rr-dns-wrong-service-name --sort-by=.lastTimestamp
+LAST SEEN   TYPE     REASON              OBJECT                         MESSAGE
+9s          Normal   Scheduled           pod/dnscheck                   Successfully assigned rr-dns-wrong-service-name/dnscheck to k3d-rr-faults-server-0
+11s         Normal   Scheduled           pod/gateway-bb4d5d5d4-wd4h9    Successfully assigned rr-dns-wrong-service-name/gateway-bb4d5d5d4-wd4h9 to k3d-rr-faults-agent-0
+12s         Normal   SuccessfulCreate    replicaset/gateway-bb4d5d5d4   Created pod: gateway-bb4d5d5d4-wd4h9
+12s         Normal   ScalingReplicaSet   deployment/gateway             Scaled up replica set gateway-bb4d5d5d4 from 0 to 1
+9s          Normal   Pulled              pod/gateway-bb4d5d5d4-wd4h9    Container image "python:3.12-alpine" already present on machine and can be accessed by the pod
+9s          Normal   Created             pod/gateway-bb4d5d5d4-wd4h9    Container created
+9s          Normal   Started             pod/gateway-bb4d5d5d4-wd4h9    Container started
+8s          Normal   Pulled              pod/dnscheck                   Container image "busybox:1.36" already present on machine and can be accessed by the pod
+8s          Normal   Created             pod/dnscheck                   Container created
+8s          Normal   Started             pod/dnscheck                   Container started
+
+### logs gateway-bb4d5d5d4-wd4h9/gateway
+$ kubectl logs gateway-bb4d5d5d4-wd4h9 -n rr-dns-wrong-service-name -c gateway --tail=30
+ERROR GET http://order:8000/api/orders failed: URLError(gaierror(-3, 'Try again'))
+
+### run dnscheck
+$ kubectl run dnscheck -n rr-dns-wrong-service-name --rm -i --restart=Never --image=busybox:1.36 -- nslookup order
+Server:		10.43.0.10
+Address:	10.43.0.10:53
+
+** server can't find order.cluster.local: NXDOMAIN
+
+** server can't find order.rr-dns-wrong-service-name.svc.cluster.local: NXDOMAIN
+
+** server can't find order.cluster.local: NXDOMAIN
+
+** server can't find order.svc.cluster.local: NXDOMAIN
+
+** server can't find order.rr-dns-wrong-service-name.svc.cluster.local: NXDOMAIN
+
+** server can't find order.svc.cluster.local: NXDOMAIN
+
+pod "dnscheck" deleted from rr-dns-wrong-service-name namespace
+All commands and output from this session will be recorded in container logs, including credentials and sensitive information passed through the command prompt.
+If you don't see a command prompt, try pressing enter.
+warning: couldn't attach to pod/dnscheck, falling back to streaming logs: Internal error occurred: unable to upgrade connection: container dnscheck not found in pod dnscheck_rr-dns-wrong-service-name
+pod rr-dns-wrong-service-name/dnscheck terminated (Error)

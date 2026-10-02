@@ -1,0 +1,90 @@
+# pvc-missing-storageclass -> runbook/pvc-pending [ok]
+# A PVC requests a StorageClass (fast-ssd) that does not exist in this cluster.
+
+### pods
+$ kubectl get pods -n rr-pvc-missing-storageclass -o wide
+NAME                        READY   STATUS    RESTARTS   AGE   IP       NODE     NOMINATED NODE   READINESS GATES
+postgres-6f6c4f64d9-5b88b   0/1     Pending   0          0s    <none>   <none>   <none>           <none>
+
+### describe pods
+$ kubectl describe pods -n rr-pvc-missing-storageclass
+Name:             postgres-6f6c4f64d9-5b88b
+Namespace:        rr-pvc-missing-storageclass
+Priority:         0
+Service Account:  default
+Node:             <none>
+Labels:           app=postgres
+                  pod-template-hash=6f6c4f64d9
+Annotations:      <none>
+Status:           Pending
+IP:               
+IPs:              <none>
+Controlled By:    ReplicaSet/postgres-6f6c4f64d9
+Containers:
+  postgres:
+    Image:        nginx:1.27-alpine
+    Port:         <none>
+    Host Port:    <none>
+    Environment:  <none>
+    Mounts:
+      /var/lib/postgresql/data from data (rw)
+      /var/run/secrets/kubernetes.io/serviceaccount from kube-api-access-hjbkh (ro)
+Conditions:
+  Type           Status
+  PodScheduled   False 
+Volumes:
+  data:
+    Type:       PersistentVolumeClaim (a reference to a PersistentVolumeClaim in the same namespace)
+    ClaimName:  postgres-data
+    ReadOnly:   false
+  kube-api-access-hjbkh:
+    Type:                    Projected (a volume that contains injected data from multiple sources)
+    TokenExpirationSeconds:  3607
+    ConfigMapName:           kube-root-ca.crt
+    Optional:                false
+    DownwardAPI:             true
+QoS Class:                   BestEffort
+Node-Selectors:              <none>
+Tolerations:                 node.kubernetes.io/not-ready:NoExecute op=Exists for 300s
+                             node.kubernetes.io/unreachable:NoExecute op=Exists for 300s
+Events:
+  Type     Reason            Age   From               Message
+  ----     ------            ----  ----               -------
+  Warning  FailedScheduling  1s    default-scheduler  0/2 nodes are available: pod has unbound immediate PersistentVolumeClaims. not found
+
+### events
+$ kubectl get events -n rr-pvc-missing-storageclass --sort-by=.lastTimestamp
+LAST SEEN   TYPE      REASON               OBJECT                                MESSAGE
+1s          Warning   FailedScheduling     pod/postgres-6f6c4f64d9-5b88b         0/2 nodes are available: pod has unbound immediate PersistentVolumeClaims. not found
+1s          Normal    SuccessfulCreate     replicaset/postgres-6f6c4f64d9        Created pod: postgres-6f6c4f64d9-5b88b
+1s          Warning   ProvisioningFailed   persistentvolumeclaim/postgres-data   storageclass.storage.k8s.io "fast-ssd" not found
+1s          Normal    ScalingReplicaSet    deployment/postgres                   Scaled up replica set postgres-6f6c4f64d9 from 0 to 1
+
+### get pvc
+$ kubectl get pvc -n rr-pvc-missing-storageclass
+NAME            STATUS    VOLUME   CAPACITY   ACCESS MODES   STORAGECLASS   VOLUMEATTRIBUTESCLASS   AGE
+postgres-data   Pending                                      fast-ssd       <unset>                 2s
+
+### describe pvc
+$ kubectl describe pvc postgres-data -n rr-pvc-missing-storageclass
+Name:          postgres-data
+Namespace:     rr-pvc-missing-storageclass
+StorageClass:  fast-ssd
+Status:        Pending
+Volume:        
+Labels:        <none>
+Annotations:   <none>
+Finalizers:    [kubernetes.io/pvc-protection]
+Capacity:      
+Access Modes:  
+VolumeMode:    Filesystem
+Used By:       postgres-6f6c4f64d9-5b88b
+Events:
+  Type     Reason              Age   From                         Message
+  ----     ------              ----  ----                         -------
+  Warning  ProvisioningFailed  3s    persistentvolume-controller  storageclass.storage.k8s.io "fast-ssd" not found
+
+### get storageclass
+$ kubectl get storageclass
+NAME                   PROVISIONER             RECLAIMPOLICY   VOLUMEBINDINGMODE      ALLOWVOLUMEEXPANSION   AGE
+local-path (default)   rancher.io/local-path   Delete          WaitForFirstConsumer   false                  11m

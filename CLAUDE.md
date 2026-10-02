@@ -35,7 +35,8 @@ Fine-tune a small embedding model (`BAAI/bge-small-en-v1.5`, 33M) so it retrieve
 - `make setup | check-env | check (lint+mypy strict+tests) | format`. Pipeline targets: `corpus data baseline train evaluate export serve`.
 - Settings only via `config.py` (`RR_*` env / `.env`). Tests never hit the network (socket blocked in `tests/conftest.py`).
 - Decisions not in PLAN.md go in `docs/DECISIONS.md`.
+- `data/incidents/*.json` = real cluster captures; planned use: real incident-snapshot test queries in Phase 2.
 - Build strictly phase by phase; stop at each phase's gate. OpsPilot integration comes later, not now.
 
 ## Current status
-Phase 0 (scaffold) done. **Next: Phase 1 (corpus: k8s docs + runbooks → `data/corpus.jsonl`).**
+Phases 0-1 done: `make corpus` builds 3,340 chunks (197 k8s pages @ pinned commit + 35 runbooks). Runbooks verified against 36 real fault captures (`make cluster-up faults` → `data/incidents/`, k3d); runbooks must never copy scenario identifiers (leakage test). **Next: Phase 2 (doc-level splits stratified by source, Gemini query generation, filters, hard negatives, hand-checked test set).**

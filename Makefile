@@ -4,7 +4,8 @@ SHELL := /bin/sh
 UV  ?= uv
 RUN := $(UV) run
 
-.PHONY: help setup check-env lint format typecheck test cov check \
+.PHONY: help setup check-env lint format typecheck test cov check fetch inspect \
+        cluster-up cluster-down faults \
         corpus data baseline train evaluate export serve
 
 help: ## Show targets
@@ -37,7 +38,44 @@ cov: ## Unit tests with coverage
 
 check: lint typecheck test ## Everything CI would run
 
-# --- Pipeline (filled in phase by phase) ---------------------------------------------
+# --- Phase 1: corpus -----------------------------------------------------------------
 
-corpus data baseline train evaluate export serve:
+N ?= 20
+SEED ?=
+
+fetch: ## Sparse-clone kubernetes/website at the pinned commit
+	$(RUN) python -m runbook_retriever.fetch_docs
+
+corpus: fetch ## Build data/corpus.jsonl (k8s docs + runbooks)
+	$(RUN) python -m runbook_retriever.build_corpus
+
+inspect: ## Print N random chunks as embedded (N=20 SEED=...)
+	$(RUN) python -m runbook_retriever.inspect_corpus -n $(N) $(if $(SEED),--seed $(SEED))
+
+# --- Phase 1b: verify runbooks against a real cluster --------------------------------
+
+CLUSTER ?= rr-faults
+FAULT_IMAGES := busybox:1.36 python:3.12-alpine nginx:1.27-alpine
+ONLY ?=
+
+cluster-up: ## Create the throwaway k3d cluster used by `make faults`
+	k3d cluster create $(CLUSTER) --agents 1 --k3s-arg "--disable=traefik@server:0" --wait --timeout 300s
+	@# Docker Desktop: k3d writes host.docker.internal, which can resolve to a firewalled LAN IP.
+	kubectl config set-cluster k3d-$(CLUSTER) \
+	  --server=https://127.0.0.1:$$(docker port k3d-$(CLUSTER)-serverlb 6443/tcp | head -1 | cut -d: -f2)
+	@# Pull per node: `k3d image import` fails on multi-platform images under Docker Desktop.
+	for node in server-0 agent-0; do for img in $(FAULT_IMAGES); do \
+	  docker exec k3d-$(CLUSTER)-$$node ctr -n k8s.io images pull --platform linux/amd64 docker.io/library/$$img >/dev/null; \
+	done; done
+	kubectl --context k3d-$(CLUSTER) get nodes
+
+cluster-down: ## Delete the k3d cluster
+	k3d cluster delete $(CLUSTER)
+
+faults: ## Inject faults and record real output to data/incidents/ (ONLY=id1,id2)
+	$(RUN) python -m runbook_retriever.fault_capture --context k3d-$(CLUSTER) $(if $(ONLY),--only $(ONLY))
+
+# --- Later phases --------------------------------------------------------------------
+
+data baseline train evaluate export serve:
 	@echo "'make $@' is not implemented yet (see docs/PLAN.md for its phase)" >&2; exit 1

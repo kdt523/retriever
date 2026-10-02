@@ -1,0 +1,47 @@
+{
+ "id": "pvc-missing-storageclass",
+ "runbook": "pvc-pending",
+ "description": "A PVC requests a StorageClass (fast-ssd) that does not exist in this cluster.",
+ "status": "ok",
+ "missing": [],
+ "error": "",
+ "captured_at": "2026-10-02T06:18:19+00:00",
+ "seconds": 4.2,
+ "versions": {
+  "client": "v1.34.1",
+  "server": "v1.35.5+k3s1"
+ },
+ "namespace": "rr-pvc-missing-storageclass",
+ "sections": [
+  {
+   "title": "pods",
+   "command": "kubectl get pods -n rr-pvc-missing-storageclass -o wide",
+   "output": "NAME                        READY   STATUS    RESTARTS   AGE   IP       NODE     NOMINATED NODE   READINESS GATES\npostgres-6f6c4f64d9-5b88b   0/1     Pending   0          0s    <none>   <none>   <none>           <none>"
+  },
+  {
+   "title": "describe pods",
+   "command": "kubectl describe pods -n rr-pvc-missing-storageclass",
+   "output": "Name:             postgres-6f6c4f64d9-5b88b\nNamespace:        rr-pvc-missing-storageclass\nPriority:         0\nService Account:  default\nNode:             <none>\nLabels:           app=postgres\n                  pod-template-hash=6f6c4f64d9\nAnnotations:      <none>\nStatus:           Pending\nIP:               \nIPs:              <none>\nControlled By:    ReplicaSet/postgres-6f6c4f64d9\nContainers:\n  postgres:\n    Image:        nginx:1.27-alpine\n    Port:         <none>\n    Host Port:    <none>\n    Environment:  <none>\n    Mounts:\n      /var/lib/postgresql/data from data (rw)\n      /var/run/secrets/kubernetes.io/serviceaccount from kube-api-access-hjbkh (ro)\nConditions:\n  Type           Status\n  PodScheduled   False \nVolumes:\n  data:\n    Type:       PersistentVolumeClaim (a reference to a PersistentVolumeClaim in the same namespace)\n    ClaimName:  postgres-data\n    ReadOnly:   false\n  kube-api-access-hjbkh:\n    Type:                    Projected (a volume that contains injected data from multiple sources)\n    TokenExpirationSeconds:  3607\n    ConfigMapName:           kube-root-ca.crt\n    Optional:                false\n    DownwardAPI:             true\nQoS Class:                   BestEffort\nNode-Selectors:              <none>\nTolerations:                 node.kubernetes.io/not-ready:NoExecute op=Exists for 300s\n                             node.kubernetes.io/unreachable:NoExecute op=Exists for 300s\nEvents:\n  Type     Reason            Age   From               Message\n  ----     ------            ----  ----               -------\n  Warning  FailedScheduling  1s    default-scheduler  0/2 nodes are available: pod has unbound immediate PersistentVolumeClaims. not found"
+  },
+  {
+   "title": "events",
+   "command": "kubectl get events -n rr-pvc-missing-storageclass --sort-by=.lastTimestamp",
+   "output": "LAST SEEN   TYPE      REASON               OBJECT                                MESSAGE\n1s          Warning   FailedScheduling     pod/postgres-6f6c4f64d9-5b88b         0/2 nodes are available: pod has unbound immediate PersistentVolumeClaims. not found\n1s          Normal    SuccessfulCreate     replicaset/postgres-6f6c4f64d9        Created pod: postgres-6f6c4f64d9-5b88b\n1s          Warning   ProvisioningFailed   persistentvolumeclaim/postgres-data   storageclass.storage.k8s.io \"fast-ssd\" not found\n1s          Normal    ScalingReplicaSet    deployment/postgres                   Scaled up replica set postgres-6f6c4f64d9 from 0 to 1"
+  },
+  {
+   "title": "get pvc",
+   "command": "kubectl get pvc -n rr-pvc-missing-storageclass",
+   "output": "NAME            STATUS    VOLUME   CAPACITY   ACCESS MODES   STORAGECLASS   VOLUMEATTRIBUTESCLASS   AGE\npostgres-data   Pending                                      fast-ssd       <unset>                 2s"
+  },
+  {
+   "title": "describe pvc",
+   "command": "kubectl describe pvc postgres-data -n rr-pvc-missing-storageclass",
+   "output": "Name:          postgres-data\nNamespace:     rr-pvc-missing-storageclass\nStorageClass:  fast-ssd\nStatus:        Pending\nVolume:        \nLabels:        <none>\nAnnotations:   <none>\nFinalizers:    [kubernetes.io/pvc-protection]\nCapacity:      \nAccess Modes:  \nVolumeMode:    Filesystem\nUsed By:       postgres-6f6c4f64d9-5b88b\nEvents:\n  Type     Reason              Age   From                         Message\n  ----     ------              ----  ----                         -------\n  Warning  ProvisioningFailed  3s    persistentvolume-controller  storageclass.storage.k8s.io \"fast-ssd\" not found"
+  },
+  {
+   "title": "get storageclass",
+   "command": "kubectl get storageclass",
+   "output": "NAME                   PROVISIONER             RECLAIMPOLICY   VOLUMEBINDINGMODE      ALLOWVOLUMEEXPANSION   AGE\nlocal-path (default)   rancher.io/local-path   Delete          WaitForFirstConsumer   false                  11m"
+  }
+ ]
+}

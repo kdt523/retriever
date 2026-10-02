@@ -1,0 +1,35 @@
+id: hpa-missing-cpu-request
+runbook: hpa-not-scaling
+description: An HPA targets CPU utilization but the pods have no CPU requests.
+manifests: |
+  apiVersion: apps/v1
+  kind: Deployment
+  metadata: {name: api, labels: {app: api}}
+  spec:
+    replicas: 1
+    selector: {matchLabels: {app: api}}
+    template:
+      metadata: {labels: {app: api}}
+      spec:
+        terminationGracePeriodSeconds: 2
+        containers:
+          - name: api
+            image: nginx:1.27-alpine
+  ---
+  apiVersion: autoscaling/v2
+  kind: HorizontalPodAutoscaler
+  metadata: {name: api}
+  spec:
+    scaleTargetRef: {apiVersion: apps/v1, kind: Deployment, name: api}
+    minReplicas: 1
+    maxReplicas: 5
+    metrics:
+      - type: Resource
+        resource: {name: cpu, target: {type: Utilization, averageUtilization: 60}}
+capture:
+  - [get, hpa, -n, "{ns}"]
+  - [describe, hpa, api, -n, "{ns}"]
+expect:
+  - 'missing request for cpu'
+  - 'FailedGetResourceMetric|FailedComputeMetricsReplicas'
+timeout_s: 300

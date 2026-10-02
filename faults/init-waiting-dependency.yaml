@@ -1,0 +1,24 @@
+id: init-waiting-dependency
+runbook: init-container-stuck
+description: An init container waits forever for a postgres Service that does not exist.
+manifests: |
+  apiVersion: apps/v1
+  kind: Deployment
+  metadata: {name: orders, labels: {app: orders}}
+  spec:
+    replicas: 1
+    selector: {matchLabels: {app: orders}}
+    template:
+      metadata: {labels: {app: orders}}
+      spec:
+        terminationGracePeriodSeconds: 2
+        initContainers:
+          - name: wait-for-postgres
+            image: busybox:1.36
+            command: ["sh", "-c", "until nslookup postgres >/dev/null 2>&1; do echo waiting for postgres; sleep 2; done"]
+        containers:
+          - name: orders
+            image: nginx:1.27-alpine
+expect:
+  - 'Init:0/1'
+  - 'waiting for postgres'

@@ -1,0 +1,42 @@
+{
+ "id": "crash-app-error",
+ "runbook": "crashloop-app-error",
+ "description": "A new version raises an unhandled exception at startup.",
+ "status": "ok",
+ "missing": [],
+ "error": "",
+ "captured_at": "2026-10-02T06:15:09+00:00",
+ "seconds": 9.6,
+ "versions": {
+  "client": "v1.34.1",
+  "server": "v1.35.5+k3s1"
+ },
+ "namespace": "rr-crash-app-error",
+ "sections": [
+  {
+   "title": "pods",
+   "command": "kubectl get pods -n rr-crash-app-error -o wide",
+   "output": "NAME                        READY   STATUS   RESTARTS     AGE   IP           NODE                    NOMINATED NODE   READINESS GATES\ncheckout-55bdb8dc8f-7sqmk   0/1     Error    1 (4s ago)   7s    10.42.1.11   k3d-rr-faults-agent-0   <none>           <none>"
+  },
+  {
+   "title": "describe pods",
+   "command": "kubectl describe pods -n rr-crash-app-error",
+   "output": "Name:             checkout-55bdb8dc8f-7sqmk\nNamespace:        rr-crash-app-error\nPriority:         0\nService Account:  default\nNode:             k3d-rr-faults-agent-0/172.21.0.4\nStart Time:       Fri, 02 Oct 2026 11:45:00 +0530\nLabels:           app=checkout\n                  pod-template-hash=55bdb8dc8f\nAnnotations:      <none>\nStatus:           Running\nIP:               10.42.1.11\nIPs:\n  IP:           10.42.1.11\nControlled By:  ReplicaSet/checkout-55bdb8dc8f\nContainers:\n  checkout:\n    Container ID:  containerd://34a832142ee8506609df57323491a1651fe509e1924fd089ff7272fac9a310c3\n    Image:         python:3.12-alpine\n    Image ID:      sha256:979e5a8a56846771598d47ebf1f8a75b46155104e168a0b237c0783c1dedff8a\n    Port:          <none>\n    Host Port:     <none>\n    Command:\n      python\n      -c\n    Args:\n      print(\"checkout-service 2.3.0 starting\", flush=True)\n      print(\"loading pricing rules from /etc/pricing/rules.json\", flush=True)\n      raise RuntimeError(\"failed to load pricing rules: invalid currency code 'EURO' in rule 17\")\n      \n    State:          Terminated\n      Reason:       Error\n      Exit Code:    1\n      Started:      Fri, 02 Oct 2026 11:45:05 +0530\n      Finished:     Fri, 02 Oct 2026 11:45:05 +0530\n    Last State:     Terminated\n      Reason:       Error\n      Exit Code:    1\n      Started:      Fri, 02 Oct 2026 11:45:03 +0530\n      Finished:     Fri, 02 Oct 2026 11:45:03 +0530\n    Ready:          False\n    Restart Count:  1\n    Environment:    <none>\n    Mounts:\n      /var/run/secrets/kubernetes.io/serviceaccount from kube-api-access-tdzd9 (ro)\nConditions:\n  Type                        Status\n  PodReadyToStartContainers   True \n  Initialized                 True \n  Ready                       False \n  ContainersReady             False \n  PodScheduled                True \nVolumes:\n  kube-api-access-tdzd9:\n    Type:                    Projected (a volume that contains injected data from multiple sources)\n    TokenExpirationSeconds:  3607\n    ConfigMapName:           kube-root-ca.crt\n    Optional:                false\n    DownwardAPI:             true\nQoS Class:                   BestEffort\nNode-Selectors:              <none>\nTolerations:                 node.kubernetes.io/not-ready:NoExecute op=Exists for 300s\n                             node.kubernetes.io/unreachable:NoExecute op=Exists for 300s\nEvents:\n  Type     Reason     Age              From               Message\n  ----     ------     ----             ----               -------\n  Normal   Scheduled  7s               default-scheduler  Successfully assigned rr-crash-app-error/checkout-55bdb8dc8f-7sqmk to k3d-rr-faults-agent-0\n  Normal   Pulled     4s (x2 over 5s)  kubelet            Container image \"python:3.12-alpine\" already present on machine and can be accessed by the pod\n  Normal   Created    3s (x2 over 5s)  kubelet            Container created\n  Normal   Started    3s (x2 over 5s)  kubelet            Container started\n  Warning  BackOff    3s               kubelet            Back-off restarting failed container checkout in pod checkout-55bdb8dc8f-7sqmk_rr-crash-app-error(6a32689c-17d4-4cba-9043-0da7295abfdc)"
+  },
+  {
+   "title": "events",
+   "command": "kubectl get events -n rr-crash-app-error --sort-by=.lastTimestamp",
+   "output": "LAST SEEN   TYPE      REASON              OBJECT                           MESSAGE\n7s          Normal    Scheduled           pod/checkout-55bdb8dc8f-7sqmk    Successfully assigned rr-crash-app-error/checkout-55bdb8dc8f-7sqmk to k3d-rr-faults-agent-0\n8s          Normal    SuccessfulCreate    replicaset/checkout-55bdb8dc8f   Created pod: checkout-55bdb8dc8f-7sqmk\n8s          Normal    ScalingReplicaSet   deployment/checkout              Scaled up replica set checkout-55bdb8dc8f from 0 to 1\n4s          Normal    Pulled              pod/checkout-55bdb8dc8f-7sqmk    Container image \"python:3.12-alpine\" already present on machine and can be accessed by the pod\n3s          Normal    Created             pod/checkout-55bdb8dc8f-7sqmk    Container created\n3s          Normal    Started             pod/checkout-55bdb8dc8f-7sqmk    Container started\n3s          Warning   BackOff             pod/checkout-55bdb8dc8f-7sqmk    Back-off restarting failed container checkout in pod checkout-55bdb8dc8f-7sqmk_rr-crash-app-error(6a32689c-17d4-4cba-9043-0da7295abfdc)"
+  },
+  {
+   "title": "logs checkout-55bdb8dc8f-7sqmk/checkout (previous)",
+   "command": "kubectl logs checkout-55bdb8dc8f-7sqmk -n rr-crash-app-error -c checkout --tail=30 --previous",
+   "output": "unable to retrieve container logs for containerd://590129283b4e28246cea2eb4dd15aa636cb28d3c986c2b0bb89e88af000a5c2c"
+  },
+  {
+   "title": "logs checkout-55bdb8dc8f-7sqmk/checkout",
+   "command": "kubectl logs checkout-55bdb8dc8f-7sqmk -n rr-crash-app-error -c checkout --tail=30",
+   "output": "Traceback (most recent call last):\n  File \"<string>\", line 3, in <module>\nRuntimeError: failed to load pricing rules: invalid currency code 'EURO' in rule 17\ncheckout-service 2.3.0 starting\nloading pricing rules from /etc/pricing/rules.json"
+  }
+ ]
+}

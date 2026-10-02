@@ -1,0 +1,276 @@
+# statefulset-update-stuck -> runbook/statefulset-rollout-stuck [ok]
+# A StatefulSet is updated to a broken image; the highest ordinal never becomes Ready and the update halts.
+
+### pods
+$ kubectl get pods -n rr-statefulset-update-stuck -o wide
+NAME   READY   STATUS         RESTARTS   AGE   IP           NODE                     NOMINATED NODE   READINESS GATES
+db-0   1/1     Running        0          14s   10.42.0.21   k3d-rr-faults-server-0   <none>           <none>
+db-1   1/1     Running        0          13s   10.42.1.31   k3d-rr-faults-agent-0    <none>           <none>
+db-2   0/1     ErrImagePull   0          9s    10.42.0.23   k3d-rr-faults-server-0   <none>           <none>
+
+### describe pods
+$ kubectl describe pods -n rr-statefulset-update-stuck
+Name:             db-0
+Namespace:        rr-statefulset-update-stuck
+Priority:         0
+Service Account:  default
+Node:             k3d-rr-faults-server-0/172.21.0.3
+Start Time:       Fri, 02 Oct 2026 11:56:07 +0530
+Labels:           app=db
+                  apps.kubernetes.io/pod-index=0
+                  controller-revision-hash=db-5c748b4d5b
+                  statefulset.kubernetes.io/pod-name=db-0
+Annotations:      <none>
+Status:           Running
+IP:               10.42.0.21
+IPs:
+  IP:           10.42.0.21
+Controlled By:  StatefulSet/db
+Containers:
+  db:
+    Container ID:   containerd://d18530dbda3ebe3d72bef4457ba04b3b44a9c58343bc20cd8a9b89b37412305e
+    Image:          nginx:1.27-alpine
+    Image ID:       sha256:6769dc3a703c719c1d2756bda113659be28ae16cf0da58dd5fd823d6b9a050ea
+    Port:           <none>
+    Host Port:      <none>
+    State:          Running
+      Started:      Fri, 02 Oct 2026 11:56:08 +0530
+    Ready:          True
+    Restart Count:  0
+    Environment:    <none>
+    Mounts:
+      /var/run/secrets/kubernetes.io/serviceaccount from kube-api-access-zhg9v (ro)
+Conditions:
+  Type                        Status
+  PodReadyToStartContainers   True 
+  Initialized                 True 
+  Ready                       True 
+  ContainersReady             True 
+  PodScheduled                True 
+Volumes:
+  kube-api-access-zhg9v:
+    Type:                    Projected (a volume that contains injected data from multiple sources)
+    TokenExpirationSeconds:  3607
+    ConfigMapName:           kube-root-ca.crt
+    Optional:                false
+    DownwardAPI:             true
+QoS Class:                   BestEffort
+Node-Selectors:              <none>
+Tolerations:                 node.kubernetes.io/not-ready:NoExecute op=Exists for 300s
+                             node.kubernetes.io/unreachable:NoExecute op=Exists for 300s
+Events:
+  Type    Reason     Age   From               Message
+  ----    ------     ----  ----               -------
+  Normal  Scheduled  14s   default-scheduler  Successfully assigned rr-statefulset-update-stuck/db-0 to k3d-rr-faults-server-0
+  Normal  Pulled     14s   kubelet            Container image "nginx:1.27-alpine" already present on machine and can be accessed by the pod
+  Normal  Created    13s   kubelet            Container created
+  Normal  Started    13s   kubelet            Container started
+
+
+Name:             db-1
+Namespace:        rr-statefulset-update-stuck
+Priority:         0
+Service Account:  default
+Node:             k3d-rr-faults-agent-0/172.21.0.2
+Start Time:       Fri, 02 Oct 2026 11:56:08 +0530
+Labels:           app=db
+                  apps.kubernetes.io/pod-index=1
+                  controller-revision-hash=db-5c748b4d5b
+                  statefulset.kubernetes.io/pod-name=db-1
+Annotations:      <none>
+Status:           Running
+IP:               10.42.1.31
+IPs:
+  IP:           10.42.1.31
+Controlled By:  StatefulSet/db
+Containers:
+  db:
+    Container ID:   containerd://715c86ab19cf6b5f65b69d087b9037644cd8ae0e3cbb93573714a775ab3edbfa
+    Image:          nginx:1.27-alpine
+    Image ID:       sha256:6769dc3a703c719c1d2756bda113659be28ae16cf0da58dd5fd823d6b9a050ea
+    Port:           <none>
+    Host Port:      <none>
+    State:          Running
+      Started:      Fri, 02 Oct 2026 11:56:09 +0530
+    Ready:          True
+    Restart Count:  0
+    Environment:    <none>
+    Mounts:
+      /var/run/secrets/kubernetes.io/serviceaccount from kube-api-access-sts55 (ro)
+Conditions:
+  Type                        Status
+  PodReadyToStartContainers   True 
+  Initialized                 True 
+  Ready                       True 
+  ContainersReady             True 
+  PodScheduled                True 
+Volumes:
+  kube-api-access-sts55:
+    Type:                    Projected (a volume that contains injected data from multiple sources)
+    TokenExpirationSeconds:  3607
+    ConfigMapName:           kube-root-ca.crt
+    Optional:                false
+    DownwardAPI:             true
+QoS Class:                   BestEffort
+Node-Selectors:              <none>
+Tolerations:                 node.kubernetes.io/not-ready:NoExecute op=Exists for 300s
+                             node.kubernetes.io/unreachable:NoExecute op=Exists for 300s
+Events:
+  Type    Reason     Age   From               Message
+  ----    ------     ----  ----               -------
+  Normal  Scheduled  13s   default-scheduler  Successfully assigned rr-statefulset-update-stuck/db-1 to k3d-rr-faults-agent-0
+  Normal  Pulled     13s   kubelet            Container image "nginx:1.27-alpine" already present on machine and can be accessed by the pod
+  Normal  Created    12s   kubelet            Container created
+  Normal  Started    12s   kubelet            Container started
+
+
+Name:             db-2
+Namespace:        rr-statefulset-update-stuck
+Priority:         0
+Service Account:  default
+Node:             k3d-rr-faults-server-0/172.21.0.3
+Start Time:       Fri, 02 Oct 2026 11:56:12 +0530
+Labels:           app=db
+                  apps.kubernetes.io/pod-index=2
+                  controller-revision-hash=db-95c857476
+                  statefulset.kubernetes.io/pod-name=db-2
+Annotations:      <none>
+Status:           Pending
+IP:               10.42.0.23
+IPs:
+  IP:           10.42.0.23
+Controlled By:  StatefulSet/db
+Containers:
+  db:
+    Container ID:   
+    Image:          nginx:1.27.99-broken
+    Image ID:       
+    Port:           <none>
+    Host Port:      <none>
+    State:          Waiting
+      Reason:       ErrImagePull
+    Ready:          False
+    Restart Count:  0
+    Environment:    <none>
+    Mounts:
+      /var/run/secrets/kubernetes.io/serviceaccount from kube-api-access-6p49m (ro)
+Conditions:
+  Type                        Status
+  PodReadyToStartContainers   True 
+  Initialized                 True 
+  Ready                       False 
+  ContainersReady             False 
+  PodScheduled                True 
+Volumes:
+  kube-api-access-6p49m:
+    Type:                    Projected (a volume that contains injected data from multiple sources)
+    TokenExpirationSeconds:  3607
+    ConfigMapName:           kube-root-ca.crt
+    Optional:                false
+    DownwardAPI:             true
+QoS Class:                   BestEffort
+Node-Selectors:              <none>
+Tolerations:                 node.kubernetes.io/not-ready:NoExecute op=Exists for 300s
+                             node.kubernetes.io/unreachable:NoExecute op=Exists for 300s
+Events:
+  Type     Reason     Age   From               Message
+  ----     ------     ----  ----               -------
+  Normal   Scheduled  9s    default-scheduler  Successfully assigned rr-statefulset-update-stuck/db-2 to k3d-rr-faults-server-0
+  Normal   Pulling    10s   kubelet            Pulling image "nginx:1.27.99-broken"
+  Warning  Failed     7s    kubelet            Failed to pull image "nginx:1.27.99-broken": rpc error: code = NotFound desc = failed to pull and unpack image "docker.io/library/nginx:1.27.99-broken": failed to resolve reference "docker.io/library/nginx:1.27.99-broken": docker.io/library/nginx:1.27.99-broken: not found
+  Warning  Failed     7s    kubelet            Error: ErrImagePull
+  Normal   BackOff    6s    kubelet            Back-off pulling image "nginx:1.27.99-broken"
+  Warning  Failed     6s    kubelet            Error: ImagePullBackOff
+
+### events
+$ kubectl get events -n rr-statefulset-update-stuck --sort-by=.lastTimestamp
+LAST SEEN   TYPE      REASON             OBJECT           MESSAGE
+9s          Normal    Scheduled          pod/db-2         Successfully assigned rr-statefulset-update-stuck/db-2 to k3d-rr-faults-server-0
+13s         Normal    Scheduled          pod/db-1         Successfully assigned rr-statefulset-update-stuck/db-1 to k3d-rr-faults-agent-0
+12s         Normal    Scheduled          pod/db-2         Successfully assigned rr-statefulset-update-stuck/db-2 to k3d-rr-faults-server-0
+14s         Normal    Scheduled          pod/db-0         Successfully assigned rr-statefulset-update-stuck/db-0 to k3d-rr-faults-server-0
+15s         Normal    Pulled             pod/db-0         Container image "nginx:1.27-alpine" already present on machine and can be accessed by the pod
+15s         Normal    SuccessfulCreate   statefulset/db   Create Pod db-0 in StatefulSet db successful
+14s         Normal    Created            pod/db-0         Container created
+14s         Normal    Started            pod/db-0         Container started
+14s         Normal    Pulled             pod/db-1         Container image "nginx:1.27-alpine" already present on machine and can be accessed by the pod
+14s         Normal    SuccessfulCreate   statefulset/db   Create Pod db-1 in StatefulSet db successful
+13s         Normal    Created            pod/db-1         Container created
+13s         Normal    Started            pod/db-1         Container started
+12s         Normal    Created            pod/db-2         Container created
+12s         Normal    Started            pod/db-2         Container started
+12s         Normal    Pulled             pod/db-2         Container image "nginx:1.27-alpine" already present on machine and can be accessed by the pod
+12s         Normal    SuccessfulDelete   statefulset/db   Delete Pod db-2 in StatefulSet db successful
+11s         Normal    Killing            pod/db-2         Stopping container db
+10s         Normal    Pulling            pod/db-2         Pulling image "nginx:1.27.99-broken"
+10s         Normal    SuccessfulCreate   statefulset/db   Create Pod db-2 in StatefulSet db successful
+7s          Warning   Failed             pod/db-2         Failed to pull image "nginx:1.27.99-broken": rpc error: code = NotFound desc = failed to pull and unpack image "docker.io/library/nginx:1.27.99-broken": failed to resolve reference "docker.io/library/nginx:1.27.99-broken": docker.io/library/nginx:1.27.99-broken: not found
+7s          Warning   Failed             pod/db-2         Error: ErrImagePull
+6s          Normal    BackOff            pod/db-2         Back-off pulling image "nginx:1.27.99-broken"
+6s          Warning   Failed             pod/db-2         Error: ImagePullBackOff
+
+### logs db-0/db
+$ kubectl logs db-0 -n rr-statefulset-update-stuck -c db --tail=30
+/docker-entrypoint.sh: /docker-entrypoint.d/ is not empty, will attempt to perform configuration
+/docker-entrypoint.sh: Looking for shell scripts in /docker-entrypoint.d/
+/docker-entrypoint.sh: Launching /docker-entrypoint.d/10-listen-on-ipv6-by-default.sh
+10-listen-on-ipv6-by-default.sh: info: Getting the checksum of /etc/nginx/conf.d/default.conf
+10-listen-on-ipv6-by-default.sh: info: Enabled listen on IPv6 in /etc/nginx/conf.d/default.conf
+/docker-entrypoint.sh: Sourcing /docker-entrypoint.d/15-local-resolvers.envsh
+/docker-entrypoint.sh: Launching /docker-entrypoint.d/20-envsubst-on-templates.sh
+/docker-entrypoint.sh: Launching /docker-entrypoint.d/30-tune-worker-processes.sh
+/docker-entrypoint.sh: Configuration complete; ready for start up
+2026/10/02 06:26:08 [notice] 1#1: using the "epoll" event method
+2026/10/02 06:26:08 [notice] 1#1: nginx/1.27.5
+2026/10/02 06:26:08 [notice] 1#1: built by gcc 14.2.0 (Alpine 14.2.0) 
+2026/10/02 06:26:08 [notice] 1#1: OS: Linux 6.6.87.2-microsoft-standard-WSL2
+2026/10/02 06:26:08 [notice] 1#1: getrlimit(RLIMIT_NOFILE): 1048576:1048576
+2026/10/02 06:26:08 [notice] 1#1: start worker processes
+2026/10/02 06:26:08 [notice] 1#1: start worker process 30
+2026/10/02 06:26:08 [notice] 1#1: start worker process 31
+2026/10/02 06:26:08 [notice] 1#1: start worker process 32
+2026/10/02 06:26:08 [notice] 1#1: start worker process 33
+2026/10/02 06:26:08 [notice] 1#1: start worker process 34
+2026/10/02 06:26:08 [notice] 1#1: start worker process 35
+2026/10/02 06:26:08 [notice] 1#1: start worker process 36
+2026/10/02 06:26:08 [notice] 1#1: start worker process 37
+
+### logs db-1/db
+$ kubectl logs db-1 -n rr-statefulset-update-stuck -c db --tail=30
+/docker-entrypoint.sh: /docker-entrypoint.d/ is not empty, will attempt to perform configuration
+/docker-entrypoint.sh: Looking for shell scripts in /docker-entrypoint.d/
+/docker-entrypoint.sh: Launching /docker-entrypoint.d/10-listen-on-ipv6-by-default.sh
+10-listen-on-ipv6-by-default.sh: info: Getting the checksum of /etc/nginx/conf.d/default.conf
+10-listen-on-ipv6-by-default.sh: info: Enabled listen on IPv6 in /etc/nginx/conf.d/default.conf
+/docker-entrypoint.sh: Sourcing /docker-entrypoint.d/15-local-resolvers.envsh
+/docker-entrypoint.sh: Launching /docker-entrypoint.d/20-envsubst-on-templates.sh
+/docker-entrypoint.sh: Launching /docker-entrypoint.d/30-tune-worker-processes.sh
+/docker-entrypoint.sh: Configuration complete; ready for start up
+2026/10/02 06:26:09 [notice] 1#1: using the "epoll" event method
+2026/10/02 06:26:09 [notice] 1#1: nginx/1.27.5
+2026/10/02 06:26:09 [notice] 1#1: built by gcc 14.2.0 (Alpine 14.2.0) 
+2026/10/02 06:26:09 [notice] 1#1: OS: Linux 6.6.87.2-microsoft-standard-WSL2
+2026/10/02 06:26:09 [notice] 1#1: getrlimit(RLIMIT_NOFILE): 1048576:1048576
+2026/10/02 06:26:09 [notice] 1#1: start worker processes
+2026/10/02 06:26:09 [notice] 1#1: start worker process 30
+2026/10/02 06:26:09 [notice] 1#1: start worker process 31
+2026/10/02 06:26:09 [notice] 1#1: start worker process 32
+2026/10/02 06:26:09 [notice] 1#1: start worker process 33
+2026/10/02 06:26:09 [notice] 1#1: start worker process 34
+2026/10/02 06:26:09 [notice] 1#1: start worker process 35
+2026/10/02 06:26:09 [notice] 1#1: start worker process 36
+2026/10/02 06:26:09 [notice] 1#1: start worker process 37
+
+### rollout status
+$ kubectl rollout status statefulset/db -n rr-statefulset-update-stuck --timeout=3s
+Waiting for 1 pods to be ready...
+error: timed out waiting for the condition
+
+### get statefulset
+$ kubectl get statefulset db -n rr-statefulset-update-stuck
+NAME   READY   AGE
+db     2/3     18s
+
+### get statefulset
+$ kubectl get statefulset db -n rr-statefulset-update-stuck -o jsonpath=currentRevision={.status.currentRevision} updateRevision={.status.updateRevision}
+currentRevision=db-5c748b4d5b updateRevision=db-95c857476

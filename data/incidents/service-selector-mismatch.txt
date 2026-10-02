@@ -1,0 +1,298 @@
+# service-selector-mismatch -> runbook/service-no-endpoints [ok]
+# Pods were relabelled app=orders-v2 but the Service still selects app=orders.
+
+### pods
+$ kubectl get pods -n rr-service-selector-mismatch -o wide
+NAME                       READY   STATUS    RESTARTS   AGE   IP           NODE                     NOMINATED NODE   READINESS GATES
+gateway-7887cd5c54-hd4fc   1/1     Running   0          8s    10.42.1.23   k3d-rr-faults-agent-0    <none>           <none>
+orders-96cdf96b6-9v5xk     1/1     Running   0          8s    10.42.1.22   k3d-rr-faults-agent-0    <none>           <none>
+orders-96cdf96b6-rm9r9     1/1     Running   0          8s    10.42.0.20   k3d-rr-faults-server-0   <none>           <none>
+
+### describe pods
+$ kubectl describe pods -n rr-service-selector-mismatch
+Name:             gateway-7887cd5c54-hd4fc
+Namespace:        rr-service-selector-mismatch
+Priority:         0
+Service Account:  default
+Node:             k3d-rr-faults-agent-0/172.21.0.4
+Start Time:       Fri, 02 Oct 2026 11:45:35 +0530
+Labels:           app=gateway
+                  pod-template-hash=7887cd5c54
+Annotations:      <none>
+Status:           Running
+IP:               10.42.1.23
+IPs:
+  IP:           10.42.1.23
+Controlled By:  ReplicaSet/gateway-7887cd5c54
+Containers:
+  gateway:
+    Container ID:  containerd://37e1524c762acb654c27dea51ed47bb64ff7e5fe2221ef2a429a4afd838d0d7f
+    Image:         python:3.12-alpine
+    Image ID:      sha256:979e5a8a56846771598d47ebf1f8a75b46155104e168a0b237c0783c1dedff8a
+    Port:          <none>
+    Host Port:     <none>
+    Command:
+      python
+      -c
+    Args:
+      import time, urllib.request
+      while True:
+          try:
+              urllib.request.urlopen("http://orders:8000/", timeout=3)
+              print("GET http://orders:8000/ -> 200", flush=True)
+          except Exception as e:
+              print(f"ERROR GET http://orders:8000/ failed: {e!r}", flush=True)
+          time.sleep(3)
+      
+    State:          Running
+      Started:      Fri, 02 Oct 2026 11:45:37 +0530
+    Ready:          True
+    Restart Count:  0
+    Environment:    <none>
+    Mounts:
+      /var/run/secrets/kubernetes.io/serviceaccount from kube-api-access-mjx2h (ro)
+Conditions:
+  Type                        Status
+  PodReadyToStartContainers   True 
+  Initialized                 True 
+  Ready                       True 
+  ContainersReady             True 
+  PodScheduled                True 
+Volumes:
+  kube-api-access-mjx2h:
+    Type:                    Projected (a volume that contains injected data from multiple sources)
+    TokenExpirationSeconds:  3607
+    ConfigMapName:           kube-root-ca.crt
+    Optional:                false
+    DownwardAPI:             true
+QoS Class:                   BestEffort
+Node-Selectors:              <none>
+Tolerations:                 node.kubernetes.io/not-ready:NoExecute op=Exists for 300s
+                             node.kubernetes.io/unreachable:NoExecute op=Exists for 300s
+Events:
+  Type    Reason     Age   From               Message
+  ----    ------     ----  ----               -------
+  Normal  Scheduled  9s    default-scheduler  Successfully assigned rr-service-selector-mismatch/gateway-7887cd5c54-hd4fc to k3d-rr-faults-agent-0
+  Normal  Pulled     7s    kubelet            Container image "python:3.12-alpine" already present on machine and can be accessed by the pod
+  Normal  Created    7s    kubelet            Container created
+  Normal  Started    7s    kubelet            Container started
+
+
+Name:             orders-96cdf96b6-9v5xk
+Namespace:        rr-service-selector-mismatch
+Priority:         0
+Service Account:  default
+Node:             k3d-rr-faults-agent-0/172.21.0.4
+Start Time:       Fri, 02 Oct 2026 11:45:35 +0530
+Labels:           app=orders-v2
+                  pod-template-hash=96cdf96b6
+Annotations:      <none>
+Status:           Running
+IP:               10.42.1.22
+IPs:
+  IP:           10.42.1.22
+Controlled By:  ReplicaSet/orders-96cdf96b6
+Containers:
+  orders:
+    Container ID:   containerd://1e13d2a5ade399e5455d66437e2fa9aa1dc623817c520cc6546ab9e327211e81
+    Image:          nginx:1.27-alpine
+    Image ID:       sha256:6769dc3a703c719c1d2756bda113659be28ae16cf0da58dd5fd823d6b9a050ea
+    Port:           80/TCP
+    Host Port:      0/TCP
+    State:          Running
+      Started:      Fri, 02 Oct 2026 11:45:37 +0530
+    Ready:          True
+    Restart Count:  0
+    Environment:    <none>
+    Mounts:
+      /var/run/secrets/kubernetes.io/serviceaccount from kube-api-access-qtxh5 (ro)
+Conditions:
+  Type                        Status
+  PodReadyToStartContainers   True 
+  Initialized                 True 
+  Ready                       True 
+  ContainersReady             True 
+  PodScheduled                True 
+Volumes:
+  kube-api-access-qtxh5:
+    Type:                    Projected (a volume that contains injected data from multiple sources)
+    TokenExpirationSeconds:  3607
+    ConfigMapName:           kube-root-ca.crt
+    Optional:                false
+    DownwardAPI:             true
+QoS Class:                   BestEffort
+Node-Selectors:              <none>
+Tolerations:                 node.kubernetes.io/not-ready:NoExecute op=Exists for 300s
+                             node.kubernetes.io/unreachable:NoExecute op=Exists for 300s
+Events:
+  Type    Reason     Age   From               Message
+  ----    ------     ----  ----               -------
+  Normal  Scheduled  9s    default-scheduler  Successfully assigned rr-service-selector-mismatch/orders-96cdf96b6-9v5xk to k3d-rr-faults-agent-0
+  Normal  Pulled     8s    kubelet            Container image "nginx:1.27-alpine" already present on machine and can be accessed by the pod
+  Normal  Created    7s    kubelet            Container created
+  Normal  Started    7s    kubelet            Container started
+
+
+Name:             orders-96cdf96b6-rm9r9
+Namespace:        rr-service-selector-mismatch
+Priority:         0
+Service Account:  default
+Node:             k3d-rr-faults-server-0/172.21.0.3
+Start Time:       Fri, 02 Oct 2026 11:45:35 +0530
+Labels:           app=orders-v2
+                  pod-template-hash=96cdf96b6
+Annotations:      <none>
+Status:           Running
+IP:               10.42.0.20
+IPs:
+  IP:           10.42.0.20
+Controlled By:  ReplicaSet/orders-96cdf96b6
+Containers:
+  orders:
+    Container ID:   containerd://d122de66cd5f4be7b7e9e70a974881dd6cfd8d6969c7ab72ae92c2d55ffabb93
+    Image:          nginx:1.27-alpine
+    Image ID:       sha256:6769dc3a703c719c1d2756bda113659be28ae16cf0da58dd5fd823d6b9a050ea
+    Port:           80/TCP
+    Host Port:      0/TCP
+    State:          Running
+      Started:      Fri, 02 Oct 2026 11:45:37 +0530
+    Ready:          True
+    Restart Count:  0
+    Environment:    <none>
+    Mounts:
+      /var/run/secrets/kubernetes.io/serviceaccount from kube-api-access-6k9bp (ro)
+Conditions:
+  Type                        Status
+  PodReadyToStartContainers   True 
+  Initialized                 True 
+  Ready                       True 
+  ContainersReady             True 
+  PodScheduled                True 
+Volumes:
+  kube-api-access-6k9bp:
+    Type:                    Projected (a volume that contains injected data from multiple sources)
+    TokenExpirationSeconds:  3607
+    ConfigMapName:           kube-root-ca.crt
+    Optional:                false
+    DownwardAPI:             true
+QoS Class:                   BestEffort
+Node-Selectors:              <none>
+Tolerations:                 node.kubernetes.io/not-ready:NoExecute op=Exists for 300s
+                             node.kubernetes.io/unreachable:NoExecute op=Exists for 300s
+Events:
+  Type    Reason     Age   From               Message
+  ----    ------     ----  ----               -------
+  Normal  Scheduled  9s    default-scheduler  Successfully assigned rr-service-selector-mismatch/orders-96cdf96b6-rm9r9 to k3d-rr-faults-server-0
+  Normal  Pulled     7s    kubelet            Container image "nginx:1.27-alpine" already present on machine and can be accessed by the pod
+  Normal  Created    7s    kubelet            Container created
+  Normal  Started    7s    kubelet            Container started
+
+### events
+$ kubectl get events -n rr-service-selector-mismatch --sort-by=.lastTimestamp
+LAST SEEN   TYPE     REASON              OBJECT                          MESSAGE
+10s         Normal   Scheduled           pod/orders-96cdf96b6-rm9r9      Successfully assigned rr-service-selector-mismatch/orders-96cdf96b6-rm9r9 to k3d-rr-faults-server-0
+10s         Normal   Scheduled           pod/orders-96cdf96b6-9v5xk      Successfully assigned rr-service-selector-mismatch/orders-96cdf96b6-9v5xk to k3d-rr-faults-agent-0
+9s          Normal   Scheduled           pod/gateway-7887cd5c54-hd4fc    Successfully assigned rr-service-selector-mismatch/gateway-7887cd5c54-hd4fc to k3d-rr-faults-agent-0
+11s         Normal   ScalingReplicaSet   deployment/orders               Scaled up replica set orders-96cdf96b6 from 0 to 2
+10s         Normal   SuccessfulCreate    replicaset/orders-96cdf96b6     Created pod: orders-96cdf96b6-rm9r9
+10s         Normal   SuccessfulCreate    replicaset/orders-96cdf96b6     Created pod: orders-96cdf96b6-9v5xk
+10s         Normal   SuccessfulCreate    replicaset/gateway-7887cd5c54   Created pod: gateway-7887cd5c54-hd4fc
+10s         Normal   ScalingReplicaSet   deployment/gateway              Scaled up replica set gateway-7887cd5c54 from 0 to 1
+9s          Normal   Pulled              pod/orders-96cdf96b6-9v5xk      Container image "nginx:1.27-alpine" already present on machine and can be accessed by the pod
+8s          Normal   Created             pod/orders-96cdf96b6-9v5xk      Container created
+8s          Normal   Started             pod/orders-96cdf96b6-9v5xk      Container started
+8s          Normal   Pulled              pod/orders-96cdf96b6-rm9r9      Container image "nginx:1.27-alpine" already present on machine and can be accessed by the pod
+8s          Normal   Created             pod/orders-96cdf96b6-rm9r9      Container created
+8s          Normal   Started             pod/orders-96cdf96b6-rm9r9      Container started
+8s          Normal   Started             pod/gateway-7887cd5c54-hd4fc    Container started
+8s          Normal   Created             pod/gateway-7887cd5c54-hd4fc    Container created
+8s          Normal   Pulled              pod/gateway-7887cd5c54-hd4fc    Container image "python:3.12-alpine" already present on machine and can be accessed by the pod
+
+### logs gateway-7887cd5c54-hd4fc/gateway
+$ kubectl logs gateway-7887cd5c54-hd4fc -n rr-service-selector-mismatch -c gateway --tail=30
+ERROR GET http://orders:8000/ failed: URLError(ConnectionRefusedError(111, 'Connection refused'))
+ERROR GET http://orders:8000/ failed: URLError(ConnectionRefusedError(111, 'Connection refused'))
+ERROR GET http://orders:8000/ failed: URLError(ConnectionRefusedError(111, 'Connection refused'))
+
+### logs orders-96cdf96b6-9v5xk/orders
+$ kubectl logs orders-96cdf96b6-9v5xk -n rr-service-selector-mismatch -c orders --tail=30
+/docker-entrypoint.sh: /docker-entrypoint.d/ is not empty, will attempt to perform configuration
+/docker-entrypoint.sh: Looking for shell scripts in /docker-entrypoint.d/
+/docker-entrypoint.sh: Launching /docker-entrypoint.d/10-listen-on-ipv6-by-default.sh
+10-listen-on-ipv6-by-default.sh: info: Getting the checksum of /etc/nginx/conf.d/default.conf
+10-listen-on-ipv6-by-default.sh: info: Enabled listen on IPv6 in /etc/nginx/conf.d/default.conf
+/docker-entrypoint.sh: Sourcing /docker-entrypoint.d/15-local-resolvers.envsh
+/docker-entrypoint.sh: Launching /docker-entrypoint.d/20-envsubst-on-templates.sh
+/docker-entrypoint.sh: Launching /docker-entrypoint.d/30-tune-worker-processes.sh
+/docker-entrypoint.sh: Configuration complete; ready for start up
+2026/10/02 06:15:37 [notice] 1#1: using the "epoll" event method
+2026/10/02 06:15:37 [notice] 1#1: nginx/1.27.5
+2026/10/02 06:15:37 [notice] 1#1: built by gcc 14.2.0 (Alpine 14.2.0) 
+2026/10/02 06:15:37 [notice] 1#1: OS: Linux 6.6.87.2-microsoft-standard-WSL2
+2026/10/02 06:15:37 [notice] 1#1: getrlimit(RLIMIT_NOFILE): 1048576:1048576
+2026/10/02 06:15:37 [notice] 1#1: start worker processes
+2026/10/02 06:15:37 [notice] 1#1: start worker process 30
+2026/10/02 06:15:37 [notice] 1#1: start worker process 31
+2026/10/02 06:15:37 [notice] 1#1: start worker process 32
+2026/10/02 06:15:37 [notice] 1#1: start worker process 33
+2026/10/02 06:15:37 [notice] 1#1: start worker process 34
+2026/10/02 06:15:37 [notice] 1#1: start worker process 35
+2026/10/02 06:15:37 [notice] 1#1: start worker process 36
+2026/10/02 06:15:37 [notice] 1#1: start worker process 37
+
+### logs orders-96cdf96b6-rm9r9/orders
+$ kubectl logs orders-96cdf96b6-rm9r9 -n rr-service-selector-mismatch -c orders --tail=30
+/docker-entrypoint.sh: /docker-entrypoint.d/ is not empty, will attempt to perform configuration
+/docker-entrypoint.sh: Looking for shell scripts in /docker-entrypoint.d/
+/docker-entrypoint.sh: Launching /docker-entrypoint.d/10-listen-on-ipv6-by-default.sh
+10-listen-on-ipv6-by-default.sh: info: Getting the checksum of /etc/nginx/conf.d/default.conf
+10-listen-on-ipv6-by-default.sh: info: Enabled listen on IPv6 in /etc/nginx/conf.d/default.conf
+/docker-entrypoint.sh: Sourcing /docker-entrypoint.d/15-local-resolvers.envsh
+/docker-entrypoint.sh: Launching /docker-entrypoint.d/20-envsubst-on-templates.sh
+/docker-entrypoint.sh: Launching /docker-entrypoint.d/30-tune-worker-processes.sh
+/docker-entrypoint.sh: Configuration complete; ready for start up
+2026/10/02 06:15:37 [notice] 1#1: using the "epoll" event method
+2026/10/02 06:15:37 [notice] 1#1: nginx/1.27.5
+2026/10/02 06:15:37 [notice] 1#1: built by gcc 14.2.0 (Alpine 14.2.0) 
+2026/10/02 06:15:37 [notice] 1#1: OS: Linux 6.6.87.2-microsoft-standard-WSL2
+2026/10/02 06:15:37 [notice] 1#1: getrlimit(RLIMIT_NOFILE): 1048576:1048576
+2026/10/02 06:15:37 [notice] 1#1: start worker processes
+2026/10/02 06:15:37 [notice] 1#1: start worker process 30
+2026/10/02 06:15:37 [notice] 1#1: start worker process 31
+2026/10/02 06:15:37 [notice] 1#1: start worker process 32
+2026/10/02 06:15:37 [notice] 1#1: start worker process 33
+2026/10/02 06:15:37 [notice] 1#1: start worker process 34
+2026/10/02 06:15:37 [notice] 1#1: start worker process 35
+2026/10/02 06:15:37 [notice] 1#1: start worker process 36
+2026/10/02 06:15:37 [notice] 1#1: start worker process 37
+
+### get endpointslices
+$ kubectl get endpointslices -n rr-service-selector-mismatch -l kubernetes.io/service-name=orders -o wide
+NAME           ADDRESSTYPE   PORTS     ENDPOINTS   AGE
+orders-dnw22   IPv4          <unset>   <unset>     11s
+
+### describe service
+$ kubectl describe service orders -n rr-service-selector-mismatch
+Name:                     orders
+Namespace:                rr-service-selector-mismatch
+Labels:                   <none>
+Annotations:              <none>
+Selector:                 app=orders
+Type:                     ClusterIP
+IP Family Policy:         SingleStack
+IP Families:              IPv4
+IP:                       10.43.230.146
+IPs:                      10.43.230.146
+Port:                     <unset>  8000/TCP
+TargetPort:               80/TCP
+Endpoints:                
+Session Affinity:         None
+Internal Traffic Policy:  Cluster
+Events:                   <none>
+
+### get pods
+$ kubectl get pods -n rr-service-selector-mismatch --show-labels
+NAME                       READY   STATUS    RESTARTS   AGE   LABELS
+gateway-7887cd5c54-hd4fc   1/1     Running   0          12s   app=gateway,pod-template-hash=7887cd5c54
+orders-96cdf96b6-9v5xk     1/1     Running   0          12s   app=orders-v2,pod-template-hash=96cdf96b6
+orders-96cdf96b6-rm9r9     1/1     Running   0          12s   app=orders-v2,pod-template-hash=96cdf96b6

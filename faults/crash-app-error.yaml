@@ -1,0 +1,26 @@
+id: crash-app-error
+runbook: crashloop-app-error
+description: A new version raises an unhandled exception at startup.
+manifests: |
+  apiVersion: apps/v1
+  kind: Deployment
+  metadata: {name: checkout, labels: {app: checkout}}
+  spec:
+    replicas: 1
+    selector: {matchLabels: {app: checkout}}
+    template:
+      metadata: {labels: {app: checkout}}
+      spec:
+        terminationGracePeriodSeconds: 2
+        containers:
+          - name: checkout
+            image: python:3.12-alpine
+            command: ["python", "-c"]
+            args:
+              - |
+                print("checkout-service 2.3.0 starting", flush=True)
+                print("loading pricing rules from /etc/pricing/rules.json", flush=True)
+                raise RuntimeError("failed to load pricing rules: invalid currency code 'EURO' in rule 17")
+expect:
+  - 'Back-off restarting failed container checkout'
+  - 'RuntimeError: failed to load pricing rules'

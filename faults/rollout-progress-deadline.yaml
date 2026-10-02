@@ -1,0 +1,30 @@
+id: rollout-progress-deadline
+runbook: rollout-stuck
+description: A healthy deployment is updated to a broken image and the rollout exceeds its progress deadline.
+manifests: |
+  apiVersion: apps/v1
+  kind: Deployment
+  metadata: {name: frontend, labels: {app: frontend}}
+  spec:
+    replicas: 2
+    progressDeadlineSeconds: 30
+    selector: {matchLabels: {app: frontend}}
+    template:
+      metadata: {labels: {app: frontend}}
+      spec:
+        terminationGracePeriodSeconds: 2
+        containers:
+          - name: frontend
+            image: nginx:1.27-alpine
+steps:
+  - run: [kubectl, rollout, status, deployment/frontend, -n, "{ns}", --timeout=120s]
+  - run: [kubectl, set, image, deployment/frontend, frontend=nginx:1.27.99-broken, -n, "{ns}"]
+capture:
+  - [rollout, status, deployment/frontend, -n, "{ns}", --timeout=3s]
+  - [describe, deployment, frontend, -n, "{ns}"]
+  - [get, rs, -n, "{ns}"]
+  - [rollout, history, deployment/frontend, -n, "{ns}"]
+expect:
+  - 'ProgressDeadlineExceeded'
+  - 'exceeded its progress deadline'
+timeout_s: 240

@@ -1,0 +1,306 @@
+# job-backoff-limit -> runbook/job-backoff-limit [ok]
+# A nightly export Job fails every attempt and hits its backoffLimit.
+
+### pods
+$ kubectl get pods -n rr-job-backoff-limit -o wide
+NAME                   READY   STATUS   RESTARTS   AGE   IP           NODE                     NOMINATED NODE   READINESS GATES
+nightly-export-429wh   0/1     Error    0          39s   10.42.0.13   k3d-rr-faults-server-0   <none>           <none>
+nightly-export-fqnc8   0/1     Error    0          6s    10.42.1.25   k3d-rr-faults-agent-0    <none>           <none>
+nightly-export-wfmtg   0/1     Error    0          28s   10.42.1.17   k3d-rr-faults-agent-0    <none>           <none>
+
+### describe pods
+$ kubectl describe pods -n rr-job-backoff-limit
+Name:             nightly-export-429wh
+Namespace:        rr-job-backoff-limit
+Priority:         0
+Service Account:  default
+Node:             k3d-rr-faults-server-0/172.21.0.3
+Start Time:       Fri, 02 Oct 2026 11:45:12 +0530
+Labels:           batch.kubernetes.io/controller-uid=89b4b494-4636-42c5-acd3-6ce8d2a67a58
+                  batch.kubernetes.io/job-name=nightly-export
+                  controller-uid=89b4b494-4636-42c5-acd3-6ce8d2a67a58
+                  job-name=nightly-export
+Annotations:      <none>
+Status:           Failed
+IP:               10.42.0.13
+IPs:
+  IP:           10.42.0.13
+Controlled By:  Job/nightly-export
+Containers:
+  export:
+    Container ID:  containerd://06bd0566f90dee23c963e8425b47ce0b0e565544fe02e0f9e65124a18bcb063d
+    Image:         python:3.12-alpine
+    Image ID:      sha256:979e5a8a56846771598d47ebf1f8a75b46155104e168a0b237c0783c1dedff8a
+    Port:          <none>
+    Host Port:     <none>
+    Command:
+      python
+      -c
+    Args:
+      import sys
+      print("nightly-export: exporting orders for 2026-10-01", flush=True)
+      print("ERROR: upload to s3://reports-bucket/orders/2026-10-01.csv failed: 403 AccessDenied", flush=True)
+      sys.exit(2)
+      
+    State:          Terminated
+      Reason:       Error
+      Exit Code:    2
+      Started:      Fri, 02 Oct 2026 11:45:13 +0530
+      Finished:     Fri, 02 Oct 2026 11:45:13 +0530
+    Ready:          False
+    Restart Count:  0
+    Environment:    <none>
+    Mounts:
+      /var/run/secrets/kubernetes.io/serviceaccount from kube-api-access-s2v5l (ro)
+Conditions:
+  Type                        Status
+  PodReadyToStartContainers   False 
+  Initialized                 True 
+  Ready                       False 
+  ContainersReady             False 
+  PodScheduled                True 
+Volumes:
+  kube-api-access-s2v5l:
+    Type:                    Projected (a volume that contains injected data from multiple sources)
+    TokenExpirationSeconds:  3607
+    ConfigMapName:           kube-root-ca.crt
+    Optional:                false
+    DownwardAPI:             true
+QoS Class:                   BestEffort
+Node-Selectors:              <none>
+Tolerations:                 node.kubernetes.io/not-ready:NoExecute op=Exists for 300s
+                             node.kubernetes.io/unreachable:NoExecute op=Exists for 300s
+Events:
+  Type    Reason     Age   From               Message
+  ----    ------     ----  ----               -------
+  Normal  Scheduled  40s   default-scheduler  Successfully assigned rr-job-backoff-limit/nightly-export-429wh to k3d-rr-faults-server-0
+  Normal  Pulled     40s   kubelet            Container image "python:3.12-alpine" already present on machine and can be accessed by the pod
+  Normal  Created    40s   kubelet            Container created
+  Normal  Started    39s   kubelet            Container started
+
+
+Name:             nightly-export-fqnc8
+Namespace:        rr-job-backoff-limit
+Priority:         0
+Service Account:  default
+Node:             k3d-rr-faults-agent-0/172.21.0.4
+Start Time:       Fri, 02 Oct 2026 11:45:45 +0530
+Labels:           batch.kubernetes.io/controller-uid=89b4b494-4636-42c5-acd3-6ce8d2a67a58
+                  batch.kubernetes.io/job-name=nightly-export
+                  controller-uid=89b4b494-4636-42c5-acd3-6ce8d2a67a58
+                  job-name=nightly-export
+Annotations:      <none>
+Status:           Failed
+IP:               10.42.1.25
+IPs:
+  IP:           10.42.1.25
+Controlled By:  Job/nightly-export
+Containers:
+  export:
+    Container ID:  containerd://7925e7e6ddfcb7d3993fc88ccf4296128f29bc27fb24004249a648e618685a0f
+    Image:         python:3.12-alpine
+    Image ID:      sha256:979e5a8a56846771598d47ebf1f8a75b46155104e168a0b237c0783c1dedff8a
+    Port:          <none>
+    Host Port:     <none>
+    Command:
+      python
+      -c
+    Args:
+      import sys
+      print("nightly-export: exporting orders for 2026-10-01", flush=True)
+      print("ERROR: upload to s3://reports-bucket/orders/2026-10-01.csv failed: 403 AccessDenied", flush=True)
+      sys.exit(2)
+      
+    State:          Terminated
+      Reason:       Error
+      Exit Code:    2
+      Started:      Fri, 02 Oct 2026 11:45:46 +0530
+      Finished:     Fri, 02 Oct 2026 11:45:46 +0530
+    Ready:          False
+    Restart Count:  0
+    Environment:    <none>
+    Mounts:
+      /var/run/secrets/kubernetes.io/serviceaccount from kube-api-access-9l9bk (ro)
+Conditions:
+  Type                        Status
+  PodReadyToStartContainers   False 
+  Initialized                 True 
+  Ready                       False 
+  ContainersReady             False 
+  PodScheduled                True 
+Volumes:
+  kube-api-access-9l9bk:
+    Type:                    Projected (a volume that contains injected data from multiple sources)
+    TokenExpirationSeconds:  3607
+    ConfigMapName:           kube-root-ca.crt
+    Optional:                false
+    DownwardAPI:             true
+QoS Class:                   BestEffort
+Node-Selectors:              <none>
+Tolerations:                 node.kubernetes.io/not-ready:NoExecute op=Exists for 300s
+                             node.kubernetes.io/unreachable:NoExecute op=Exists for 300s
+Events:
+  Type    Reason     Age   From               Message
+  ----    ------     ----  ----               -------
+  Normal  Scheduled  7s    default-scheduler  Successfully assigned rr-job-backoff-limit/nightly-export-fqnc8 to k3d-rr-faults-agent-0
+  Normal  Pulled     6s    kubelet            Container image "python:3.12-alpine" already present on machine and can be accessed by the pod
+  Normal  Created    6s    kubelet            Container created
+  Normal  Started    6s    kubelet            Container started
+
+
+Name:             nightly-export-wfmtg
+Namespace:        rr-job-backoff-limit
+Priority:         0
+Service Account:  default
+Node:             k3d-rr-faults-agent-0/172.21.0.4
+Start Time:       Fri, 02 Oct 2026 11:45:23 +0530
+Labels:           batch.kubernetes.io/controller-uid=89b4b494-4636-42c5-acd3-6ce8d2a67a58
+                  batch.kubernetes.io/job-name=nightly-export
+                  controller-uid=89b4b494-4636-42c5-acd3-6ce8d2a67a58
+                  job-name=nightly-export
+Annotations:      <none>
+Status:           Failed
+IP:               10.42.1.17
+IPs:
+  IP:           10.42.1.17
+Controlled By:  Job/nightly-export
+Containers:
+  export:
+    Container ID:  containerd://1e7c9d432572e948df1319be6055e1b2d354374ddaecb0bc3a3b6fd4638ca8b8
+    Image:         python:3.12-alpine
+    Image ID:      sha256:979e5a8a56846771598d47ebf1f8a75b46155104e168a0b237c0783c1dedff8a
+    Port:          <none>
+    Host Port:     <none>
+    Command:
+      python
+      -c
+    Args:
+      import sys
+      print("nightly-export: exporting orders for 2026-10-01", flush=True)
+      print("ERROR: upload to s3://reports-bucket/orders/2026-10-01.csv failed: 403 AccessDenied", flush=True)
+      sys.exit(2)
+      
+    State:          Terminated
+      Reason:       Error
+      Exit Code:    2
+      Started:      Fri, 02 Oct 2026 11:45:24 +0530
+      Finished:     Fri, 02 Oct 2026 11:45:24 +0530
+    Ready:          False
+    Restart Count:  0
+    Environment:    <none>
+    Mounts:
+      /var/run/secrets/kubernetes.io/serviceaccount from kube-api-access-tkp9d (ro)
+Conditions:
+  Type                        Status
+  PodReadyToStartContainers   False 
+  Initialized                 True 
+  Ready                       False 
+  ContainersReady             False 
+  PodScheduled                True 
+Volumes:
+  kube-api-access-tkp9d:
+    Type:                    Projected (a volume that contains injected data from multiple sources)
+    TokenExpirationSeconds:  3607
+    ConfigMapName:           kube-root-ca.crt
+    Optional:                false
+    DownwardAPI:             true
+QoS Class:                   BestEffort
+Node-Selectors:              <none>
+Tolerations:                 node.kubernetes.io/not-ready:NoExecute op=Exists for 300s
+                             node.kubernetes.io/unreachable:NoExecute op=Exists for 300s
+Events:
+  Type    Reason     Age   From               Message
+  ----    ------     ----  ----               -------
+  Normal  Scheduled  29s   default-scheduler  Successfully assigned rr-job-backoff-limit/nightly-export-wfmtg to k3d-rr-faults-agent-0
+  Normal  Pulled     29s   kubelet            Container image "python:3.12-alpine" already present on machine and can be accessed by the pod
+  Normal  Created    29s   kubelet            Container created
+  Normal  Started    28s   kubelet            Container started
+
+### events
+$ kubectl get events -n rr-job-backoff-limit --sort-by=.lastTimestamp
+LAST SEEN   TYPE      REASON                 OBJECT                     MESSAGE
+30s         Normal    Scheduled              pod/nightly-export-wfmtg   Successfully assigned rr-job-backoff-limit/nightly-export-wfmtg to k3d-rr-faults-agent-0
+40s         Normal    Scheduled              pod/nightly-export-429wh   Successfully assigned rr-job-backoff-limit/nightly-export-429wh to k3d-rr-faults-server-0
+7s          Normal    Scheduled              pod/nightly-export-fqnc8   Successfully assigned rr-job-backoff-limit/nightly-export-fqnc8 to k3d-rr-faults-agent-0
+41s         Normal    Created                pod/nightly-export-429wh   Container created
+41s         Normal    SuccessfulCreate       job/nightly-export         Created pod: nightly-export-429wh
+41s         Normal    Pulled                 pod/nightly-export-429wh   Container image "python:3.12-alpine" already present on machine and can be accessed by the pod
+40s         Normal    Started                pod/nightly-export-429wh   Container started
+30s         Normal    Pulled                 pod/nightly-export-wfmtg   Container image "python:3.12-alpine" already present on machine and can be accessed by the pod
+30s         Normal    Created                pod/nightly-export-wfmtg   Container created
+30s         Normal    SuccessfulCreate       job/nightly-export         Created pod: nightly-export-wfmtg
+29s         Normal    Started                pod/nightly-export-wfmtg   Container started
+8s          Normal    SuccessfulCreate       job/nightly-export         Created pod: nightly-export-fqnc8
+7s          Normal    Created                pod/nightly-export-fqnc8   Container created
+7s          Normal    Started                pod/nightly-export-fqnc8   Container started
+7s          Normal    Pulled                 pod/nightly-export-fqnc8   Container image "python:3.12-alpine" already present on machine and can be accessed by the pod
+5s          Warning   BackoffLimitExceeded   job/nightly-export         Job has reached the specified backoff limit
+
+### logs nightly-export-429wh/export
+$ kubectl logs nightly-export-429wh -n rr-job-backoff-limit -c export --tail=30
+nightly-export: exporting orders for 2026-10-01
+ERROR: upload to s3://reports-bucket/orders/2026-10-01.csv failed: 403 AccessDenied
+
+### logs nightly-export-fqnc8/export
+$ kubectl logs nightly-export-fqnc8 -n rr-job-backoff-limit -c export --tail=30
+nightly-export: exporting orders for 2026-10-01
+ERROR: upload to s3://reports-bucket/orders/2026-10-01.csv failed: 403 AccessDenied
+
+### logs nightly-export-wfmtg/export
+$ kubectl logs nightly-export-wfmtg -n rr-job-backoff-limit -c export --tail=30
+nightly-export: exporting orders for 2026-10-01
+ERROR: upload to s3://reports-bucket/orders/2026-10-01.csv failed: 403 AccessDenied
+
+### get jobs
+$ kubectl get jobs -n rr-job-backoff-limit
+NAME             STATUS   COMPLETIONS   DURATION   AGE
+nightly-export   Failed   0/1           43s        43s
+
+### describe job
+$ kubectl describe job nightly-export -n rr-job-backoff-limit
+Name:             nightly-export
+Namespace:        rr-job-backoff-limit
+Selector:         batch.kubernetes.io/controller-uid=89b4b494-4636-42c5-acd3-6ce8d2a67a58
+Labels:           batch.kubernetes.io/controller-uid=89b4b494-4636-42c5-acd3-6ce8d2a67a58
+                  batch.kubernetes.io/job-name=nightly-export
+                  controller-uid=89b4b494-4636-42c5-acd3-6ce8d2a67a58
+                  job-name=nightly-export
+Annotations:      <none>
+Parallelism:      1
+Completions:      1
+Completion Mode:  NonIndexed
+Suspend:          false
+Backoff Limit:    2
+Start Time:       Fri, 02 Oct 2026 11:45:11 +0530
+Pods Statuses:    0 Active (0 Ready) / 0 Succeeded / 3 Failed
+Pod Template:
+  Labels:  batch.kubernetes.io/controller-uid=89b4b494-4636-42c5-acd3-6ce8d2a67a58
+           batch.kubernetes.io/job-name=nightly-export
+           controller-uid=89b4b494-4636-42c5-acd3-6ce8d2a67a58
+           job-name=nightly-export
+  Containers:
+   export:
+    Image:      python:3.12-alpine
+    Port:       <none>
+    Host Port:  <none>
+    Command:
+      python
+      -c
+    Args:
+      import sys
+      print("nightly-export: exporting orders for 2026-10-01", flush=True)
+      print("ERROR: upload to s3://reports-bucket/orders/2026-10-01.csv failed: 403 AccessDenied", flush=True)
+      sys.exit(2)
+      
+    Environment:   <none>
+    Mounts:        <none>
+  Volumes:         <none>
+  Node-Selectors:  <none>
+  Tolerations:     <none>
+Events:
+  Type     Reason                Age   From            Message
+  ----     ------                ----  ----            -------
+  Normal   SuccessfulCreate      42s   job-controller  Created pod: nightly-export-429wh
+  Normal   SuccessfulCreate      31s   job-controller  Created pod: nightly-export-wfmtg
+  Normal   SuccessfulCreate      9s    job-controller  Created pod: nightly-export-fqnc8
+  Warning  BackoffLimitExceeded  6s    job-controller  Job has reached the specified backoff limit

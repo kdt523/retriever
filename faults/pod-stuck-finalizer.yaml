@@ -1,0 +1,25 @@
+id: pod-stuck-finalizer
+runbook: pod-stuck-terminating
+description: A pod with a finalizer whose controller is gone stays Terminating after deletion.
+manifests: |
+  apiVersion: v1
+  kind: Pod
+  metadata:
+    name: ledger-0
+    labels: {app: ledger}
+    finalizers: [example.com/ledger-cleanup]
+  spec:
+    terminationGracePeriodSeconds: 2
+    containers:
+      - name: ledger
+        image: nginx:1.27-alpine
+steps:
+  - run: [kubectl, wait, --for=condition=Ready, pod/ledger-0, -n, "{ns}", --timeout=90s]
+  - run: [kubectl, delete, pod, ledger-0, -n, "{ns}", --wait=false]
+capture:
+  - [get, pod, ledger-0, -n, "{ns}", -o, "jsonpath={.metadata.deletionTimestamp} {.metadata.finalizers}"]
+expect:
+  - 'Terminating'
+  - 'example\.com/ledger-cleanup'
+cleanup:
+  - run: [kubectl, patch, pod, ledger-0, -n, "{ns}", --type=merge, -p, '{"metadata":{"finalizers":null}}']

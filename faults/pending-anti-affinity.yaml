@@ -1,0 +1,25 @@
+id: pending-anti-affinity
+runbook: pending-taints-affinity
+description: Required pod anti-affinity on hostname with 3 replicas on a 2-node cluster.
+manifests: |
+  apiVersion: apps/v1
+  kind: Deployment
+  metadata: {name: cache, labels: {app: cache}}
+  spec:
+    replicas: 3
+    selector: {matchLabels: {app: cache}}
+    template:
+      metadata: {labels: {app: cache}}
+      spec:
+        terminationGracePeriodSeconds: 2
+        affinity:
+          podAntiAffinity:
+            requiredDuringSchedulingIgnoredDuringExecution:
+              - labelSelector: {matchLabels: {app: cache}}
+                topologyKey: kubernetes.io/hostname
+        containers:
+          - name: cache
+            image: nginx:1.27-alpine
+expect:
+  - 'FailedScheduling'
+  - "didn't match pod anti-affinity rules"

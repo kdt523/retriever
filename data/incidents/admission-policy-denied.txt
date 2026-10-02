@@ -1,0 +1,14 @@
+# admission-policy-denied -> runbook/admission-denied [ok]
+# A ValidatingAdmissionPolicy rejects a deployment with too many replicas.
+
+### pods
+$ kubectl get pods -n rr-admission-policy-denied -o wide
+No resources found in rr-admission-policy-denied namespace.
+
+### events
+$ kubectl get events -n rr-admission-policy-denied --sort-by=.lastTimestamp
+No resources found in rr-admission-policy-denied namespace.
+
+### create deployment
+$ kubectl create deployment batch-workers --image=nginx:1.27-alpine --replicas=10 -n rr-admission-policy-denied --dry-run=server
+error: failed to create deployment: deployments.apps "batch-workers" is forbidden: ValidatingAdmissionPolicy 'max-replicas-rr-admission-policy-denied' with binding 'max-replicas-rr-admission-policy-denied' denied request: replicas must be 5 or fewer in this namespace

@@ -1,0 +1,42 @@
+{
+ "id": "volume-node-affinity",
+ "runbook": "volume-node-affinity-conflict",
+ "description": "A local volume is bound on one node; the next pod using it is pinned to another node.",
+ "status": "ok",
+ "missing": [],
+ "error": "",
+ "captured_at": "2026-10-02T06:29:37+00:00",
+ "seconds": 16.7,
+ "versions": {
+  "client": "v1.34.1",
+  "server": "v1.35.5+k3s1"
+ },
+ "namespace": "rr-volume-node-affinity",
+ "sections": [
+  {
+   "title": "pods",
+   "command": "kubectl get pods -n rr-volume-node-affinity -o wide",
+   "output": "NAME                      READY   STATUS    RESTARTS   AGE   IP       NODE     NOMINATED NODE   READINESS GATES\nreports-6bc69c97c-cbxjr   0/1     Pending   0          0s    <none>   <none>   <none>           <none>"
+  },
+  {
+   "title": "describe pods",
+   "command": "kubectl describe pods -n rr-volume-node-affinity",
+   "output": "Name:             reports-6bc69c97c-cbxjr\nNamespace:        rr-volume-node-affinity\nPriority:         0\nService Account:  default\nNode:             <none>\nLabels:           app=reports\n                  pod-template-hash=6bc69c97c\nAnnotations:      <none>\nStatus:           Pending\nIP:               \nIPs:              <none>\nControlled By:    ReplicaSet/reports-6bc69c97c\nContainers:\n  reports:\n    Image:        nginx:1.27-alpine\n    Port:         <none>\n    Host Port:    <none>\n    Environment:  <none>\n    Mounts:\n      /data from data (rw)\n      /var/run/secrets/kubernetes.io/serviceaccount from kube-api-access-gc6p5 (ro)\nConditions:\n  Type           Status\n  PodScheduled   False \nVolumes:\n  data:\n    Type:       PersistentVolumeClaim (a reference to a PersistentVolumeClaim in the same namespace)\n    ClaimName:  reports-data\n    ReadOnly:   false\n  kube-api-access-gc6p5:\n    Type:                    Projected (a volume that contains injected data from multiple sources)\n    TokenExpirationSeconds:  3607\n    ConfigMapName:           kube-root-ca.crt\n    Optional:                false\n    DownwardAPI:             true\nQoS Class:                   BestEffort\nNode-Selectors:              kubernetes.io/hostname=k3d-rr-faults-server-0\nTolerations:                 node.kubernetes.io/not-ready:NoExecute op=Exists for 300s\n                             node.kubernetes.io/unreachable:NoExecute op=Exists for 300s\nEvents:\n  Type     Reason            Age   From               Message\n  ----     ------            ----  ----               -------\n  Warning  FailedScheduling  0s    default-scheduler  0/2 nodes are available: 1 node(s) didn't match PersistentVolume's node affinity, 1 node(s) didn't match Pod's node affinity/selector. no new claims to deallocate, preemption: 0/2 nodes are available: 2 Preemption is not helpful for scheduling."
+  },
+  {
+   "title": "events",
+   "command": "kubectl get events -n rr-volume-node-affinity --sort-by=.lastTimestamp",
+   "output": "LAST SEEN   TYPE      REASON                  OBJECT                               MESSAGE\n0s          Warning   FailedScheduling        pod/reports-6bc69c97c-cbxjr          0/2 nodes are available: 1 node(s) didn't match PersistentVolume's node affinity, 1 node(s) didn't match Pod's node affinity/selector. no new claims to deallocate, preemption: 0/2 nodes are available: 2 Preemption is not helpful for scheduling.\n8s          Normal    Scheduled               pod/writer                           Successfully assigned rr-volume-node-affinity/writer to k3d-rr-faults-agent-0\n13s         Normal    WaitForFirstConsumer    persistentvolumeclaim/reports-data   waiting for first consumer to be created before binding\n13s         Normal    ExternalProvisioning    persistentvolumeclaim/reports-data   Waiting for a volume to be created either by the external provisioner 'rancher.io/local-path' or manually by the system administrator. If volume creation is delayed, please verify that the provisioner is running and correctly registered.\n13s         Normal    Provisioning            persistentvolumeclaim/reports-data   External provisioner is provisioning volume for claim \"rr-volume-node-affinity/reports-data\"\n10s         Normal    ProvisioningSucceeded   persistentvolumeclaim/reports-data   Successfully provisioned volume pvc-0931e181-63a9-4df4-b939-2e5dfe9a6c05\n8s          Normal    Pulled                  pod/writer                           Container image \"busybox:1.36\" already present on machine and can be accessed by the pod\n8s          Normal    Created                 pod/writer                           Container created\n7s          Normal    Started                 pod/writer                           Container started\n4s          Normal    Killing                 pod/writer                           Stopping container writer\n1s          Normal    SuccessfulCreate        replicaset/reports-6bc69c97c         Created pod: reports-6bc69c97c-cbxjr\n1s          Normal    ScalingReplicaSet       deployment/reports                   Scaled up replica set reports-6bc69c97c from 0 to 1"
+  },
+  {
+   "title": "get pvc",
+   "command": "kubectl get pvc -n rr-volume-node-affinity",
+   "output": "NAME           STATUS   VOLUME                                     CAPACITY   ACCESS MODES   STORAGECLASS   VOLUMEATTRIBUTESCLASS   AGE\nreports-data   Bound    pvc-0931e181-63a9-4df4-b939-2e5dfe9a6c05   1Gi        RWO            local-path     <unset>                 13s"
+  },
+  {
+   "title": "get pv",
+   "command": "kubectl get pv -o custom-columns=NAME:.metadata.name,CLAIM:.spec.claimRef.name,NODE-AFFINITY:.spec.nodeAffinity.required.nodeSelectorTerms[*].matchExpressions[*].values",
+   "output": "NAME                                       CLAIM          NODE-AFFINITY\npvc-0931e181-63a9-4df4-b939-2e5dfe9a6c05   reports-data   [k3d-rr-faults-agent-0]"
+  }
+ ]
+}

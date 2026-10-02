@@ -1,0 +1,22 @@
+id: pending-insufficient-memory
+runbook: pending-insufficient-resources
+description: A typo makes the memory request 64Gi instead of 64Mi; no node can fit it.
+manifests: |
+  apiVersion: apps/v1
+  kind: Deployment
+  metadata: {name: analytics, labels: {app: analytics}}
+  spec:
+    replicas: 1
+    selector: {matchLabels: {app: analytics}}
+    template:
+      metadata: {labels: {app: analytics}}
+      spec:
+        terminationGracePeriodSeconds: 2
+        containers:
+          - name: analytics
+            image: nginx:1.27-alpine
+            resources:
+              requests: {memory: 64Gi, cpu: 100m}
+expect:
+  - 'FailedScheduling'
+  - 'Insufficient memory'

@@ -1,0 +1,27 @@
+id: crash-missing-env
+runbook: crashloop-missing-config
+description: A required environment variable was removed in a deploy; the app exits at startup.
+manifests: |
+  apiVersion: apps/v1
+  kind: Deployment
+  metadata: {name: orders, labels: {app: orders}}
+  spec:
+    replicas: 1
+    selector: {matchLabels: {app: orders}}
+    template:
+      metadata: {labels: {app: orders}}
+      spec:
+        terminationGracePeriodSeconds: 2
+        containers:
+          - name: orders
+            image: python:3.12-alpine
+            env: [{name: LOG_LEVEL, value: info}]
+            command: ["python", "-c"]
+            args:
+              - |
+                import os
+                print("orders-api starting", flush=True)
+                database_url = os.environ["DATABASE_URL"]
+expect:
+  - 'Back-off restarting failed container'
+  - "KeyError: 'DATABASE_URL'"

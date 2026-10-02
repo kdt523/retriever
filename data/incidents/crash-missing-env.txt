@@ -1,0 +1,97 @@
+# crash-missing-env -> runbook/crashloop-missing-config [ok]
+# A required environment variable was removed in a deploy; the app exits at startup.
+
+### pods
+$ kubectl get pods -n rr-crash-missing-env -o wide
+NAME                      READY   STATUS             RESTARTS     AGE   IP          NODE                    NOMINATED NODE   READINESS GATES
+orders-57dfd44db7-qkm2w   0/1     CrashLoopBackOff   1 (3s ago)   7s    10.42.1.8   k3d-rr-faults-agent-0   <none>           <none>
+
+### describe pods
+$ kubectl describe pods -n rr-crash-missing-env
+Name:             orders-57dfd44db7-qkm2w
+Namespace:        rr-crash-missing-env
+Priority:         0
+Service Account:  default
+Node:             k3d-rr-faults-agent-0/172.21.0.4
+Start Time:       Fri, 02 Oct 2026 11:45:00 +0530
+Labels:           app=orders
+                  pod-template-hash=57dfd44db7
+Annotations:      <none>
+Status:           Running
+IP:               10.42.1.8
+IPs:
+  IP:           10.42.1.8
+Controlled By:  ReplicaSet/orders-57dfd44db7
+Containers:
+  orders:
+    Container ID:  containerd://11856274d0d851affc6da5962b15415f23905b0dbcaa53b4e3f869c6b47c7212
+    Image:         python:3.12-alpine
+    Image ID:      sha256:979e5a8a56846771598d47ebf1f8a75b46155104e168a0b237c0783c1dedff8a
+    Port:          <none>
+    Host Port:     <none>
+    Command:
+      python
+      -c
+    Args:
+      import os
+      print("orders-api starting", flush=True)
+      database_url = os.environ["DATABASE_URL"]
+      
+    State:          Waiting
+      Reason:       CrashLoopBackOff
+    Last State:     Terminated
+      Reason:       Error
+      Exit Code:    1
+      Started:      Fri, 02 Oct 2026 11:45:04 +0530
+      Finished:     Fri, 02 Oct 2026 11:45:04 +0530
+    Ready:          False
+    Restart Count:  1
+    Environment:
+      LOG_LEVEL:  info
+    Mounts:
+      /var/run/secrets/kubernetes.io/serviceaccount from kube-api-access-jhkc7 (ro)
+Conditions:
+  Type                        Status
+  PodReadyToStartContainers   True 
+  Initialized                 True 
+  Ready                       False 
+  ContainersReady             False 
+  PodScheduled                True 
+Volumes:
+  kube-api-access-jhkc7:
+    Type:                    Projected (a volume that contains injected data from multiple sources)
+    TokenExpirationSeconds:  3607
+    ConfigMapName:           kube-root-ca.crt
+    Optional:                false
+    DownwardAPI:             true
+QoS Class:                   BestEffort
+Node-Selectors:              <none>
+Tolerations:                 node.kubernetes.io/not-ready:NoExecute op=Exists for 300s
+                             node.kubernetes.io/unreachable:NoExecute op=Exists for 300s
+Events:
+  Type     Reason     Age              From               Message
+  ----     ------     ----             ----               -------
+  Normal   Scheduled  7s               default-scheduler  Successfully assigned rr-crash-missing-env/orders-57dfd44db7-qkm2w to k3d-rr-faults-agent-0
+  Normal   Pulled     5s (x2 over 6s)  kubelet            Container image "python:3.12-alpine" already present on machine and can be accessed by the pod
+  Normal   Created    5s (x2 over 5s)  kubelet            Container created
+  Normal   Started    4s (x2 over 5s)  kubelet            Container started
+  Warning  BackOff    3s (x2 over 4s)  kubelet            Back-off restarting failed container orders in pod orders-57dfd44db7-qkm2w_rr-crash-missing-env(09b8972e-40ab-48a0-a578-ba4d4627ed89)
+
+### events
+$ kubectl get events -n rr-crash-missing-env --sort-by=.lastTimestamp
+LAST SEEN   TYPE      REASON              OBJECT                         MESSAGE
+7s          Normal    Scheduled           pod/orders-57dfd44db7-qkm2w    Successfully assigned rr-crash-missing-env/orders-57dfd44db7-qkm2w to k3d-rr-faults-agent-0
+8s          Normal    SuccessfulCreate    replicaset/orders-57dfd44db7   Created pod: orders-57dfd44db7-qkm2w
+8s          Normal    ScalingReplicaSet   deployment/orders              Scaled up replica set orders-57dfd44db7 from 0 to 1
+5s          Normal    Pulled              pod/orders-57dfd44db7-qkm2w    Container image "python:3.12-alpine" already present on machine and can be accessed by the pod
+5s          Normal    Created             pod/orders-57dfd44db7-qkm2w    Container created
+4s          Normal    Started             pod/orders-57dfd44db7-qkm2w    Container started
+3s          Warning   BackOff             pod/orders-57dfd44db7-qkm2w    Back-off restarting failed container orders in pod orders-57dfd44db7-qkm2w_rr-crash-missing-env(09b8972e-40ab-48a0-a578-ba4d4627ed89)
+
+### logs orders-57dfd44db7-qkm2w/orders (previous)
+$ kubectl logs orders-57dfd44db7-qkm2w -n rr-crash-missing-env -c orders --tail=30 --previous
+Traceback (most recent call last):
+  File "<string>", line 3, in <module>
+  File "<frozen os>", line 714, in __getitem__
+KeyError: 'DATABASE_URL'
+orders-api starting

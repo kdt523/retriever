@@ -1,0 +1,21 @@
+id: config-missing-configmap
+runbook: create-container-config-error
+description: envFrom references a ConfigMap that was never applied to this namespace.
+manifests: |
+  apiVersion: apps/v1
+  kind: Deployment
+  metadata: {name: payments, labels: {app: payments}}
+  spec:
+    replicas: 1
+    selector: {matchLabels: {app: payments}}
+    template:
+      metadata: {labels: {app: payments}}
+      spec:
+        terminationGracePeriodSeconds: 2
+        containers:
+          - name: payments
+            image: nginx:1.27-alpine
+            envFrom: [{configMapRef: {name: payments-config}}]
+expect:
+  - 'CreateContainerConfigError'
+  - 'configmap "payments-config" not found'

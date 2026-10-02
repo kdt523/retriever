@@ -1,0 +1,113 @@
+# oom-killed -> runbook/oomkilled [ok]
+# A cache warmup allocates more memory than the 64Mi limit.
+
+### pods
+$ kubectl get pods -n rr-oom-killed -o wide
+NAME                         READY   STATUS    RESTARTS     AGE   IP           NODE                    NOMINATED NODE   READINESS GATES
+inventory-564749bf55-mn7kt   1/1     Running   1 (3s ago)   6s    10.42.1.37   k3d-rr-faults-agent-0   <none>           <none>
+
+### describe pods
+$ kubectl describe pods -n rr-oom-killed
+Name:             inventory-564749bf55-mn7kt
+Namespace:        rr-oom-killed
+Priority:         0
+Service Account:  default
+Node:             k3d-rr-faults-agent-0/172.21.0.2
+Start Time:       Fri, 02 Oct 2026 12:04:43 +0530
+Labels:           app=inventory
+                  pod-template-hash=564749bf55
+Annotations:      <none>
+Status:           Running
+IP:               10.42.1.37
+IPs:
+  IP:           10.42.1.37
+Controlled By:  ReplicaSet/inventory-564749bf55
+Containers:
+  inventory:
+    Container ID:  containerd://48f5a6d29968ec34e0dc03615f52d8dbcc41482f6ee32a6432ec9fffd256b721
+    Image:         python:3.12-alpine
+    Image ID:      sha256:979e5a8a56846771598d47ebf1f8a75b46155104e168a0b237c0783c1dedff8a
+    Port:          <none>
+    Host Port:     <none>
+    Command:
+      python
+      -c
+    Args:
+      import time
+      chunks = []
+      for i in range(1, 60):
+          chunks.append(b"x" * (8 * 1024 * 1024))
+          print(f"inventory cache warmup: {i * 8} MB loaded", flush=True)
+          time.sleep(0.2)
+      
+    State:          Terminated
+      Reason:       OOMKilled
+      Exit Code:    137
+      Started:      Fri, 02 Oct 2026 12:04:47 +0530
+      Finished:     Fri, 02 Oct 2026 12:04:49 +0530
+    Last State:     Terminated
+      Reason:       OOMKilled
+      Exit Code:    137
+      Started:      Fri, 02 Oct 2026 12:04:45 +0530
+      Finished:     Fri, 02 Oct 2026 12:04:46 +0530
+    Ready:          False
+    Restart Count:  1
+    Limits:
+      memory:  64Mi
+    Requests:
+      cpu:        50m
+      memory:     32Mi
+    Environment:  <none>
+    Mounts:
+      /var/run/secrets/kubernetes.io/serviceaccount from kube-api-access-9kc9d (ro)
+Conditions:
+  Type                        Status
+  PodReadyToStartContainers   True 
+  Initialized                 True 
+  Ready                       False 
+  ContainersReady             False 
+  PodScheduled                True 
+Volumes:
+  kube-api-access-9kc9d:
+    Type:                    Projected (a volume that contains injected data from multiple sources)
+    TokenExpirationSeconds:  3607
+    ConfigMapName:           kube-root-ca.crt
+    Optional:                false
+    DownwardAPI:             true
+QoS Class:                   Burstable
+Node-Selectors:              <none>
+Tolerations:                 node.kubernetes.io/not-ready:NoExecute op=Exists for 300s
+                             node.kubernetes.io/unreachable:NoExecute op=Exists for 300s
+Events:
+  Type     Reason     Age              From               Message
+  ----     ------     ----             ----               -------
+  Normal   Scheduled  7s               default-scheduler  Successfully assigned rr-oom-killed/inventory-564749bf55-mn7kt to k3d-rr-faults-agent-0
+  Normal   Pulled     3s (x2 over 5s)  kubelet            Container image "python:3.12-alpine" already present on machine and can be accessed by the pod
+  Normal   Created    3s (x2 over 5s)  kubelet            Container created
+  Normal   Started    3s (x2 over 5s)  kubelet            Container started
+  Warning  BackOff    1s               kubelet            Back-off restarting failed container inventory in pod inventory-564749bf55-mn7kt_rr-oom-killed(681d0337-535c-4106-a2ad-eac8c3caf9da)
+
+### events
+$ kubectl get events -n rr-oom-killed --sort-by=.lastTimestamp
+LAST SEEN   TYPE      REASON              OBJECT                            MESSAGE
+7s          Normal    Scheduled           pod/inventory-564749bf55-mn7kt    Successfully assigned rr-oom-killed/inventory-564749bf55-mn7kt to k3d-rr-faults-agent-0
+7s          Normal    SuccessfulCreate    replicaset/inventory-564749bf55   Created pod: inventory-564749bf55-mn7kt
+7s          Normal    ScalingReplicaSet   deployment/inventory              Scaled up replica set inventory-564749bf55 from 0 to 1
+3s          Normal    Pulled              pod/inventory-564749bf55-mn7kt    Container image "python:3.12-alpine" already present on machine and can be accessed by the pod
+3s          Normal    Created             pod/inventory-564749bf55-mn7kt    Container created
+3s          Normal    Started             pod/inventory-564749bf55-mn7kt    Container started
+1s          Warning   BackOff             pod/inventory-564749bf55-mn7kt    Back-off restarting failed container inventory in pod inventory-564749bf55-mn7kt_rr-oom-killed(681d0337-535c-4106-a2ad-eac8c3caf9da)
+
+### logs inventory-564749bf55-mn7kt/inventory (previous)
+$ kubectl logs inventory-564749bf55-mn7kt -n rr-oom-killed -c inventory --tail=30 --previous
+unable to retrieve container logs for containerd://98310827d4caa94029d77bcc8d875de3854d12db8d1c23d4e7cba4f3d672074c
+
+### logs inventory-564749bf55-mn7kt/inventory
+$ kubectl logs inventory-564749bf55-mn7kt -n rr-oom-killed -c inventory --tail=30
+inventory cache warmup: 8 MB loaded
+inventory cache warmup: 16 MB loaded
+inventory cache warmup: 24 MB loaded
+inventory cache warmup: 32 MB loaded
+inventory cache warmup: 40 MB loaded
+inventory cache warmup: 48 MB loaded
+inventory cache warmup: 56 MB loaded

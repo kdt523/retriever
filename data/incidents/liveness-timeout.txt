@@ -1,0 +1,99 @@
+# liveness-timeout -> runbook/liveness-probe-restarts [ok]
+# The /healthz handler takes 3s but the liveness probe times out after 1s.
+
+### pods
+$ kubectl get pods -n rr-liveness-timeout -o wide
+NAME                          READY   STATUS    RESTARTS   AGE   IP           NODE                    NOMINATED NODE   READINESS GATES
+search-api-79d8b9956f-4bf7s   1/1     Running   0          14s   10.42.1.14   k3d-rr-faults-agent-0   <none>           <none>
+
+### describe pods
+$ kubectl describe pods -n rr-liveness-timeout
+Name:             search-api-79d8b9956f-4bf7s
+Namespace:        rr-liveness-timeout
+Priority:         0
+Service Account:  default
+Node:             k3d-rr-faults-agent-0/172.21.0.4
+Start Time:       Fri, 02 Oct 2026 11:45:17 +0530
+Labels:           app=search-api
+                  pod-template-hash=79d8b9956f
+Annotations:      <none>
+Status:           Running
+IP:               10.42.1.14
+IPs:
+  IP:           10.42.1.14
+Controlled By:  ReplicaSet/search-api-79d8b9956f
+Containers:
+  search-api:
+    Container ID:  containerd://7141a2f37fe0cc4f9bb166e2a3da20a082a1956a8445573adc090d1cad8ed250
+    Image:         python:3.12-alpine
+    Image ID:      sha256:979e5a8a56846771598d47ebf1f8a75b46155104e168a0b237c0783c1dedff8a
+    Port:          8080/TCP
+    Host Port:     0/TCP
+    Command:
+      python
+      -c
+    Args:
+      import http.server, time
+      class Handler(http.server.BaseHTTPRequestHandler):
+          def do_GET(self):
+              if self.path == "/healthz":
+                  time.sleep(3)
+              self.send_response(200)
+              self.end_headers()
+              self.wfile.write(b"ok")
+          def log_message(self, *args):
+              pass
+      print("search-api listening on :8080", flush=True)
+      http.server.ThreadingHTTPServer(("", 8080), Handler).serve_forever()
+      
+    State:          Running
+      Started:      Fri, 02 Oct 2026 11:45:20 +0530
+    Ready:          True
+    Restart Count:  0
+    Liveness:       http-get http://:8080/healthz delay=0s timeout=1s period=5s #success=1 #failure=2
+    Environment:    <none>
+    Mounts:
+      /var/run/secrets/kubernetes.io/serviceaccount from kube-api-access-wpv2s (ro)
+Conditions:
+  Type                        Status
+  PodReadyToStartContainers   True 
+  Initialized                 True 
+  Ready                       True 
+  ContainersReady             True 
+  PodScheduled                True 
+Volumes:
+  kube-api-access-wpv2s:
+    Type:                    Projected (a volume that contains injected data from multiple sources)
+    TokenExpirationSeconds:  3607
+    ConfigMapName:           kube-root-ca.crt
+    Optional:                false
+    DownwardAPI:             true
+QoS Class:                   BestEffort
+Node-Selectors:              <none>
+Tolerations:                 node.kubernetes.io/not-ready:NoExecute op=Exists for 300s
+                             node.kubernetes.io/unreachable:NoExecute op=Exists for 300s
+Events:
+  Type     Reason     Age               From               Message
+  ----     ------     ----              ----               -------
+  Normal   Scheduled  14s               default-scheduler  Successfully assigned rr-liveness-timeout/search-api-79d8b9956f-4bf7s to k3d-rr-faults-agent-0
+  Normal   Created    12s               kubelet            Container created
+  Normal   Started    11s               kubelet            Container started
+  Warning  Unhealthy  2s (x2 over 7s)   kubelet            Liveness probe failed: Get "http://10.42.1.14:8080/healthz": context deadline exceeded (Client.Timeout exceeded while awaiting headers)
+  Normal   Killing    2s                kubelet            Container search-api failed liveness probe, will be restarted
+  Normal   Pulled     0s (x2 over 12s)  kubelet            Container image "python:3.12-alpine" already present on machine and can be accessed by the pod
+
+### events
+$ kubectl get events -n rr-liveness-timeout --sort-by=.lastTimestamp
+LAST SEEN   TYPE      REASON              OBJECT                             MESSAGE
+14s         Normal    Scheduled           pod/search-api-79d8b9956f-4bf7s    Successfully assigned rr-liveness-timeout/search-api-79d8b9956f-4bf7s to k3d-rr-faults-agent-0
+15s         Normal    SuccessfulCreate    replicaset/search-api-79d8b9956f   Created pod: search-api-79d8b9956f-4bf7s
+15s         Normal    ScalingReplicaSet   deployment/search-api              Scaled up replica set search-api-79d8b9956f from 0 to 1
+12s         Normal    Started             pod/search-api-79d8b9956f-4bf7s    Container started
+3s          Warning   Unhealthy           pod/search-api-79d8b9956f-4bf7s    Liveness probe failed: Get "http://10.42.1.14:8080/healthz": context deadline exceeded (Client.Timeout exceeded while awaiting headers)
+3s          Normal    Killing             pod/search-api-79d8b9956f-4bf7s    Container search-api failed liveness probe, will be restarted
+1s          Normal    Pulled              pod/search-api-79d8b9956f-4bf7s    Container image "python:3.12-alpine" already present on machine and can be accessed by the pod
+1s          Normal    Created             pod/search-api-79d8b9956f-4bf7s    Container created
+
+### logs search-api-79d8b9956f-4bf7s/search-api
+$ kubectl logs search-api-79d8b9956f-4bf7s -n rr-liveness-timeout -c search-api --tail=30
+

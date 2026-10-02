@@ -1,0 +1,30 @@
+id: init-migration-fails
+runbook: init-container-stuck
+description: A database migration init container fails, so the app container never starts.
+manifests: |
+  apiVersion: apps/v1
+  kind: Deployment
+  metadata: {name: accounts, labels: {app: accounts}}
+  spec:
+    replicas: 1
+    selector: {matchLabels: {app: accounts}}
+    template:
+      metadata: {labels: {app: accounts}}
+      spec:
+        terminationGracePeriodSeconds: 2
+        initContainers:
+          - name: migrate
+            image: python:3.12-alpine
+            command: ["python", "-c"]
+            args:
+              - |
+                import sys
+                print("applying migration 0042_add_account_status", flush=True)
+                print('ERROR: relation "accounts_status" already exists', flush=True)
+                sys.exit(1)
+        containers:
+          - name: accounts
+            image: nginx:1.27-alpine
+expect:
+  - 'Init:CrashLoopBackOff|Init:Error'
+  - 'relation "accounts_status" already exists'

@@ -1,0 +1,37 @@
+id: statefulset-update-stuck
+runbook: statefulset-rollout-stuck
+description: A StatefulSet is updated to a broken image; the highest ordinal never becomes Ready and the update halts.
+manifests: |
+  apiVersion: v1
+  kind: Service
+  metadata: {name: db}
+  spec:
+    clusterIP: None
+    selector: {app: db}
+    ports: [{port: 80}]
+  ---
+  apiVersion: apps/v1
+  kind: StatefulSet
+  metadata: {name: db}
+  spec:
+    serviceName: db
+    replicas: 3
+    selector: {matchLabels: {app: db}}
+    template:
+      metadata: {labels: {app: db}}
+      spec:
+        terminationGracePeriodSeconds: 2
+        containers:
+          - name: db
+            image: nginx:1.27-alpine
+steps:
+  - run: [kubectl, rollout, status, statefulset/db, -n, "{ns}", --timeout=180s]
+  - run: [kubectl, set, image, statefulset/db, db=nginx:1.27.99-broken, -n, "{ns}"]
+capture:
+  - [rollout, status, statefulset/db, -n, "{ns}", --timeout=3s]
+  - [get, statefulset, db, -n, "{ns}"]
+  - [get, statefulset, db, -n, "{ns}", -o, "jsonpath=currentRevision={.status.currentRevision} updateRevision={.status.updateRevision}"]
+expect:
+  - '(?i)waiting for'
+  - 'db-2 .*(ErrImagePull|ImagePullBackOff)'
+timeout_s: 300

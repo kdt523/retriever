@@ -1,0 +1,21 @@
+id: start-error-permission-denied
+runbook: container-start-error
+description: The entrypoint exists but is not executable.
+manifests: |
+  apiVersion: apps/v1
+  kind: Deployment
+  metadata: {name: reporter, labels: {app: reporter}}
+  spec:
+    replicas: 1
+    selector: {matchLabels: {app: reporter}}
+    template:
+      metadata: {labels: {app: reporter}}
+      spec:
+        terminationGracePeriodSeconds: 2
+        containers:
+          - name: reporter
+            image: busybox:1.36
+            command: ["/etc/hostname"]
+expect:
+  - 'StartError|RunContainerError'
+  - 'permission denied'

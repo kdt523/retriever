@@ -1,0 +1,72 @@
+# config-missing-key -> runbook/create-container-config-error [ok]
+# A ConfigMap key was renamed but the deployment still references the old key.
+
+### pods
+$ kubectl get pods -n rr-config-missing-key -o wide
+NAME                      READY   STATUS                       RESTARTS   AGE   IP          NODE                     NOMINATED NODE   READINESS GATES
+orders-85dbd87668-ffr6p   0/1     CreateContainerConfigError   0          7s    10.42.0.6   k3d-rr-faults-server-0   <none>           <none>
+
+### describe pods
+$ kubectl describe pods -n rr-config-missing-key
+Name:             orders-85dbd87668-ffr6p
+Namespace:        rr-config-missing-key
+Priority:         0
+Service Account:  default
+Node:             k3d-rr-faults-server-0/172.21.0.3
+Start Time:       Fri, 02 Oct 2026 11:39:13 +0530
+Labels:           app=orders
+                  pod-template-hash=85dbd87668
+Annotations:      <none>
+Status:           Pending
+IP:               10.42.0.6
+IPs:
+  IP:           10.42.0.6
+Controlled By:  ReplicaSet/orders-85dbd87668
+Containers:
+  orders:
+    Container ID:   
+    Image:          nginx:1.27-alpine
+    Image ID:       
+    Port:           <none>
+    Host Port:      <none>
+    State:          Waiting
+      Reason:       CreateContainerConfigError
+    Ready:          False
+    Restart Count:  0
+    Environment:
+      DB_PORT:  <set to the key 'DB_PORT' of config map 'orders-config'>  Optional: false
+    Mounts:
+      /var/run/secrets/kubernetes.io/serviceaccount from kube-api-access-pr545 (ro)
+Conditions:
+  Type                        Status
+  PodReadyToStartContainers   True 
+  Initialized                 True 
+  Ready                       False 
+  ContainersReady             False 
+  PodScheduled                True 
+Volumes:
+  kube-api-access-pr545:
+    Type:                    Projected (a volume that contains injected data from multiple sources)
+    TokenExpirationSeconds:  3607
+    ConfigMapName:           kube-root-ca.crt
+    Optional:                false
+    DownwardAPI:             true
+QoS Class:                   BestEffort
+Node-Selectors:              <none>
+Tolerations:                 node.kubernetes.io/not-ready:NoExecute op=Exists for 300s
+                             node.kubernetes.io/unreachable:NoExecute op=Exists for 300s
+Events:
+  Type     Reason     Age              From               Message
+  ----     ------     ----             ----               -------
+  Normal   Scheduled  8s               default-scheduler  Successfully assigned rr-config-missing-key/orders-85dbd87668-ffr6p to k3d-rr-faults-server-0
+  Normal   Pulled     6s (x2 over 6s)  kubelet            Container image "nginx:1.27-alpine" already present on machine and can be accessed by the pod
+  Warning  Failed     6s (x2 over 6s)  kubelet            Error: couldn't find key DB_PORT in ConfigMap rr-config-missing-key/orders-config
+
+### events
+$ kubectl get events -n rr-config-missing-key --sort-by=.lastTimestamp
+LAST SEEN   TYPE      REASON              OBJECT                         MESSAGE
+8s          Normal    Scheduled           pod/orders-85dbd87668-ffr6p    Successfully assigned rr-config-missing-key/orders-85dbd87668-ffr6p to k3d-rr-faults-server-0
+8s          Normal    SuccessfulCreate    replicaset/orders-85dbd87668   Created pod: orders-85dbd87668-ffr6p
+8s          Normal    ScalingReplicaSet   deployment/orders              Scaled up replica set orders-85dbd87668 from 0 to 1
+6s          Normal    Pulled              pod/orders-85dbd87668-ffr6p    Container image "nginx:1.27-alpine" already present on machine and can be accessed by the pod
+6s          Warning   Failed              pod/orders-85dbd87668-ffr6p    Error: couldn't find key DB_PORT in ConfigMap rr-config-missing-key/orders-config

@@ -1,0 +1,28 @@
+id: config-missing-key
+runbook: create-container-config-error
+description: A ConfigMap key was renamed but the deployment still references the old key.
+manifests: |
+  apiVersion: v1
+  kind: ConfigMap
+  metadata: {name: orders-config}
+  data: {DB_HOST: postgres.demo.svc.cluster.local, DATABASE_PORT: "5432"}
+  ---
+  apiVersion: apps/v1
+  kind: Deployment
+  metadata: {name: orders, labels: {app: orders}}
+  spec:
+    replicas: 1
+    selector: {matchLabels: {app: orders}}
+    template:
+      metadata: {labels: {app: orders}}
+      spec:
+        terminationGracePeriodSeconds: 2
+        containers:
+          - name: orders
+            image: nginx:1.27-alpine
+            env:
+              - name: DB_PORT
+                valueFrom: {configMapKeyRef: {name: orders-config, key: DB_PORT}}
+expect:
+  - 'CreateContainerConfigError'
+  - "couldn't find key DB_PORT in ConfigMap"

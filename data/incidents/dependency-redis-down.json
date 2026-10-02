@@ -1,0 +1,47 @@
+{
+ "id": "dependency-redis-down",
+ "runbook": "dependency-down",
+ "description": "Redis was scaled to zero; the cart service cannot connect.",
+ "status": "ok",
+ "missing": [],
+ "error": "",
+ "captured_at": "2026-10-02T06:15:11+00:00",
+ "seconds": 11.8,
+ "versions": {
+  "client": "v1.34.1",
+  "server": "v1.35.5+k3s1"
+ },
+ "namespace": "rr-dependency-redis-down",
+ "sections": [
+  {
+   "title": "pods",
+   "command": "kubectl get pods -n rr-dependency-redis-down -o wide",
+   "output": "NAME                    READY   STATUS    RESTARTS   AGE   IP           NODE                    NOMINATED NODE   READINESS GATES\ncart-684799ccb6-cp6fr   1/1     Running   0          9s    10.42.1.10   k3d-rr-faults-agent-0   <none>           <none>"
+  },
+  {
+   "title": "describe pods",
+   "command": "kubectl describe pods -n rr-dependency-redis-down",
+   "output": "Name:             cart-684799ccb6-cp6fr\nNamespace:        rr-dependency-redis-down\nPriority:         0\nService Account:  default\nNode:             k3d-rr-faults-agent-0/172.21.0.4\nStart Time:       Fri, 02 Oct 2026 11:45:01 +0530\nLabels:           app=cart\n                  pod-template-hash=684799ccb6\nAnnotations:      <none>\nStatus:           Running\nIP:               10.42.1.10\nIPs:\n  IP:           10.42.1.10\nControlled By:  ReplicaSet/cart-684799ccb6\nContainers:\n  cart:\n    Container ID:  containerd://c6ff73e95a91f9dabf39a2b0ec47fe7ac8b0c1c5f9c78ce655687c9ad84dd546\n    Image:         python:3.12-alpine\n    Image ID:      sha256:979e5a8a56846771598d47ebf1f8a75b46155104e168a0b237c0783c1dedff8a\n    Port:          <none>\n    Host Port:     <none>\n    Command:\n      python\n      -c\n    Args:\n      # Prints connection failures in the same format redis-py uses, from the real socket error.\n      import socket, time\n      while True:\n          try:\n              socket.create_connection((\"redis\", 6379), timeout=3).close()\n              print(\"connected to redis:6379\", flush=True)\n          except OSError as e:\n              print(f\"redis.exceptions.ConnectionError: Error {e.errno} connecting to redis:6379. {e.strerror}.\", flush=True)\n          time.sleep(3)\n      \n    State:          Running\n      Started:      Fri, 02 Oct 2026 11:45:03 +0530\n    Ready:          True\n    Restart Count:  0\n    Environment:    <none>\n    Mounts:\n      /var/run/secrets/kubernetes.io/serviceaccount from kube-api-access-6f4sb (ro)\nConditions:\n  Type                        Status\n  PodReadyToStartContainers   True \n  Initialized                 True \n  Ready                       True \n  ContainersReady             True \n  PodScheduled                True \nVolumes:\n  kube-api-access-6f4sb:\n    Type:                    Projected (a volume that contains injected data from multiple sources)\n    TokenExpirationSeconds:  3607\n    ConfigMapName:           kube-root-ca.crt\n    Optional:                false\n    DownwardAPI:             true\nQoS Class:                   BestEffort\nNode-Selectors:              <none>\nTolerations:                 node.kubernetes.io/not-ready:NoExecute op=Exists for 300s\n                             node.kubernetes.io/unreachable:NoExecute op=Exists for 300s\nEvents:\n  Type    Reason     Age   From               Message\n  ----    ------     ----  ----               -------\n  Normal  Scheduled  9s    default-scheduler  Successfully assigned rr-dependency-redis-down/cart-684799ccb6-cp6fr to k3d-rr-faults-agent-0\n  Normal  Pulled     7s    kubelet            Container image \"python:3.12-alpine\" already present on machine and can be accessed by the pod\n  Normal  Created    7s    kubelet            Container created\n  Normal  Started    7s    kubelet            Container started"
+  },
+  {
+   "title": "events",
+   "command": "kubectl get events -n rr-dependency-redis-down --sort-by=.lastTimestamp",
+   "output": "LAST SEEN   TYPE     REASON              OBJECT                       MESSAGE\n9s          Normal   Scheduled           pod/cart-684799ccb6-cp6fr    Successfully assigned rr-dependency-redis-down/cart-684799ccb6-cp6fr to k3d-rr-faults-agent-0\n10s         Normal   SuccessfulCreate    replicaset/cart-684799ccb6   Created pod: cart-684799ccb6-cp6fr\n10s         Normal   ScalingReplicaSet   deployment/cart              Scaled up replica set cart-684799ccb6 from 0 to 1\n7s          Normal   Pulled              pod/cart-684799ccb6-cp6fr    Container image \"python:3.12-alpine\" already present on machine and can be accessed by the pod\n7s          Normal   Created             pod/cart-684799ccb6-cp6fr    Container created\n7s          Normal   Started             pod/cart-684799ccb6-cp6fr    Container started"
+  },
+  {
+   "title": "logs cart-684799ccb6-cp6fr/cart",
+   "command": "kubectl logs cart-684799ccb6-cp6fr -n rr-dependency-redis-down -c cart --tail=30",
+   "output": "redis.exceptions.ConnectionError: Error 111 connecting to redis:6379. Connection refused.\nredis.exceptions.ConnectionError: Error 111 connecting to redis:6379. Connection refused.\nredis.exceptions.ConnectionError: Error 111 connecting to redis:6379. Connection refused."
+  },
+  {
+   "title": "get deploy",
+   "command": "kubectl get deploy -n rr-dependency-redis-down",
+   "output": "NAME    READY   UP-TO-DATE   AVAILABLE   AGE\ncart    1/1     1            1           10s\nredis   0/0     0            0           10s"
+  },
+  {
+   "title": "get endpointslices",
+   "command": "kubectl get endpointslices -n rr-dependency-redis-down -l kubernetes.io/service-name=redis",
+   "output": "NAME          ADDRESSTYPE   PORTS     ENDPOINTS   AGE\nredis-nhxpj   IPv4          <unset>   <unset>     11s"
+  }
+ ]
+}

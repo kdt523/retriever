@@ -1,0 +1,20 @@
+id: image-private-unauthorized
+runbook: image-pull-backoff
+description: A private registry image is pulled without credentials.
+manifests: |
+  apiVersion: apps/v1
+  kind: Deployment
+  metadata: {name: payments, labels: {app: payments}}
+  spec:
+    replicas: 1
+    selector: {matchLabels: {app: payments}}
+    template:
+      metadata: {labels: {app: payments}}
+      spec:
+        terminationGracePeriodSeconds: 2
+        containers:
+          - name: payments
+            image: ghcr.io/kdt523/payments-internal:2.4.1
+expect:
+  - 'Failed to pull image "ghcr\.io/kdt523/payments-internal:2\.4\.1"'
+  - 'ErrImagePull|ImagePullBackOff'

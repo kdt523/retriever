@@ -1,0 +1,25 @@
+id: volume-configmap-missing
+runbook: volume-mount-failure
+description: A ConfigMap mounted as a volume does not exist; the pod is stuck in ContainerCreating.
+manifests: |
+  apiVersion: apps/v1
+  kind: Deployment
+  metadata: {name: worker, labels: {app: worker}}
+  spec:
+    replicas: 1
+    selector: {matchLabels: {app: worker}}
+    template:
+      metadata: {labels: {app: worker}}
+      spec:
+        terminationGracePeriodSeconds: 2
+        containers:
+          - name: worker
+            image: nginx:1.27-alpine
+            volumeMounts: [{name: config, mountPath: /etc/worker}]
+        volumes:
+          - name: config
+            configMap: {name: worker-config}
+expect:
+  - 'ContainerCreating'
+  - 'FailedMount'
+  - 'configmap "worker-config" not found'

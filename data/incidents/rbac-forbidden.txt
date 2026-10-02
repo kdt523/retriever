@@ -1,0 +1,26 @@
+# rbac-forbidden -> runbook/rbac-forbidden [ok]
+# A workload's ServiceAccount has no Role allowing it to list pods.
+
+### pods
+$ kubectl get pods -n rr-rbac-forbidden -o wide
+No resources found in rr-rbac-forbidden namespace.
+
+### events
+$ kubectl get events -n rr-rbac-forbidden --sort-by=.lastTimestamp
+No resources found in rr-rbac-forbidden namespace.
+
+### --as=system:serviceaccount:rr-rbac-forbidden:deploy-bot get
+$ kubectl --as=system:serviceaccount:rr-rbac-forbidden:deploy-bot get pods -n rr-rbac-forbidden
+Error from server (Forbidden): pods is forbidden: User "system:serviceaccount:rr-rbac-forbidden:deploy-bot" cannot list resource "pods" in API group "" in the namespace "rr-rbac-forbidden"
+
+### --as=system:serviceaccount:rr-rbac-forbidden:deploy-bot rollout
+$ kubectl --as=system:serviceaccount:rr-rbac-forbidden:deploy-bot rollout restart deployment/web -n rr-rbac-forbidden
+Error from server (Forbidden): deployments.apps "web" is forbidden: User "system:serviceaccount:rr-rbac-forbidden:deploy-bot" cannot get resource "deployments" in API group "apps" in the namespace "rr-rbac-forbidden"
+
+### auth can-i
+$ kubectl auth can-i list pods -n rr-rbac-forbidden --as=system:serviceaccount:rr-rbac-forbidden:deploy-bot
+no
+
+### get rolebindings
+$ kubectl get rolebindings -n rr-rbac-forbidden
+No resources found in rr-rbac-forbidden namespace.

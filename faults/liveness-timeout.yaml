@@ -1,0 +1,41 @@
+id: liveness-timeout
+runbook: liveness-probe-restarts
+description: The /healthz handler takes 3s but the liveness probe times out after 1s.
+manifests: |
+  apiVersion: apps/v1
+  kind: Deployment
+  metadata: {name: search-api, labels: {app: search-api}}
+  spec:
+    replicas: 1
+    selector: {matchLabels: {app: search-api}}
+    template:
+      metadata: {labels: {app: search-api}}
+      spec:
+        terminationGracePeriodSeconds: 2
+        containers:
+          - name: search-api
+            image: python:3.12-alpine
+            ports: [{containerPort: 8080}]
+            command: ["python", "-c"]
+            args:
+              - |
+                import http.server, time
+                class Handler(http.server.BaseHTTPRequestHandler):
+                    def do_GET(self):
+                        if self.path == "/healthz":
+                            time.sleep(3)
+                        self.send_response(200)
+                        self.end_headers()
+                        self.wfile.write(b"ok")
+                    def log_message(self, *args):
+                        pass
+                print("search-api listening on :8080", flush=True)
+                http.server.ThreadingHTTPServer(("", 8080), Handler).serve_forever()
+            livenessProbe:
+              httpGet: {path: /healthz, port: 8080}
+              timeoutSeconds: 1
+              periodSeconds: 5
+              failureThreshold: 2
+expect:
+  - 'Liveness probe failed'
+  - 'failed liveness probe, will be restarted'

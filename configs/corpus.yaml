@@ -1,0 +1,46 @@
+# Phase 1 corpus definition. Changing anything here changes data/corpus.jsonl,
+# which invalidates every split, label and result downstream.
+
+k8s_docs:
+  repo: https://github.com/kubernetes/website.git
+  # Pinned commit of kubernetes/website (main, resolved 2026-10-02).
+  commit: 7a1c866f252e2d62a0bcdd3ea23a0052e6674679
+  docs_root: content/en/docs
+  # Inlined into chunks wherever a page references them with {{% code_sample file="..." %}}.
+  examples_root: content/en/examples
+  # Directories (recursive) or single .md files under docs_root, chosen for troubleshooting value.
+  include:
+    - tasks/debug
+    - tasks/configure-pod-container
+    - tasks/inject-data-application
+    - tasks/run-application
+    - tasks/job
+    - tasks/administer-cluster/dns-debugging-resolution.md
+    - concepts/workloads
+    - concepts/configuration
+    - concepts/containers
+    - concepts/services-networking
+    - concepts/scheduling-eviction
+    - concepts/storage
+    - concepts/architecture
+    - reference/kubectl
+  # Globs (relative to docs_root) to skip. Generated kubectl pages are mostly flag tables.
+  exclude:
+    - reference/kubectl/generated/*
+    - reference/kubectl/kubectl-cmds.md
+
+chunking:
+  # Full chunk = "<title> > <section>\n\n<body>", capped in bge tokens incl. [CLS]/[SEP].
+  max_tokens: 256
+  overlap_tokens: 40
+  # Bodies shorter than this are merged into the next section, or dropped.
+  min_tokens: 40
+  # Sections (and their subsections) with these headings are boilerplate; skipped.
+  exclude_sections:
+    - What's next
+    - Before you begin
+    - Objectives
+    - Clean up
+    - Cleaning up
+    - Feedback
+    - See also

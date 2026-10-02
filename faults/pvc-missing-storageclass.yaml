@@ -1,0 +1,36 @@
+id: pvc-missing-storageclass
+runbook: pvc-pending
+description: A PVC requests a StorageClass (fast-ssd) that does not exist in this cluster.
+manifests: |
+  apiVersion: v1
+  kind: PersistentVolumeClaim
+  metadata: {name: postgres-data}
+  spec:
+    storageClassName: fast-ssd
+    accessModes: [ReadWriteOnce]
+    resources: {requests: {storage: 1Gi}}
+  ---
+  apiVersion: apps/v1
+  kind: Deployment
+  metadata: {name: postgres, labels: {app: postgres}}
+  spec:
+    replicas: 1
+    selector: {matchLabels: {app: postgres}}
+    template:
+      metadata: {labels: {app: postgres}}
+      spec:
+        terminationGracePeriodSeconds: 2
+        containers:
+          - name: postgres
+            image: nginx:1.27-alpine
+            volumeMounts: [{name: data, mountPath: /var/lib/postgresql/data}]
+        volumes:
+          - name: data
+            persistentVolumeClaim: {claimName: postgres-data}
+capture:
+  - [get, pvc, -n, "{ns}"]
+  - [describe, pvc, postgres-data, -n, "{ns}"]
+  - [get, storageclass]
+expect:
+  - 'storageclass\.storage\.k8s\.io "fast-ssd" not found'
+  - 'unbound immediate PersistentVolumeClaims|FailedScheduling'

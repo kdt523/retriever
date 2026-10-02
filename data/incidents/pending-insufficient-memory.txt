@@ -1,0 +1,58 @@
+# pending-insufficient-memory -> runbook/pending-insufficient-resources [ok]
+# A typo makes the memory request 64Gi instead of 64Mi; no node can fit it.
+
+### pods
+$ kubectl get pods -n rr-pending-insufficient-memory -o wide
+NAME                         READY   STATUS    RESTARTS   AGE   IP       NODE     NOMINATED NODE   READINESS GATES
+analytics-58b949445c-pd5j6   0/1     Pending   0          0s    <none>   <none>   <none>           <none>
+
+### describe pods
+$ kubectl describe pods -n rr-pending-insufficient-memory
+Name:             analytics-58b949445c-pd5j6
+Namespace:        rr-pending-insufficient-memory
+Priority:         0
+Service Account:  default
+Node:             <none>
+Labels:           app=analytics
+                  pod-template-hash=58b949445c
+Annotations:      <none>
+Status:           Pending
+IP:               
+IPs:              <none>
+Controlled By:    ReplicaSet/analytics-58b949445c
+Containers:
+  analytics:
+    Image:      nginx:1.27-alpine
+    Port:       <none>
+    Host Port:  <none>
+    Requests:
+      cpu:        100m
+      memory:     64Gi
+    Environment:  <none>
+    Mounts:
+      /var/run/secrets/kubernetes.io/serviceaccount from kube-api-access-j88bb (ro)
+Conditions:
+  Type           Status
+  PodScheduled   False 
+Volumes:
+  kube-api-access-j88bb:
+    Type:                    Projected (a volume that contains injected data from multiple sources)
+    TokenExpirationSeconds:  3607
+    ConfigMapName:           kube-root-ca.crt
+    Optional:                false
+    DownwardAPI:             true
+QoS Class:                   Burstable
+Node-Selectors:              <none>
+Tolerations:                 node.kubernetes.io/not-ready:NoExecute op=Exists for 300s
+                             node.kubernetes.io/unreachable:NoExecute op=Exists for 300s
+Events:
+  Type     Reason            Age   From               Message
+  ----     ------            ----  ----               -------
+  Warning  FailedScheduling  0s    default-scheduler  0/2 nodes are available: 2 Insufficient memory. no new claims to deallocate, preemption: 0/2 nodes are available: 2 Preemption is not helpful for scheduling.
+
+### events
+$ kubectl get events -n rr-pending-insufficient-memory --sort-by=.lastTimestamp
+LAST SEEN   TYPE      REASON              OBJECT                            MESSAGE
+1s          Warning   FailedScheduling    pod/analytics-58b949445c-pd5j6    0/2 nodes are available: 2 Insufficient memory. no new claims to deallocate, preemption: 0/2 nodes are available: 2 Preemption is not helpful for scheduling.
+2s          Normal    ScalingReplicaSet   deployment/analytics              Scaled up replica set analytics-58b949445c from 0 to 1
+1s          Normal    SuccessfulCreate    replicaset/analytics-58b949445c   Created pod: analytics-58b949445c-pd5j6

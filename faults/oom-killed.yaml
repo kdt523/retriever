@@ -1,0 +1,32 @@
+id: oom-killed
+runbook: oomkilled
+description: A cache warmup allocates more memory than the 64Mi limit.
+manifests: |
+  apiVersion: apps/v1
+  kind: Deployment
+  metadata: {name: inventory, labels: {app: inventory}}
+  spec:
+    replicas: 1
+    selector: {matchLabels: {app: inventory}}
+    template:
+      metadata: {labels: {app: inventory}}
+      spec:
+        terminationGracePeriodSeconds: 2
+        containers:
+          - name: inventory
+            image: python:3.12-alpine
+            resources:
+              requests: {memory: 32Mi, cpu: 50m}
+              limits: {memory: 64Mi}
+            command: ["python", "-c"]
+            args:
+              - |
+                import time
+                chunks = []
+                for i in range(1, 60):
+                    chunks.append(b"x" * (8 * 1024 * 1024))
+                    print(f"inventory cache warmup: {i * 8} MB loaded", flush=True)
+                    time.sleep(0.2)
+expect:
+  - 'OOMKilled'
+  - 'Exit Code:\s+137'

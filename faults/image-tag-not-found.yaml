@@ -1,0 +1,20 @@
+id: image-tag-not-found
+runbook: image-pull-backoff
+description: A deploy references an nginx tag that was never published.
+manifests: |
+  apiVersion: apps/v1
+  kind: Deployment
+  metadata: {name: orders, labels: {app: orders}}
+  spec:
+    replicas: 1
+    selector: {matchLabels: {app: orders}}
+    template:
+      metadata: {labels: {app: orders}}
+      spec:
+        terminationGracePeriodSeconds: 2
+        containers:
+          - name: orders
+            image: nginx:1.27.99-does-not-exist
+expect:
+  - 'Failed to pull image "nginx:1\.27\.99-does-not-exist"'
+  - 'ImagePullBackOff'

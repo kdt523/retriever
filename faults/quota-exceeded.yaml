@@ -1,0 +1,33 @@
+id: quota-exceeded
+runbook: resource-quota-exceeded
+description: A namespace memory-limit quota leaves room for only two of three replicas.
+manifests: |
+  apiVersion: v1
+  kind: ResourceQuota
+  metadata: {name: compute-quota}
+  spec:
+    hard: {limits.memory: 256Mi, requests.memory: 256Mi}
+  ---
+  apiVersion: apps/v1
+  kind: Deployment
+  metadata: {name: reports, labels: {app: reports}}
+  spec:
+    replicas: 3
+    selector: {matchLabels: {app: reports}}
+    template:
+      metadata: {labels: {app: reports}}
+      spec:
+        terminationGracePeriodSeconds: 2
+        containers:
+          - name: reports
+            image: nginx:1.27-alpine
+            resources:
+              requests: {memory: 96Mi, cpu: 10m}
+              limits: {memory: 128Mi}
+capture:
+  - [describe, resourcequota, compute-quota, -n, "{ns}"]
+  - [describe, rs, -n, "{ns}"]
+  - [get, deploy, reports, -n, "{ns}"]
+expect:
+  - 'FailedCreate'
+  - 'exceeded quota: compute-quota'

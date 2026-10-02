@@ -1,0 +1,22 @@
+id: start-error-missing-entrypoint
+runbook: container-start-error
+description: The command override points at a script that does not exist in the image.
+manifests: |
+  apiVersion: apps/v1
+  kind: Deployment
+  metadata: {name: notifier, labels: {app: notifier}}
+  spec:
+    replicas: 1
+    selector: {matchLabels: {app: notifier}}
+    template:
+      metadata: {labels: {app: notifier}}
+      spec:
+        terminationGracePeriodSeconds: 2
+        containers:
+          - name: notifier
+            image: busybox:1.36
+            command: ["/app/start.sh"]
+expect:
+  - 'StartError|RunContainerError'
+  - '/app/start\.sh'
+  - 'no such file or directory'

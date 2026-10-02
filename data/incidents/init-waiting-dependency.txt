@@ -1,0 +1,97 @@
+# init-waiting-dependency -> runbook/init-container-stuck [ok]
+# An init container waits forever for a postgres Service that does not exist.
+
+### pods
+$ kubectl get pods -n rr-init-waiting-dependency -o wide
+NAME                      READY   STATUS     RESTARTS   AGE   IP           NODE                     NOMINATED NODE   READINESS GATES
+orders-54485c8c4d-57zbb   0/1     Init:0/1   0          6s    10.42.0.12   k3d-rr-faults-server-0   <none>           <none>
+
+### describe pods
+$ kubectl describe pods -n rr-init-waiting-dependency
+Name:             orders-54485c8c4d-57zbb
+Namespace:        rr-init-waiting-dependency
+Priority:         0
+Service Account:  default
+Node:             k3d-rr-faults-server-0/172.21.0.3
+Start Time:       Fri, 02 Oct 2026 11:45:10 +0530
+Labels:           app=orders
+                  pod-template-hash=54485c8c4d
+Annotations:      <none>
+Status:           Pending
+IP:               10.42.0.12
+IPs:
+  IP:           10.42.0.12
+Controlled By:  ReplicaSet/orders-54485c8c4d
+Init Containers:
+  wait-for-postgres:
+    Container ID:  containerd://4e54152fcc21992e1ce23a61daa8edc7b12ff432b2fa1fbf03bdf7afd1d9c107
+    Image:         busybox:1.36
+    Image ID:      sha256:b116e155074440ffd9e449559433feb4cd2341eb3554b1da1c638c976e56451d
+    Port:          <none>
+    Host Port:     <none>
+    Command:
+      sh
+      -c
+      until nslookup postgres >/dev/null 2>&1; do echo waiting for postgres; sleep 2; done
+    State:          Running
+      Started:      Fri, 02 Oct 2026 11:45:11 +0530
+    Ready:          False
+    Restart Count:  0
+    Environment:    <none>
+    Mounts:
+      /var/run/secrets/kubernetes.io/serviceaccount from kube-api-access-h9sjf (ro)
+Containers:
+  orders:
+    Container ID:   
+    Image:          nginx:1.27-alpine
+    Image ID:       
+    Port:           <none>
+    Host Port:      <none>
+    State:          Waiting
+      Reason:       PodInitializing
+    Ready:          False
+    Restart Count:  0
+    Environment:    <none>
+    Mounts:
+      /var/run/secrets/kubernetes.io/serviceaccount from kube-api-access-h9sjf (ro)
+Conditions:
+  Type                        Status
+  PodReadyToStartContainers   True 
+  Initialized                 False 
+  Ready                       False 
+  ContainersReady             False 
+  PodScheduled                True 
+Volumes:
+  kube-api-access-h9sjf:
+    Type:                    Projected (a volume that contains injected data from multiple sources)
+    TokenExpirationSeconds:  3607
+    ConfigMapName:           kube-root-ca.crt
+    Optional:                false
+    DownwardAPI:             true
+QoS Class:                   BestEffort
+Node-Selectors:              <none>
+Tolerations:                 node.kubernetes.io/not-ready:NoExecute op=Exists for 300s
+                             node.kubernetes.io/unreachable:NoExecute op=Exists for 300s
+Events:
+  Type    Reason     Age   From               Message
+  ----    ------     ----  ----               -------
+  Normal  Scheduled  6s    default-scheduler  Successfully assigned rr-init-waiting-dependency/orders-54485c8c4d-57zbb to k3d-rr-faults-server-0
+  Normal  Pulled     6s    kubelet            Container image "busybox:1.36" already present on machine and can be accessed by the pod
+  Normal  Created    6s    kubelet            Container created
+  Normal  Started    6s    kubelet            Container started
+
+### events
+$ kubectl get events -n rr-init-waiting-dependency --sort-by=.lastTimestamp
+LAST SEEN   TYPE     REASON              OBJECT                         MESSAGE
+6s          Normal   Scheduled           pod/orders-54485c8c4d-57zbb    Successfully assigned rr-init-waiting-dependency/orders-54485c8c4d-57zbb to k3d-rr-faults-server-0
+8s          Normal   ScalingReplicaSet   deployment/orders              Scaled up replica set orders-54485c8c4d from 0 to 1
+7s          Normal   SuccessfulCreate    replicaset/orders-54485c8c4d   Created pod: orders-54485c8c4d-57zbb
+6s          Normal   Pulled              pod/orders-54485c8c4d-57zbb    Container image "busybox:1.36" already present on machine and can be accessed by the pod
+6s          Normal   Created             pod/orders-54485c8c4d-57zbb    Container created
+6s          Normal   Started             pod/orders-54485c8c4d-57zbb    Container started
+
+### logs orders-54485c8c4d-57zbb/wait-for-postgres
+$ kubectl logs orders-54485c8c4d-57zbb -n rr-init-waiting-dependency -c wait-for-postgres --tail=30
+waiting for postgres
+waiting for postgres
+waiting for postgres

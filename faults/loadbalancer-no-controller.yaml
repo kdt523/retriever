@@ -1,0 +1,33 @@
+id: loadbalancer-no-controller
+runbook: loadbalancer-pending
+description: A LoadBalancer Service asks for a load balancer class that no controller implements.
+manifests: |
+  apiVersion: apps/v1
+  kind: Deployment
+  metadata: {name: web, labels: {app: web}}
+  spec:
+    replicas: 1
+    selector: {matchLabels: {app: web}}
+    template:
+      metadata: {labels: {app: web}}
+      spec:
+        terminationGracePeriodSeconds: 2
+        containers:
+          - name: web
+            image: nginx:1.27-alpine
+  ---
+  apiVersion: v1
+  kind: Service
+  metadata: {name: web}
+  spec:
+    type: LoadBalancer
+    loadBalancerClass: example.com/no-such-controller
+    selector: {app: web}
+    ports: [{port: 80}]
+steps:
+  - run: [kubectl, rollout, status, deployment/web, -n, "{ns}", --timeout=120s]
+capture:
+  - [get, svc, web, -n, "{ns}"]
+  - [describe, svc, web, -n, "{ns}"]
+expect:
+  - 'web\s+LoadBalancer\s+\S+\s+<pending>'

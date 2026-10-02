@@ -1,0 +1,138 @@
+# hpa-missing-cpu-request -> runbook/hpa-not-scaling [ok]
+# An HPA targets CPU utilization but the pods have no CPU requests.
+
+### pods
+$ kubectl get pods -n rr-hpa-missing-cpu-request -o wide
+NAME                   READY   STATUS    RESTARTS   AGE   IP           NODE                    NOMINATED NODE   READINESS GATES
+api-86756f66b4-mm6hc   1/1     Running   0          46s   10.42.1.12   k3d-rr-faults-agent-0   <none>           <none>
+
+### describe pods
+$ kubectl describe pods -n rr-hpa-missing-cpu-request
+Name:             api-86756f66b4-mm6hc
+Namespace:        rr-hpa-missing-cpu-request
+Priority:         0
+Service Account:  default
+Node:             k3d-rr-faults-agent-0/172.21.0.4
+Start Time:       Fri, 02 Oct 2026 11:45:04 +0530
+Labels:           app=api
+                  pod-template-hash=86756f66b4
+Annotations:      <none>
+Status:           Running
+IP:               10.42.1.12
+IPs:
+  IP:           10.42.1.12
+Controlled By:  ReplicaSet/api-86756f66b4
+Containers:
+  api:
+    Container ID:   containerd://5845d2f0e14a197682865f6ad6486216d10fdc7c00d86f84c883dc07a7f82f5b
+    Image:          nginx:1.27-alpine
+    Image ID:       sha256:6769dc3a703c719c1d2756bda113659be28ae16cf0da58dd5fd823d6b9a050ea
+    Port:           <none>
+    Host Port:      <none>
+    State:          Running
+      Started:      Fri, 02 Oct 2026 11:45:05 +0530
+    Ready:          True
+    Restart Count:  0
+    Environment:    <none>
+    Mounts:
+      /var/run/secrets/kubernetes.io/serviceaccount from kube-api-access-hg6ff (ro)
+Conditions:
+  Type                        Status
+  PodReadyToStartContainers   True 
+  Initialized                 True 
+  Ready                       True 
+  ContainersReady             True 
+  PodScheduled                True 
+Volumes:
+  kube-api-access-hg6ff:
+    Type:                    Projected (a volume that contains injected data from multiple sources)
+    TokenExpirationSeconds:  3607
+    ConfigMapName:           kube-root-ca.crt
+    Optional:                false
+    DownwardAPI:             true
+QoS Class:                   BestEffort
+Node-Selectors:              <none>
+Tolerations:                 node.kubernetes.io/not-ready:NoExecute op=Exists for 300s
+                             node.kubernetes.io/unreachable:NoExecute op=Exists for 300s
+Events:
+  Type    Reason     Age   From               Message
+  ----    ------     ----  ----               -------
+  Normal  Scheduled  46s   default-scheduler  Successfully assigned rr-hpa-missing-cpu-request/api-86756f66b4-mm6hc to k3d-rr-faults-agent-0
+  Normal  Pulled     46s   kubelet            Container image "nginx:1.27-alpine" already present on machine and can be accessed by the pod
+  Normal  Created    46s   kubelet            Container created
+  Normal  Started    46s   kubelet            Container started
+
+### events
+$ kubectl get events -n rr-hpa-missing-cpu-request --sort-by=.lastTimestamp
+LAST SEEN   TYPE      REASON                         OBJECT                        MESSAGE
+46s         Normal    Scheduled                      pod/api-86756f66b4-mm6hc      Successfully assigned rr-hpa-missing-cpu-request/api-86756f66b4-mm6hc to k3d-rr-faults-agent-0
+47s         Normal    SuccessfulCreate               replicaset/api-86756f66b4     Created pod: api-86756f66b4-mm6hc
+47s         Normal    ScalingReplicaSet              deployment/api                Scaled up replica set api-86756f66b4 from 0 to 1
+46s         Normal    Pulled                         pod/api-86756f66b4-mm6hc      Container image "nginx:1.27-alpine" already present on machine and can be accessed by the pod
+46s         Normal    Created                        pod/api-86756f66b4-mm6hc      Container created
+46s         Normal    Started                        pod/api-86756f66b4-mm6hc      Container started
+32s         Warning   FailedGetResourceMetric        horizontalpodautoscaler/api   failed to get cpu utilization: unable to get metrics for resource cpu: no metrics returned from resource metrics API
+32s         Warning   FailedComputeMetricsReplicas   horizontalpodautoscaler/api   invalid metrics (1 invalid out of 1), first error is: failed to get cpu resource metric value: failed to get cpu utilization: unable to get metrics for resource cpu: no metrics returned from resource metrics API
+17s         Warning   FailedGetResourceMetric        horizontalpodautoscaler/api   failed to get cpu utilization: did not receive metrics for targeted pods (pods might be unready)
+17s         Warning   FailedComputeMetricsReplicas   horizontalpodautoscaler/api   invalid metrics (1 invalid out of 1), first error is: failed to get cpu resource metric value: failed to get cpu utilization: did not receive metrics for targeted pods (pods might be unready)
+2s          Warning   FailedGetResourceMetric        horizontalpodautoscaler/api   failed to get cpu utilization: missing request for cpu in container api of Pod api-86756f66b4-mm6hc
+2s          Warning   FailedComputeMetricsReplicas   horizontalpodautoscaler/api   invalid metrics (1 invalid out of 1), first error is: failed to get cpu resource metric value: failed to get cpu utilization: missing request for cpu in container api of Pod api-86756f66b4-mm6hc
+
+### logs api-86756f66b4-mm6hc/api
+$ kubectl logs api-86756f66b4-mm6hc -n rr-hpa-missing-cpu-request -c api --tail=30
+/docker-entrypoint.sh: /docker-entrypoint.d/ is not empty, will attempt to perform configuration
+/docker-entrypoint.sh: Looking for shell scripts in /docker-entrypoint.d/
+/docker-entrypoint.sh: Launching /docker-entrypoint.d/10-listen-on-ipv6-by-default.sh
+10-listen-on-ipv6-by-default.sh: info: Getting the checksum of /etc/nginx/conf.d/default.conf
+10-listen-on-ipv6-by-default.sh: info: Enabled listen on IPv6 in /etc/nginx/conf.d/default.conf
+/docker-entrypoint.sh: Sourcing /docker-entrypoint.d/15-local-resolvers.envsh
+/docker-entrypoint.sh: Launching /docker-entrypoint.d/20-envsubst-on-templates.sh
+/docker-entrypoint.sh: Launching /docker-entrypoint.d/30-tune-worker-processes.sh
+/docker-entrypoint.sh: Configuration complete; ready for start up
+2026/10/02 06:15:05 [notice] 1#1: using the "epoll" event method
+2026/10/02 06:15:05 [notice] 1#1: nginx/1.27.5
+2026/10/02 06:15:05 [notice] 1#1: built by gcc 14.2.0 (Alpine 14.2.0) 
+2026/10/02 06:15:05 [notice] 1#1: OS: Linux 6.6.87.2-microsoft-standard-WSL2
+2026/10/02 06:15:05 [notice] 1#1: getrlimit(RLIMIT_NOFILE): 1048576:1048576
+2026/10/02 06:15:05 [notice] 1#1: start worker processes
+2026/10/02 06:15:05 [notice] 1#1: start worker process 30
+2026/10/02 06:15:05 [notice] 1#1: start worker process 31
+2026/10/02 06:15:05 [notice] 1#1: start worker process 32
+2026/10/02 06:15:05 [notice] 1#1: start worker process 33
+2026/10/02 06:15:05 [notice] 1#1: start worker process 34
+2026/10/02 06:15:05 [notice] 1#1: start worker process 35
+2026/10/02 06:15:05 [notice] 1#1: start worker process 36
+2026/10/02 06:15:05 [notice] 1#1: start worker process 37
+
+### get hpa
+$ kubectl get hpa -n rr-hpa-missing-cpu-request
+NAME   REFERENCE        TARGETS              MINPODS   MAXPODS   REPLICAS   AGE
+api    Deployment/api   cpu: <unknown>/60%   1         5         1          48s
+
+### describe hpa
+$ kubectl describe hpa api -n rr-hpa-missing-cpu-request
+Name:                                                  api
+Namespace:                                             rr-hpa-missing-cpu-request
+Labels:                                                <none>
+Annotations:                                           <none>
+CreationTimestamp:                                     Fri, 02 Oct 2026 11:45:04 +0530
+Reference:                                             Deployment/api
+Metrics:                                               ( current / target )
+  resource cpu on pods  (as a percentage of request):  <unknown> / 60%
+Min replicas:                                          1
+Max replicas:                                          5
+Deployment pods:                                       1 current / 0 desired
+Conditions:
+  Type           Status  Reason                   Message
+  ----           ------  ------                   -------
+  AbleToScale    True    SucceededGetScale        the HPA controller was able to get the target's current scale
+  ScalingActive  False   FailedGetResourceMetric  the HPA was unable to compute the replica count: failed to get cpu utilization: missing request for cpu in container api of Pod api-86756f66b4-mm6hc
+Events:
+  Type     Reason                        Age   From                       Message
+  ----     ------                        ----  ----                       -------
+  Warning  FailedGetResourceMetric       33s   horizontal-pod-autoscaler  failed to get cpu utilization: unable to get metrics for resource cpu: no metrics returned from resource metrics API
+  Warning  FailedComputeMetricsReplicas  33s   horizontal-pod-autoscaler  invalid metrics (1 invalid out of 1), first error is: failed to get cpu resource metric value: failed to get cpu utilization: unable to get metrics for resource cpu: no metrics returned from resource metrics API
+  Warning  FailedGetResourceMetric       18s   horizontal-pod-autoscaler  failed to get cpu utilization: did not receive metrics for targeted pods (pods might be unready)
+  Warning  FailedComputeMetricsReplicas  18s   horizontal-pod-autoscaler  invalid metrics (1 invalid out of 1), first error is: failed to get cpu resource metric value: failed to get cpu utilization: did not receive metrics for targeted pods (pods might be unready)
+  Warning  FailedGetResourceMetric       3s    horizontal-pod-autoscaler  failed to get cpu utilization: missing request for cpu in container api of Pod api-86756f66b4-mm6hc
+  Warning  FailedComputeMetricsReplicas  3s    horizontal-pod-autoscaler  invalid metrics (1 invalid out of 1), first error is: failed to get cpu resource metric value: failed to get cpu utilization: missing request for cpu in container api of Pod api-86756f66b4-mm6hc

@@ -1,0 +1,32 @@
+{
+ "id": "volume-configmap-missing",
+ "runbook": "volume-mount-failure",
+ "description": "A ConfigMap mounted as a volume does not exist; the pod is stuck in ContainerCreating.",
+ "status": "ok",
+ "missing": [],
+ "error": "",
+ "captured_at": "2026-10-02T06:18:19+00:00",
+ "seconds": 1.7,
+ "versions": {
+  "client": "v1.34.1",
+  "server": "v1.35.5+k3s1"
+ },
+ "namespace": "rr-volume-configmap-missing",
+ "sections": [
+  {
+   "title": "pods",
+   "command": "kubectl get pods -n rr-volume-configmap-missing -o wide",
+   "output": "NAME                      READY   STATUS    RESTARTS   AGE   IP       NODE     NOMINATED NODE   READINESS GATES\nworker-7df48cd46c-2m274   0/1     Pending   0          0s    <none>   <none>   <none>           <none>"
+  },
+  {
+   "title": "describe pods",
+   "command": "kubectl describe pods -n rr-volume-configmap-missing",
+   "output": "Name:             worker-7df48cd46c-2m274\nNamespace:        rr-volume-configmap-missing\nPriority:         0\nService Account:  default\nNode:             k3d-rr-faults-server-0/172.21.0.3\nStart Time:       Fri, 02 Oct 2026 11:45:45 +0530\nLabels:           app=worker\n                  pod-template-hash=7df48cd46c\nAnnotations:      <none>\nStatus:           Pending\nIP:               \nIPs:              <none>\nControlled By:    ReplicaSet/worker-7df48cd46c\nContainers:\n  worker:\n    Container ID:   \n    Image:          nginx:1.27-alpine\n    Image ID:       \n    Port:           <none>\n    Host Port:      <none>\n    State:          Waiting\n      Reason:       ContainerCreating\n    Ready:          False\n    Restart Count:  0\n    Environment:    <none>\n    Mounts:\n      /etc/worker from config (rw)\n      /var/run/secrets/kubernetes.io/serviceaccount from kube-api-access-bdcrx (ro)\nConditions:\n  Type                        Status\n  PodReadyToStartContainers   False \n  Initialized                 True \n  Ready                       False \n  ContainersReady             False \n  PodScheduled                True \nVolumes:\n  config:\n    Type:      ConfigMap (a volume populated by a ConfigMap)\n    Name:      worker-config\n    Optional:  false\n  kube-api-access-bdcrx:\n    Type:                    Projected (a volume that contains injected data from multiple sources)\n    TokenExpirationSeconds:  3607\n    ConfigMapName:           kube-root-ca.crt\n    Optional:                false\n    DownwardAPI:             true\nQoS Class:                   BestEffort\nNode-Selectors:              <none>\nTolerations:                 node.kubernetes.io/not-ready:NoExecute op=Exists for 300s\n                             node.kubernetes.io/unreachable:NoExecute op=Exists for 300s\nEvents:\n  Type     Reason       Age   From               Message\n  ----     ------       ----  ----               -------\n  Normal   Scheduled    0s    default-scheduler  Successfully assigned rr-volume-configmap-missing/worker-7df48cd46c-2m274 to k3d-rr-faults-server-0\n  Warning  FailedMount  1s    kubelet            MountVolume.SetUp failed for volume \"config\" : configmap \"worker-config\" not found"
+  },
+  {
+   "title": "events",
+   "command": "kubectl get events -n rr-volume-configmap-missing --sort-by=.lastTimestamp",
+   "output": "LAST SEEN   TYPE      REASON              OBJECT                         MESSAGE\n0s          Normal    Scheduled           pod/worker-7df48cd46c-2m274    Successfully assigned rr-volume-configmap-missing/worker-7df48cd46c-2m274 to k3d-rr-faults-server-0\n1s          Normal    SuccessfulCreate    replicaset/worker-7df48cd46c   Created pod: worker-7df48cd46c-2m274\n1s          Normal    ScalingReplicaSet   deployment/worker              Scaled up replica set worker-7df48cd46c from 0 to 1\n0s          Warning   FailedMount         pod/worker-7df48cd46c-2m274    MountVolume.SetUp failed for volume \"config\" : configmap \"worker-config\" not found"
+  }
+ ]
+}

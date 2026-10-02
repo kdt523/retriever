@@ -1,0 +1,47 @@
+{
+ "id": "rbac-forbidden",
+ "runbook": "rbac-forbidden",
+ "description": "A workload's ServiceAccount has no Role allowing it to list pods.",
+ "status": "ok",
+ "missing": [],
+ "error": "",
+ "captured_at": "2026-10-02T06:34:51+00:00",
+ "seconds": 2.3,
+ "versions": {
+  "client": "v1.34.1",
+  "server": "v1.35.5+k3s1"
+ },
+ "namespace": "rr-rbac-forbidden",
+ "sections": [
+  {
+   "title": "pods",
+   "command": "kubectl get pods -n rr-rbac-forbidden -o wide",
+   "output": "No resources found in rr-rbac-forbidden namespace."
+  },
+  {
+   "title": "events",
+   "command": "kubectl get events -n rr-rbac-forbidden --sort-by=.lastTimestamp",
+   "output": "No resources found in rr-rbac-forbidden namespace."
+  },
+  {
+   "title": "--as=system:serviceaccount:rr-rbac-forbidden:deploy-bot get",
+   "command": "kubectl --as=system:serviceaccount:rr-rbac-forbidden:deploy-bot get pods -n rr-rbac-forbidden",
+   "output": "Error from server (Forbidden): pods is forbidden: User \"system:serviceaccount:rr-rbac-forbidden:deploy-bot\" cannot list resource \"pods\" in API group \"\" in the namespace \"rr-rbac-forbidden\""
+  },
+  {
+   "title": "--as=system:serviceaccount:rr-rbac-forbidden:deploy-bot rollout",
+   "command": "kubectl --as=system:serviceaccount:rr-rbac-forbidden:deploy-bot rollout restart deployment/web -n rr-rbac-forbidden",
+   "output": "Error from server (Forbidden): deployments.apps \"web\" is forbidden: User \"system:serviceaccount:rr-rbac-forbidden:deploy-bot\" cannot get resource \"deployments\" in API group \"apps\" in the namespace \"rr-rbac-forbidden\""
+  },
+  {
+   "title": "auth can-i",
+   "command": "kubectl auth can-i list pods -n rr-rbac-forbidden --as=system:serviceaccount:rr-rbac-forbidden:deploy-bot",
+   "output": "no"
+  },
+  {
+   "title": "get rolebindings",
+   "command": "kubectl get rolebindings -n rr-rbac-forbidden",
+   "output": "No resources found in rr-rbac-forbidden namespace."
+  }
+ ]
+}

@@ -1,0 +1,17 @@
+id: node-not-ready
+runbook: node-not-ready
+description: The worker node's kubelet stops (node container stopped) and the node goes NotReady.
+node_level: true
+order: 2
+steps:
+  - run: [k3d, node, stop, "{agent}"]
+capture:
+  - [get, nodes]
+  - [describe, node, "{agent}"]
+expect:
+  - 'NotReady'
+  - 'Kubelet stopped posting node status'
+timeout_s: 300
+cleanup:
+  - run: [k3d, node, start, "{agent}"]
+  - run: [kubectl, wait, --for=condition=Ready, "node/{agent}", --timeout=180s]

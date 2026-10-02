@@ -1,0 +1,107 @@
+# node-not-ready -> runbook/node-not-ready [ok]
+# The worker node's kubelet stops (node container stopped) and the node goes NotReady.
+
+### pods
+$ kubectl get pods -n rr-node-not-ready -o wide
+No resources found in rr-node-not-ready namespace.
+
+### events
+$ kubectl get events -n rr-node-not-ready --sort-by=.lastTimestamp
+No resources found in rr-node-not-ready namespace.
+
+### get nodes
+$ kubectl get nodes
+NAME                     STATUS     ROLES           AGE   VERSION
+k3d-rr-faults-agent-0    NotReady   <none>          15m   v1.35.5+k3s1
+k3d-rr-faults-server-0   Ready      control-plane   15m   v1.35.5+k3s1
+
+### describe node
+$ kubectl describe node k3d-rr-faults-agent-0
+Name:               k3d-rr-faults-agent-0
+Roles:              <none>
+Labels:             beta.kubernetes.io/arch=amd64
+                    beta.kubernetes.io/instance-type=k3s
+                    beta.kubernetes.io/os=linux
+                    kubernetes.io/arch=amd64
+                    kubernetes.io/hostname=k3d-rr-faults-agent-0
+                    kubernetes.io/os=linux
+                    node.kubernetes.io/instance-type=k3s
+Annotations:        alpha.kubernetes.io/provided-node-ip: 172.21.0.4
+                    flannel.alpha.coreos.com/backend-data: {"VNI":1,"VtepMAC":"6a:b5:37:de:17:d7"}
+                    flannel.alpha.coreos.com/backend-type: vxlan
+                    flannel.alpha.coreos.com/kube-subnet-manager: true
+                    flannel.alpha.coreos.com/public-ip: 172.21.0.4
+                    k3s.io/hostname: k3d-rr-faults-agent-0
+                    k3s.io/internal-ip: 172.21.0.4
+                    k3s.io/node-args: ["agent"]
+                    k3s.io/node-config-hash: G62DDLAP6GXLNN73XGDQHTXE2JYVF6RS4PUF5AJ7TLYNFK4MBVTA====
+                    k3s.io/node-env: {"K3S_KUBECONFIG_OUTPUT":"/output/kubeconfig.yaml","K3S_TOKEN":"********","K3S_URL":"https://k3d-rr-faults-server-0:6443"}
+                    node.alpha.kubernetes.io/ttl: 0
+                    volumes.kubernetes.io/controller-managed-attach-detach: true
+CreationTimestamp:  Fri, 02 Oct 2026 11:34:10 +0530
+Taints:             node.kubernetes.io/unreachable:NoExecute
+                    node.kubernetes.io/unreachable:NoSchedule
+Unschedulable:      false
+Lease:
+  HolderIdentity:  k3d-rr-faults-agent-0
+  AcquireTime:     <unset>
+  RenewTime:       Fri, 02 Oct 2026 11:48:45 +0530
+Conditions:
+  Type             Status    LastHeartbeatTime                 LastTransitionTime                Reason              Message
+  ----             ------    -----------------                 ------------------                ------              -------
+  MemoryPressure   Unknown   Fri, 02 Oct 2026 11:46:44 +0530   Fri, 02 Oct 2026 11:49:37 +0530   NodeStatusUnknown   Kubelet stopped posting node status.
+  DiskPressure     Unknown   Fri, 02 Oct 2026 11:46:44 +0530   Fri, 02 Oct 2026 11:49:37 +0530   NodeStatusUnknown   Kubelet stopped posting node status.
+  PIDPressure      Unknown   Fri, 02 Oct 2026 11:46:44 +0530   Fri, 02 Oct 2026 11:49:37 +0530   NodeStatusUnknown   Kubelet stopped posting node status.
+  Ready            Unknown   Fri, 02 Oct 2026 11:46:44 +0530   Fri, 02 Oct 2026 11:49:37 +0530   NodeStatusUnknown   Kubelet stopped posting node status.
+Addresses:
+  InternalIP:  172.21.0.4
+  Hostname:    k3d-rr-faults-agent-0
+Capacity:
+  cpu:                8
+  ephemeral-storage:  1055762868Ki
+  hugepages-1Gi:      0
+  hugepages-2Mi:      0
+  memory:             8003804Ki
+  pods:               110
+Allocatable:
+  cpu:                8
+  ephemeral-storage:  1027046117185
+  hugepages-1Gi:      0
+  hugepages-2Mi:      0
+  memory:             8003804Ki
+  pods:               110
+System Info:
+  Machine ID:                 
+  System UUID:                
+  Boot ID:                    261b5f52-80a7-42ca-a2b0-a9b581e3320a
+  Kernel Version:             6.6.87.2-microsoft-standard-WSL2
+  OS Image:                   K3s v1.35.5+k3s1
+  Operating System:           linux
+  Architecture:               amd64
+  Container Runtime Version:  containerd://2.2.3-k3s1
+  Kubelet Version:            v1.35.5+k3s1
+  Kube-Proxy Version:         
+PodCIDR:                      10.42.1.0/24
+PodCIDRs:                     10.42.1.0/24
+ProviderID:                   k3s://k3d-rr-faults-agent-0
+Non-terminated Pods:          (1 in total)
+  Namespace                   Name                       CPU Requests  CPU Limits  Memory Requests  Memory Limits  Age
+  ---------                   ----                       ------------  ----------  ---------------  -------------  ---
+  rr-pdb-blocks-drain         ledger-77bf7b65bc-q6bvq    0 (0%)        0 (0%)      0 (0%)           0 (0%)         80s
+Allocated resources:
+  (Total limits may be over 100 percent, i.e., overcommitted.)
+  Resource           Requests  Limits
+  --------           --------  ------
+  cpu                0 (0%)    0 (0%)
+  memory             0 (0%)    0 (0%)
+  ephemeral-storage  0 (0%)    0 (0%)
+  hugepages-1Gi      0 (0%)    0 (0%)
+  hugepages-2Mi      0 (0%)    0 (0%)
+Events:
+  Type    Reason                   Age   From                   Message
+  ----    ------                   ----  ----                   -------
+  Normal  CertificateExpirationOK  15m   k3s-cert-monitor       Node and Certificate Authority certificates managed by k3s are OK
+  Normal  CIDRAssignmentFailed     15m   cidrAllocator          Node k3d-rr-faults-agent-0 status is now: CIDRAssignmentFailed
+  Normal  Synced                   15m   cloud-node-controller  Node synced successfully
+  Normal  RegisteredNode           15m   node-controller        Node k3d-rr-faults-agent-0 event: Registered Node k3d-rr-faults-agent-0 in Controller
+  Normal  NodeNotReady             2s    node-controller        Node k3d-rr-faults-agent-0 status is now: NodeNotReady

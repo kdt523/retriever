@@ -1,0 +1,32 @@
+{
+ "id": "pending-node-selector",
+ "runbook": "pending-taints-affinity",
+ "description": "A nodeSelector asks for a node label that no node has.",
+ "status": "ok",
+ "missing": [],
+ "error": "",
+ "captured_at": "2026-10-02T06:18:19+00:00",
+ "seconds": 2.4,
+ "versions": {
+  "client": "v1.34.1",
+  "server": "v1.35.5+k3s1"
+ },
+ "namespace": "rr-pending-node-selector",
+ "sections": [
+  {
+   "title": "pods",
+   "command": "kubectl get pods -n rr-pending-node-selector -o wide",
+   "output": "NAME                      READY   STATUS    RESTARTS   AGE   IP       NODE     NOMINATED NODE   READINESS GATES\nsearch-5d54984d5b-rg6gz   0/1     Pending   0          1s    <none>   <none>   <none>           <none>"
+  },
+  {
+   "title": "describe pods",
+   "command": "kubectl describe pods -n rr-pending-node-selector",
+   "output": "Name:             search-5d54984d5b-rg6gz\nNamespace:        rr-pending-node-selector\nPriority:         0\nService Account:  default\nNode:             <none>\nLabels:           app=search\n                  pod-template-hash=5d54984d5b\nAnnotations:      <none>\nStatus:           Pending\nIP:               \nIPs:              <none>\nControlled By:    ReplicaSet/search-5d54984d5b\nContainers:\n  search:\n    Image:        nginx:1.27-alpine\n    Port:         <none>\n    Host Port:    <none>\n    Environment:  <none>\n    Mounts:\n      /var/run/secrets/kubernetes.io/serviceaccount from kube-api-access-l6kkr (ro)\nConditions:\n  Type           Status\n  PodScheduled   False \nVolumes:\n  kube-api-access-l6kkr:\n    Type:                    Projected (a volume that contains injected data from multiple sources)\n    TokenExpirationSeconds:  3607\n    ConfigMapName:           kube-root-ca.crt\n    Optional:                false\n    DownwardAPI:             true\nQoS Class:                   BestEffort\nNode-Selectors:              disktype=ssd\nTolerations:                 node.kubernetes.io/not-ready:NoExecute op=Exists for 300s\n                             node.kubernetes.io/unreachable:NoExecute op=Exists for 300s\nEvents:\n  Type     Reason            Age   From               Message\n  ----     ------            ----  ----               -------\n  Warning  FailedScheduling  1s    default-scheduler  0/2 nodes are available: 2 node(s) didn't match Pod's node affinity/selector. no new claims to deallocate, preemption: 0/2 nodes are available: 2 Preemption is not helpful for scheduling."
+  },
+  {
+   "title": "events",
+   "command": "kubectl get events -n rr-pending-node-selector --sort-by=.lastTimestamp",
+   "output": "LAST SEEN   TYPE      REASON              OBJECT                         MESSAGE\n1s          Warning   FailedScheduling    pod/search-5d54984d5b-rg6gz    0/2 nodes are available: 2 node(s) didn't match Pod's node affinity/selector. no new claims to deallocate, preemption: 0/2 nodes are available: 2 Preemption is not helpful for scheduling.\n1s          Normal    SuccessfulCreate    replicaset/search-5d54984d5b   Created pod: search-5d54984d5b-rg6gz\n1s          Normal    ScalingReplicaSet   deployment/search              Scaled up replica set search-5d54984d5b from 0 to 1"
+  }
+ ]
+}

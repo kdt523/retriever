@@ -1,0 +1,42 @@
+{
+ "id": "init-migration-fails",
+ "runbook": "init-container-stuck",
+ "description": "A database migration init container fails, so the app container never starts.",
+ "status": "ok",
+ "missing": [],
+ "error": "",
+ "captured_at": "2026-10-02T06:15:53+00:00",
+ "seconds": 8.8,
+ "versions": {
+  "client": "v1.34.1",
+  "server": "v1.35.5+k3s1"
+ },
+ "namespace": "rr-init-migration-fails",
+ "sections": [
+  {
+   "title": "pods",
+   "command": "kubectl get pods -n rr-init-migration-fails -o wide",
+   "output": "NAME                        READY   STATUS       RESTARTS     AGE   IP           NODE                     NOMINATED NODE   READINESS GATES\naccounts-55f6f5bb9c-6j6hj   0/1     Init:Error   1 (5s ago)   7s    10.42.0.11   k3d-rr-faults-server-0   <none>           <none>"
+  },
+  {
+   "title": "describe pods",
+   "command": "kubectl describe pods -n rr-init-migration-fails",
+   "output": "Name:             accounts-55f6f5bb9c-6j6hj\nNamespace:        rr-init-migration-fails\nPriority:         0\nService Account:  default\nNode:             k3d-rr-faults-server-0/172.21.0.3\nStart Time:       Fri, 02 Oct 2026 11:45:09 +0530\nLabels:           app=accounts\n                  pod-template-hash=55f6f5bb9c\nAnnotations:      <none>\nStatus:           Pending\nIP:               10.42.0.11\nIPs:\n  IP:           10.42.0.11\nControlled By:  ReplicaSet/accounts-55f6f5bb9c\nInit Containers:\n  migrate:\n    Container ID:  containerd://863440424a7c17400d2957df4dd9fbe26980955250077292aa3acda713491265\n    Image:         python:3.12-alpine\n    Image ID:      sha256:979e5a8a56846771598d47ebf1f8a75b46155104e168a0b237c0783c1dedff8a\n    Port:          <none>\n    Host Port:     <none>\n    Command:\n      python\n      -c\n    Args:\n      import sys\n      print(\"applying migration 0042_add_account_status\", flush=True)\n      print('ERROR: relation \"accounts_status\" already exists', flush=True)\n      sys.exit(1)\n      \n    State:          Terminated\n      Reason:       Error\n      Exit Code:    1\n      Started:      Fri, 02 Oct 2026 11:45:12 +0530\n      Finished:     Fri, 02 Oct 2026 11:45:12 +0530\n    Last State:     Terminated\n      Reason:       Error\n      Exit Code:    1\n      Started:      Fri, 02 Oct 2026 11:45:11 +0530\n      Finished:     Fri, 02 Oct 2026 11:45:11 +0530\n    Ready:          False\n    Restart Count:  1\n    Environment:    <none>\n    Mounts:\n      /var/run/secrets/kubernetes.io/serviceaccount from kube-api-access-967cp (ro)\nContainers:\n  accounts:\n    Container ID:   \n    Image:          nginx:1.27-alpine\n    Image ID:       \n    Port:           <none>\n    Host Port:      <none>\n    State:          Waiting\n      Reason:       PodInitializing\n    Ready:          False\n    Restart Count:  0\n    Environment:    <none>\n    Mounts:\n      /var/run/secrets/kubernetes.io/serviceaccount from kube-api-access-967cp (ro)\nConditions:\n  Type                        Status\n  PodReadyToStartContainers   True \n  Initialized                 False \n  Ready                       False \n  ContainersReady             False \n  PodScheduled                True \nVolumes:\n  kube-api-access-967cp:\n    Type:                    Projected (a volume that contains injected data from multiple sources)\n    TokenExpirationSeconds:  3607\n    ConfigMapName:           kube-root-ca.crt\n    Optional:                false\n    DownwardAPI:             true\nQoS Class:                   BestEffort\nNode-Selectors:              <none>\nTolerations:                 node.kubernetes.io/not-ready:NoExecute op=Exists for 300s\n                             node.kubernetes.io/unreachable:NoExecute op=Exists for 300s\nEvents:\n  Type     Reason     Age              From               Message\n  ----     ------     ----             ----               -------\n  Normal   Scheduled  7s               default-scheduler  Successfully assigned rr-init-migration-fails/accounts-55f6f5bb9c-6j6hj to k3d-rr-faults-server-0\n  Normal   Pulled     5s (x2 over 6s)  kubelet            Container image \"python:3.12-alpine\" already present on machine and can be accessed by the pod\n  Normal   Created    5s (x2 over 6s)  kubelet            Container created\n  Normal   Started    5s (x2 over 6s)  kubelet            Container started\n  Warning  BackOff    4s               kubelet            Back-off restarting failed container migrate in pod accounts-55f6f5bb9c-6j6hj_rr-init-migration-fails(3a1272ac-f429-41ae-8e36-f96451308130)"
+  },
+  {
+   "title": "events",
+   "command": "kubectl get events -n rr-init-migration-fails --sort-by=.lastTimestamp",
+   "output": "LAST SEEN   TYPE      REASON              OBJECT                           MESSAGE\n7s          Normal    Scheduled           pod/accounts-55f6f5bb9c-6j6hj    Successfully assigned rr-init-migration-fails/accounts-55f6f5bb9c-6j6hj to k3d-rr-faults-server-0\n8s          Normal    SuccessfulCreate    replicaset/accounts-55f6f5bb9c   Created pod: accounts-55f6f5bb9c-6j6hj\n8s          Normal    ScalingReplicaSet   deployment/accounts              Scaled up replica set accounts-55f6f5bb9c from 0 to 1\n5s          Normal    Pulled              pod/accounts-55f6f5bb9c-6j6hj    Container image \"python:3.12-alpine\" already present on machine and can be accessed by the pod\n5s          Normal    Created             pod/accounts-55f6f5bb9c-6j6hj    Container created\n5s          Normal    Started             pod/accounts-55f6f5bb9c-6j6hj    Container started\n4s          Warning   BackOff             pod/accounts-55f6f5bb9c-6j6hj    Back-off restarting failed container migrate in pod accounts-55f6f5bb9c-6j6hj_rr-init-migration-fails(3a1272ac-f429-41ae-8e36-f96451308130)"
+  },
+  {
+   "title": "logs accounts-55f6f5bb9c-6j6hj/migrate (previous)",
+   "command": "kubectl logs accounts-55f6f5bb9c-6j6hj -n rr-init-migration-fails -c migrate --tail=30 --previous",
+   "output": "unable to retrieve container logs for containerd://c3b79d31a61e1bc99d202b3ea24eced10b595671461643449182d9958df9e19d"
+  },
+  {
+   "title": "logs accounts-55f6f5bb9c-6j6hj/migrate",
+   "command": "kubectl logs accounts-55f6f5bb9c-6j6hj -n rr-init-migration-fails -c migrate --tail=30",
+   "output": "applying migration 0042_add_account_status\nERROR: relation \"accounts_status\" already exists"
+  }
+ ]
+}

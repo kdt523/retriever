@@ -1,0 +1,54 @@
+id: volume-node-affinity
+runbook: volume-node-affinity-conflict
+description: A local volume is bound on one node; the next pod using it is pinned to another node.
+manifests: |
+  apiVersion: v1
+  kind: PersistentVolumeClaim
+  metadata: {name: reports-data}
+  spec:
+    storageClassName: local-path
+    accessModes: [ReadWriteOnce]
+    resources: {requests: {storage: 1Gi}}
+  ---
+  apiVersion: v1
+  kind: Pod
+  metadata: {name: writer, labels: {app: writer}}
+  spec:
+    terminationGracePeriodSeconds: 1
+    nodeSelector: {kubernetes.io/hostname: "{agent}"}
+    containers:
+      - name: writer
+        image: busybox:1.36
+        command: ["sh", "-c", "echo report > /data/report.txt; sleep 3600"]
+        volumeMounts: [{name: data, mountPath: /data}]
+    volumes:
+      - name: data
+        persistentVolumeClaim: {claimName: reports-data}
+  ---
+  apiVersion: apps/v1
+  kind: Deployment
+  metadata: {name: reports, labels: {app: reports}}
+  spec:
+    replicas: 0
+    selector: {matchLabels: {app: reports}}
+    template:
+      metadata: {labels: {app: reports}}
+      spec:
+        terminationGracePeriodSeconds: 2
+        nodeSelector: {kubernetes.io/hostname: "{server}"}
+        containers:
+          - name: reports
+            image: nginx:1.27-alpine
+            volumeMounts: [{name: data, mountPath: /data}]
+        volumes:
+          - name: data
+            persistentVolumeClaim: {claimName: reports-data}
+steps:
+  - run: [kubectl, wait, --for=condition=Ready, pod/writer, -n, "{ns}", --timeout=180s]
+  - run: [kubectl, delete, pod, writer, -n, "{ns}", --wait=true]
+  - run: [kubectl, scale, deployment/reports, --replicas=1, -n, "{ns}"]
+capture:
+  - [get, pvc, -n, "{ns}"]
+  - [get, pv, -o, "custom-columns=NAME:.metadata.name,CLAIM:.spec.claimRef.name,NODE-AFFINITY:.spec.nodeAffinity.required.nodeSelectorTerms[*].matchExpressions[*].values"]
+expect:
+  - "didn't match PersistentVolume's node affinity|volume node affinity conflict"
