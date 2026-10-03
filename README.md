@@ -1,148 +1,134 @@
 # RunbookRetriever
 
-Fine-tuned `BAAI/bge-small-en-v1.5` embeddings that retrieve the right Kubernetes runbook or doc
-section from messy incident signals (pod status, events, exit codes, log tails).
+Fine-tuning a small embedding model (`BAAI/bge-small-en-v1.5`, 33M parameters) to find the right
+Kubernetes runbook or documentation section from messy incident signals: pod status, events,
+exit codes and log tails.
 
-**Result on a locked 269-query test set** (generated queries, real incidents, Stack Overflow):
-fine-tuning raises top-5 accuracy from 83.3% to 88.8% (mean of 3 seeds) and top-1 from 56.5% to
-64.1%, matching the 3x larger bge-base. Combined with BM25 it reaches 90.3% top-5 and 66.9% top-1.
-Full tables, ablations and error analysis are below; every number comes from `results/`.
+**The problem.** During an incident, an engineer (or an AI agent) pastes something like
+`Reason: OOMKilled, Exit Code 137` and needs the one page that explains it. Keyword search misses
+paraphrases, and an off-the-shelf embedding model has never seen Kubernetes failure modes.
 
-> **Status:** corpus, training data, evaluation, fine-tuning, ablations and error analysis are done
-> (Phases 1-5). Next: ONNX export and a FastAPI search service (Phase 6, not built yet).
+**The result** on a locked 269-query test set (generated queries, real incidents, Stack Overflow
+questions), searching 3,340 chunks:
 
-The full plan, research and success criteria are in [docs/PLAN.md](docs/PLAN.md).
+| Retriever | Right chunk ranked 1st | In top 5 | In top 10 |
+| --- | --- | --- | --- |
+| BM25 keyword search | 62.8% | 82.2% | 88.5% |
+| bge-small, no fine-tuning | 56.5% | 83.3% | 89.2% |
+| bge-base (3x larger, no fine-tuning) | 62.1% | 88.1% | 92.9% |
+| **bge-small, fine-tuned (mean of 3 seeds)** | **64.1%** | **88.8%** | **94.1%** |
+| **Fine-tuned + BM25 hybrid** | **66.9%** | **90.3%** | **94.1%** |
 
-## Quick start
+Fine-tuning gains +7.6 points top-1 and +5.5 points top-5 over the same model untrained, and the
+33M-parameter model matches the 3x larger bge-base. Seed-to-seed spread is small (top-5 sd 0.4
+points). Every number here comes from [`results/`](results/); full metrics (MRR, NDCG) and
+per-slice tables are in [`results/final.csv`](results/final.csv).
 
-Requirements: [uv](https://docs.astral.sh/uv/), GNU make, git. An NVIDIA GPU is optional
-(training falls back to CPU).
+**A real example** from the test set. Query: *"pods without gpu requirements are landing on our
+accelerated nodes and blocking jobs"*.
+
+| | Top result | Rank of the correct chunk |
+| --- | --- | --- |
+| Untrained bge-small | *Pods Pending due to insufficient CPU or memory* (a runbook) | 22 |
+| Fine-tuned | *Taints and Tolerations > Example Use Cases* (the GPU-node taint section) | 1 |
+
+> **Status:** data pipeline, fine-tuning, evaluation, ablations and error analysis are done.
+> An ONNX export and FastAPI search service are planned but not built, and the tuned model is not
+> published yet (`models/` is git-ignored), so there is nothing to download or call today.
+
+## How it works
+
+1. **Corpus.** Kubernetes docs (3,340 chunks from 197 pages) plus 35 hand-written runbooks.
+   30 of the runbooks were checked against real failures injected into a local k3d cluster
+   (`faults/`, `data/incidents/`).
+2. **Training data.** Gemini writes questions for each chunk in 5 styles (error string, symptom,
+   how-to, kubectl output, incident snapshot). Questions that copy the chunk's wording, or that a
+   baseline model cannot connect to their chunk, are dropped. Whole documents are assigned to
+   train, validation or test before any generation, so test text never leaks into training.
+   Result: about 5,000 question-passage pairs and 4,634 triplets with mined hard negatives.
+3. **Fine-tuning** (`make train`). Contrastive learning with
+   `CachedMultipleNegativesRankingLoss`: batch size 64 via gradient caching, learning rate 2e-5
+   with 10% warmup, 3 epochs, fp16, max sequence length 256. One run takes about 10 minutes on a
+   4 GB RTX 3050. The best checkpoint is chosen on a validation set, never on the test set.
+4. **Evaluation** (`make evaluate`). Retrieval over the whole corpus on a test set frozen with
+   file hashes. Metrics: hit@k (the right chunk is in the top k), MRR@10, NDCG@10, reported per
+   query type. Compared against BM25, MiniLM, bge-small and bge-base.
+
+## What the experiments showed
+
+Ablations (`make ablate`), test set, one run each unless noted:
+
+| Variant | top-5 | NDCG@10 |
+| --- | --- | --- |
+| No fine-tuning | 83.3% | 0.626 |
+| 25% of the training pairs | 84.8% | 0.632 |
+| 50% of the training pairs | 88.1% | 0.644 |
+| 1 epoch instead of 3 | 87.0% | 0.646 |
+| No hard negatives | 89.6% | 0.673 |
+| Full recipe (3 seeds, mean) | 88.8% | 0.664 |
+
+- More training data helps steadily, and 3 epochs beat 1.
+- **Mined hard negatives gave no measurable gain** at this data size; the difference is inside
+  the seed noise. They are kept in the pipeline but are not what produces the result.
+- BM25 is a strong baseline on exact error strings and kubectl output, which is why the hybrid
+  (rank fusion of BM25 and the tuned model) is the best system overall.
+- **Error analysis** (`results/error_analysis.md`): of the 30 worst test queries, 17 are real
+  model misses (usually the right page but a neighbouring chunk), 9 are ambiguous queries or
+  answer keys that miss an equally good chunk, 2 have no good chunk in the corpus, and 2 are
+  wrong labels.
+
+## Limitations
+
+- **The gain is smaller on the test set than on validation** (+5.5 vs +11.0 points top-5). The
+  test set contains real incidents and Stack Overflow questions, which the generated training
+  questions resemble less.
+- **Stack Overflow questions are the weak spot**: tuned top-5 is 68.8% against 84.4% for
+  bge-base (32 questions, so one question is 3 points).
+- **Test labels were written by Claude and spot-checked by a human**: a blind check of 30 pairs
+  agreed on 24 (80%), and the human verdict wins where they differ. Two test labels were later
+  found to be wrong; the frozen files are not edited, and this is recorded in
+  [`docs/DECISIONS.md`](docs/DECISIONS.md) (D20, D22).
+- Slices with 4 to 10 queries (incident snapshots, held-out incidents) are too small to rank
+  retrievers.
+- Not done: section-title ablation, synthetic-vs-real training queries ablation, a forgetting
+  check on a general retrieval benchmark.
+
+## Reproduce
+
+Requires [uv](https://docs.astral.sh/uv/), GNU make and git; an NVIDIA GPU is optional (training
+falls back to CPU, slower). The committed `data/splits/` are enough to retrain and evaluate; a
+Gemini key (`.env`, see `.env.example`) is only needed to regenerate the questions with
+`make data`.
 
 ```bash
-make setup        # install Python 3.12 env with CUDA PyTorch + dev tools
-cp .env.example .env   # then put your Gemini API key in it (needed from Phase 2)
-make check-env    # print Python / torch / GPU / settings
-make check        # lint + typecheck + tests
+make setup        # Python 3.12 env with CUDA PyTorch
+make corpus       # fetch the pinned Kubernetes docs and build data/corpus.jsonl
+make check        # lint, type-check and 123 offline tests
+make train        # fine-tune -> models/bge-small-rr
+make evaluate     # test-set table -> results/final.csv, worst-30 error report
+make ablate       # the 6 ablation/seed runs (about an hour on the RTX 3050)
 ```
 
-## Pipeline
-
-| Phase | What | Make target | Output |
-| --- | --- | --- | --- |
-| 0 | Scaffold | `make check` | — |
-| 1 | Build corpus (`make inspect` to eyeball chunks) | `make corpus` | `data/corpus.jsonl` |
-| 1b | Verify runbooks: inject 36 faults into k3d, record real output | `make cluster-up faults` | `data/incidents/` |
-| 2 | Generate, filter, split, mine negatives | `make data` | `data/splits/` |
-| 3 | Baselines | `make baseline` | `results/baseline.csv` |
-| 4 | Fine-tune | `make train` | `models/` |
-| 5 | Ablations, error analysis | `make evaluate` | `results/final.csv` |
-| 6 | ONNX int8 + FastAPI (planned) | not built yet | — |
-
 Every run appends its config, wall-clock time, peak RAM/VRAM and metrics to `results/runs.csv`.
+Design decisions and their reasons are logged in [`docs/DECISIONS.md`](docs/DECISIONS.md); the
+original plan is [`docs/PLAN.md`](docs/PLAN.md).
 
-### Phase 3 baselines (frozen test set, 269 queries, from `results/baseline.csv`)
-
-| Retriever | hit@1 | hit@10 | MRR@10 | NDCG@10 |
-| --- | --- | --- | --- | --- |
-| BM25 | 0.628 | 0.885 | 0.705 | 0.557 |
-| all-MiniLM-L6-v2 | 0.532 | 0.885 | 0.651 | 0.566 |
-| bge-small-en-v1.5 | 0.565 | 0.892 | 0.684 | 0.626 |
-| bge-base-en-v1.5 | 0.621 | 0.929 | 0.725 | 0.677 |
-| Hybrid BM25 + bge-small (RRF) | 0.665 | 0.941 | 0.761 | 0.658 |
-
-Test labels were written by Claude and audited by a blind human spot check (24/30 agreement,
-`results/label_agreement.json`); see `docs/DECISIONS.md` D20. Per-slice numbers are in the CSV.
-
-### Phase 4 fine-tuning (val set, 715 queries, from `results/tuned_val.csv`)
-
-| Retriever | hit@1 | hit@5 | hit@10 | MRR@10 | NDCG@10 |
-| --- | --- | --- | --- | --- | --- |
-| bge-small (base) | 0.387 | 0.678 | 0.792 | 0.514 | 0.576 |
-| bge-small tuned (`make train`) | 0.505 | 0.786 | 0.870 | 0.625 | 0.679 |
-| Hybrid BM25 + tuned (RRF) | 0.546 | 0.814 | 0.891 | 0.659 | 0.709 |
-
-Val is the model-selection set, so these numbers are optimistic; the frozen test set is scored
-once in Phase 5. Training setup and deviations from the plan: `docs/DECISIONS.md` D21.
-
-### Phase 5 results (frozen test set, 269 queries, from `results/final.csv`)
-
-| Retriever | hit@1 | hit@5 | hit@10 | MRR@10 | NDCG@10 |
-| --- | --- | --- | --- | --- | --- |
-| BM25 | 0.628 | 0.822 | 0.885 | 0.705 | 0.557 |
-| all-MiniLM-L6-v2 | 0.532 | 0.799 | 0.885 | 0.651 | 0.566 |
-| bge-small (base) | 0.565 | 0.833 | 0.892 | 0.684 | 0.626 |
-| bge-base | 0.621 | 0.881 | 0.929 | 0.725 | 0.677 |
-| **bge-small tuned** | 0.639 | 0.892 | 0.941 | 0.746 | 0.664 |
-| Hybrid BM25 + bge-small | 0.665 | 0.881 | 0.941 | 0.760 | 0.658 |
-| **Hybrid BM25 + tuned** | 0.669 | 0.903 | 0.941 | 0.766 | 0.657 |
-
-hit@5 per slice (n in the header row):
-
-| Retriever | low overlap (n=59) | error string (n=27) | symptom (n=61) | how-to (n=64) | kubectl output (n=17) | real incident (seen runbook) (n=54) | real incident (held-out runbook) (n=10) | Stack Overflow (n=32) |
-| --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| BM25 | 0.661 | 1.000 | 0.770 | 0.734 | 1.000 | 0.926 | 1.000 | 0.594 |
-| bge-small (base) | 0.831 | 0.926 | 0.803 | 0.859 | 0.824 | 0.907 | 1.000 | 0.594 |
-| bge-base | 0.864 | 0.926 | 0.836 | 0.938 | 0.882 | 0.889 | 0.800 | 0.844 |
-| **bge-small tuned** | 0.932 | 0.926 | 0.885 | 0.922 | 0.941 | 0.944 | 0.900 | 0.688 |
-| **Hybrid BM25 + tuned** | 0.848 | 1.000 | 0.918 | 0.844 | 0.941 | 0.963 | 1.000 | 0.750 |
-
-**What the numbers say**
-
-- Fine-tuning helps, less than val suggested. On the test set the tuned bge-small gains
-  +7.6 points hit@1 and +5.5 points hit@5 over the untuned model (mean over 3 seeds: hit@1
-  0.641 ± 0.006, hit@5 0.888 ± 0.004), and it beats the 3x larger bge-base on hit@1, hit@5 and
-  hit@10 but not on NDCG@10. The plan's target of +10 points hit@5 was met on val (+11.0) and
-  not on test.
-- BM25 is a strong baseline here: it wins hit@5 on error strings and kubectl output, and ties the
-  tuned model on hit@1 overall. The hybrid (RRF of BM25 and the tuned model) has the best hit@1,
-  hit@5 and MRR@10. NDCG@10 understates it on the incident slices (see D19).
-- Stack Overflow questions are the weak spot: tuned hit@5 0.688 against 0.844 for bge-base
-  (n=32, so one query is 3 points).
-- Slices with 4 to 10 queries (incident snapshots, held-out incidents) are too small to rank
-  retrievers; read them as smoke tests.
-
-### Phase 5 ablations (`make ablate`, tables in `results/ablations.md`)
-
-Test hit@5 / NDCG@10 (val in the same file); one run each unless noted.
-
-| Variant | test hit@5 | test NDCG@10 | val NDCG@10 |
-| --- | --- | --- | --- |
-| untrained bge-small | 0.833 | 0.626 | 0.576 |
-| 25% of training pairs | 0.848 | 0.632 | 0.642 |
-| 50% of training pairs | 0.881 | 0.644 | 0.659 |
-| 1 epoch instead of 3 | 0.870 | 0.646 | 0.652 |
-| no hard negatives | 0.896 | 0.673 | 0.672 |
-| full (3 seeds, mean) | 0.888 | 0.664 | 0.676 |
-
-- More data helps steadily (25% to 50% to 100%), and three epochs beat one.
-- Hard negatives did not help: val NDCG@10 is 0.004 lower without them, which is inside the
-  seed spread (sd 0.002), and test is slightly higher without. The mined negatives (D17) are
-  not buying anything at this data size.
-- Seed spread is small (sd about 0.002 NDCG@10 on val).
-- Not run: section-title prefix on/off, synthetic-only vs real queries, and the forgetting check
-  on an MTEB retrieval subset.
-
-### Error analysis (`results/error_analysis.md`)
-
-The 30 test queries where the tuned model ranks the right chunk lowest, tagged by hand:
-17 model misses (mostly the right page but a neighbouring chunk, or a long pasted question hiding
-the real one), 9 ambiguous queries or incomplete answer keys (another returned chunk answers the
-question as well), 2 questions with no good chunk in the corpus, and 2 wrong labels in the test
-set (D22). That is about 4 of the 30 worst cases that are the test set's fault, not the model's.
+**Built with** Python 3.12, PyTorch, sentence-transformers, Hugging Face datasets, Gemini API,
+BM25 (rank-bm25), pytest, ruff, mypy, k3d, uv.
 
 ## Repo layout
 
 ```
-src/runbook_retriever/   # library + one module per pipeline phase
+src/runbook_retriever/   # library, one module per pipeline stage (train.py, evaluate.py, ...)
 tests/                   # offline unit tests (network is blocked)
+configs/                 # corpus and training configs
 runbooks/                # hand-written runbooks (part of the corpus)
-faults/                  # fault-injection scenarios used to verify runbooks
-data/                    # raw sources, corpus, splits, LLM cache (git-ignored except splits)
-results/                 # CSV results (committed)
-configs/                 # training configs
+faults/                  # fault-injection scenarios used to verify the runbooks
+data/                    # frozen splits and labels (raw sources and caches are git-ignored)
+results/                 # result tables, ablations, error analysis
 scripts/                 # ablation runner
 review/                  # Streamlit app used to check the test labels
-docs/                    # plan and decision log
+docs/                    # decision log and plan
 ```
 
 ## Data sources and licences
@@ -150,3 +136,6 @@ docs/                    # plan and decision log
 - Kubernetes documentation from [kubernetes/website](https://github.com/kubernetes/website),
   pinned in `configs/corpus.yaml`, licensed CC BY 4.0. Chunks keep their source URL.
 - `runbooks/`: written for this project; symptom text checked against `data/incidents/`.
+- Test questions from Stack Overflow, via the
+  [`mcipriano/stackoverflow-kubernetes-questions`](https://huggingface.co/datasets/mcipriano/stackoverflow-kubernetes-questions)
+  dataset, licensed CC BY-SA 4.0. The questions belong to their authors on Stack Overflow.
