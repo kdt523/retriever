@@ -1,0 +1,20 @@
+{"id": "7ae2c9b0af4af4f1", "verdict": "correct", "also_relevant": ["B"], "reason": "names the job-tracking finalizer holding Job pods"}
+{"id": "28d14efdcc9a1dd9", "verdict": "correct", "also_relevant": [], "reason": "activeDeadlineSeconds causes Failed with DeadlineExceeded"}
+{"id": "406362474f40f4c7", "verdict": "correct", "also_relevant": ["E"], "reason": "tolerationSeconds 3600 semantics for matching NoExecute taints"}
+{"id": "b4cd4a35c3b0a031", "verdict": "correct", "also_relevant": [], "reason": "revoked 60 seconds after the pod's deletionTimestamp"}
+{"id": "bd181423faecc313", "verdict": "ambiguous", "also_relevant": [], "reason": "bare job listing, no problem stated"}
+{"id": "6f727b4406530315", "verdict": "correct", "also_relevant": ["A"], "reason": "run kubectl version to check client compatibility"}
+{"id": "62d5b3c267ea76b6", "verdict": "correct", "also_relevant": [], "reason": "without limits, downward API exposes node allocatable"}
+{"id": "3f07a195388547b8", "verdict": "correct", "also_relevant": [], "reason": "DaemonSet controller adds pid-pressure NoSchedule toleration"}
+{"id": "372b2a842f08aa49", "verdict": "correct", "also_relevant": [], "reason": "Suspended condition lastTransitionTime shows how long"}
+{"id": "b8db72370f0b3887", "verdict": "correct", "also_relevant": ["A"], "reason": "entries must use label key format, max 20"}
+{"id": "ec58981e9eae2d15", "verdict": "ambiguous", "also_relevant": [], "reason": "healthy process listing copied from docs, no problem"}
+{"id": "c59050bea325634f", "verdict": "correct", "also_relevant": ["B", "E"], "reason": "terminating pods keep tracking finalizer until terminal phase"}
+{"id": "1ca216c14cd3e8c4", "verdict": "correct", "also_relevant": [], "reason": "add extended resource name under resources.limits"}
+{"id": "02f5112c271a4662", "verdict": "ambiguous", "also_relevant": [], "reason": "pasted kuberc YAML, no question"}
+{"id": "5966cb9a0912b61b", "verdict": "correct", "also_relevant": [], "reason": "disabling the gate needs Gt/Lt removed first; watch validation errors"}
+{"id": "ee404dcfa592ff26", "verdict": "correct", "also_relevant": ["A", "D"], "reason": "describe node shows allocated resources and allocatable"}
+{"id": "8e2e6b633c534c65", "verdict": "ambiguous", "also_relevant": [], "reason": "pasted kuberc YAML, no question"}
+{"id": "8983c06ed00dbd64", "verdict": "correct", "also_relevant": [], "reason": "check and switch kubectl context"}
+{"id": "82ca8e8c5b22959f", "verdict": "correct", "also_relevant": ["A", "B"], "reason": "use service.namespace in the DNS name"}
+{"id": "b2d19eafa306b381", "verdict": "correct", "also_relevant": ["A", "B"], "reason": "describe shows OOMKilled exit 137 from exceeding memory limit"}

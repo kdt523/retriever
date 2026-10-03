@@ -1,0 +1,10 @@
+{"id": "c0bfd4d99f84a83e", "relevant": [], "reason": "snap helm cannot see gcloud auth helper; not covered"}
+{"id": "771d230cc5737d93", "relevant": ["A", "B"], "reason": "local storage needs volumeBindingMode WaitForFirstConsumer"}
+{"id": "440016c9af3fc65d", "relevant": [], "reason": "needs sessionAffinity ClientIP; no candidate shows it"}
+{"id": "2e2feabe79192eee", "relevant": [], "reason": "needs pods/log subresource; no candidate mentions it"}
+{"id": "496cb9b87602f268", "relevant": [], "reason": "Spring Cloud dual discovery beans; out of scope"}
+{"id": "96b56d2f9a324e42", "relevant": [], "reason": "shell quoting passes command as one argv; not covered"}
+{"id": "d6e4d09eabd3078c", "relevant": ["G", "J"], "reason": "pod affinity with zone topology co-locates a workload in one zone"}
+{"id": "3d4a443691e1c1ae", "relevant": [], "reason": "CoreDNS port 53 refused on nodes; candidates generic DNS checks"}
+{"id": "1712c2ddc3aadb42", "relevant": [], "reason": "GKE instance group nodes not registering; cloud-specific"}
+{"id": "6e3590d1417a25c0", "relevant": ["A"], "reason": "Job .spec.template is required, so pass it to the spec"}

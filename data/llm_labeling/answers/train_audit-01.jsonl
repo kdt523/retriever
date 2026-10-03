@@ -1,0 +1,50 @@
+{"id": "c69bb0420705b757", "verdict": "correct", "reason": "lists failing startup probes as a CrashLoopBackOff cause"}
+{"id": "fe8e578e11b17a77", "verdict": "correct", "reason": "missing endpoints: list pods with the Service selector"}
+{"id": "02f768ea637555f5", "verdict": "wrong", "reason": "only says the metrics exist; does not explain them missing"}
+{"id": "23fc5c9a0ce75d1c", "verdict": "correct", "reason": "over 100 missed schedules stops the Job; startingDeadlineSeconds"}
+{"id": "6beb0284d29da9f8", "verdict": "correct", "reason": "set windowsOptions.hostProcess for privileged Windows containers"}
+{"id": "d83fb8936c5db0f7", "verdict": "wrong", "reason": "mentions PV node affinity but shows no configuration"}
+{"id": "048b2692885ef08d", "verdict": "correct", "reason": "states request-sum and per-container limit validation rules"}
+{"id": "8006d5021d21261a", "verdict": "wrong", "reason": "bare Ingress listing, no question"}
+{"id": "8968f3a3f50422ad", "verdict": "correct", "reason": "rollback to last deployed revision clears the stuck release lock"}
+{"id": "0bd5034f31a94c6a", "verdict": "correct", "reason": "controlledResources restricts VPA to memory"}
+{"id": "4d949d6855b78190", "verdict": "correct", "reason": "lowercase m means milli: 400m is 0.4 bytes"}
+{"id": "9fc425b9359e129f", "verdict": "wrong", "reason": "generic voluntary disruptions intro; not PDB-blocked drains"}
+{"id": "110cf9aa4f7322d4", "verdict": "correct", "reason": "trafficDistribution values are preferences, not guarantees"}
+{"id": "4dcecc28f0fbe759", "verdict": "correct", "reason": "kube_pod_overhead_* metrics in kube-state-metrics"}
+{"id": "18755030a48d4890", "verdict": "correct", "reason": "kubelet does not support multiple image/container filesystems"}
+{"id": "07bacafb5febd215", "verdict": "correct", "reason": "PVCs without class bind to the default; newest default wins"}
+{"id": "2db5272cc93783a7", "verdict": "correct", "reason": "explains when kubelet records a ProbeWarning event"}
+{"id": "d432d24bbf1bbedf", "verdict": "correct", "reason": "maxContainerRestartPeriod lowers the 300s backoff cap"}
+{"id": "7cc4cd52ab8e143f", "verdict": "wrong", "reason": "only mentions hostUsers as a procMount prerequisite"}
+{"id": "6bdfddb3e38ed505", "verdict": "wrong", "reason": "says SCTP needs CNI support but names no plugins"}
+{"id": "8a962394386a5ca0", "verdict": "correct", "reason": "download crictl from cri-tools releases into PATH"}
+{"id": "acc16fc1898da4b7", "verdict": "correct", "reason": "exec probes fork processes and add node CPU overhead"}
+{"id": "7efbcb286f33b5a2", "verdict": "correct", "reason": "local user HostProcess containers need containerd v1.7+"}
+{"id": "b5c547953400ac73", "verdict": "correct", "reason": "kubectl logs pod -c init-container"}
+{"id": "029a80ff8522a8f1", "verdict": "correct", "reason": "provides the rediswq.py Python work queue client"}
+{"id": "fdb44f88ada4d442", "verdict": "correct", "reason": "escalate to service owner when latency comes from new code"}
+{"id": "91f0adde03afce75", "verdict": "correct", "reason": "printenv shows injected pod IP and namespace"}
+{"id": "9a43e1783dc5b729", "verdict": "correct", "reason": "SELinuxWarningController emits this conflict event"}
+{"id": "ea8505f314fafc9c", "verdict": "correct", "reason": "names the StorageCapacityScoring gate and what it changes"}
+{"id": "ecf208e868fc225b", "verdict": "wrong", "reason": "page intro only; no runtimeClassName usage"}
+{"id": "51c63b8aae7a0378", "verdict": "correct", "reason": "VOLUME_MOUNT_GROUP CSI drivers apply fsGroup themselves"}
+{"id": "f59f84afd6da9937", "verdict": "wrong", "reason": "bare Workload listing, no question"}
+{"id": "729980f454239afa", "verdict": "wrong", "reason": "only defines ControllerRevision; no rollback troubleshooting"}
+{"id": "b7e268742abc898b", "verdict": "wrong", "reason": "bare container listing, no question"}
+{"id": "106b6e1072766aeb", "verdict": "correct", "reason": "states SelectorSpread is disabled by default"}
+{"id": "a5e160a0997713d1", "verdict": "correct", "reason": "@monthly equals 0 0 1 * *"}
+{"id": "4d24310db4f1950f", "verdict": "wrong", "reason": "bare Secret listing, no question"}
+{"id": "865bf42ebfefc207", "verdict": "correct", "reason": "lists upgrade options including PDBs for no downtime"}
+{"id": "19edceaae54fbe74", "verdict": "correct", "reason": "RuntimeClass selects a hardware-virtualized runtime"}
+{"id": "73bc42f73d565232", "verdict": "correct", "reason": "control plane sets storageClassName on existing unset PVCs"}
+{"id": "8d3073da23b3459b", "verdict": "correct", "reason": "debug pod sees the kubelet namespace root, not the node"}
+{"id": "c6c67ea1c8dc2499", "verdict": "correct", "reason": "php-apache Deployment with CPU requests and limits"}
+{"id": "4e15bf34c495b6ce", "verdict": "wrong", "reason": "manifest fragment, no question"}
+{"id": "6689578abaef0478", "verdict": "wrong", "reason": "bare pod listing, no question"}
+{"id": "ea1d30a3f246d196", "verdict": "correct", "reason": "grant secret create to persistent-volume-binder clusterrole"}
+{"id": "21c6d5516053f6e5", "verdict": "correct", "reason": "appArmorProfile.type RuntimeDefault example"}
+{"id": "7ef3e15b797ea6dc", "verdict": "correct", "reason": "subPath downward API mounts never receive updates"}
+{"id": "cd6126caed68051a", "verdict": "correct", "reason": "defaults apply only without own constraints and with an owner"}
+{"id": "9b4b530e023a43ad", "verdict": "correct", "reason": "kubectl debug node/<name> -it opens a node shell"}
+{"id": "6b236972fd1dc2a0", "verdict": "correct", "reason": "kubectl -A is the all-namespaces shorthand"}

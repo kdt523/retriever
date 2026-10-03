@@ -1,0 +1,20 @@
+{"id": "0633552c1ed39cf2", "verdict": "correct", "also_relevant": [], "reason": "empty key with Exists matches all keys and values"}
+{"id": "2c83840d6dc25ebb", "verdict": "correct", "also_relevant": ["A", "B"], "reason": "TTL controller deletes Job and pods only if ttlSecondsAfterFinished set"}
+{"id": "eb1c0ce0014739a3", "verdict": "correct", "also_relevant": ["B"], "reason": "creating one slice beats many updates sent to every node"}
+{"id": "9727629767542f00", "verdict": "ambiguous", "also_relevant": [], "reason": "malformed output naming a doc example job, no question"}
+{"id": "adb96a777b599b0a", "verdict": "correct", "also_relevant": ["C"], "reason": "higher-priority pod may take the node while victims terminate"}
+{"id": "2c6dc5268abec24b", "verdict": "correct", "also_relevant": ["C", "D", "E"], "reason": "kubectl create secret docker-registry command"}
+{"id": "49b86932765395de", "verdict": "correct", "also_relevant": [], "reason": "nodeName bypasses scheduler; NoExecute taint ejects the pod"}
+{"id": "0509234e1c817871", "verdict": "correct", "also_relevant": ["A", "C"], "reason": "wait for Failed condition before replacing to conserve resources"}
+{"id": "ff9521de77bc9117", "verdict": "correct", "also_relevant": [], "reason": "suspend sends SIGTERM to running non-completed pods"}
+{"id": "82c6bb1715a5ddfb", "verdict": "ambiguous", "also_relevant": [], "reason": "pasted CompositePodGroup YAML, no question"}
+{"id": "bb0d22d97c6ef5d8", "verdict": "correct", "also_relevant": ["A"], "reason": "ready is always true with publishNotReadyAddresses"}
+{"id": "ff5fc016bd660672", "verdict": "correct", "also_relevant": [], "reason": "onExitCodes.containerName may name an initContainer"}
+{"id": "182653f337d0cb8e", "verdict": "ambiguous", "also_relevant": [], "reason": "pasted Job YAML, no question"}
+{"id": "5afce9928773e17d", "verdict": "correct", "also_relevant": [], "reason": "ExtendedResourceToleration adds tolerations for hardware requests"}
+{"id": "bb141ad982ce4819", "verdict": "correct", "also_relevant": [], "reason": "kubectl get pods -l app=... confirms pods are running"}
+{"id": "e6165d5b3560a033", "verdict": "ambiguous", "also_relevant": [], "reason": "bare spec field with no context or question"}
+{"id": "2f173d085857c2bc", "verdict": "correct", "also_relevant": ["A"], "reason": "terminating endpoints get traffic only if all are terminating"}
+{"id": "c2f25d47a856af51", "verdict": "correct", "also_relevant": ["A"], "reason": "use kubectl get pods to view completed Job pods"}
+{"id": "26ea6266d440cff1", "verdict": "ambiguous", "also_relevant": [], "reason": "pasted toleration YAML, no question"}
+{"id": "ec0fa0f688ccc5bb", "verdict": "correct", "also_relevant": [], "reason": "supplying both name and command in one entry is an error"}

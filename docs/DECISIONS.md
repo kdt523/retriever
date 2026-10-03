@@ -122,7 +122,7 @@ chunks (no val/test text enters training), never from the positive's neighbourin
 above 95% of the positive. Up to 3 are stored per pair for n-tuple experiments.
 
 ## D18: Evaluation set composition (2026-10-02)
-Test slices: generated queries that a human marked correct (per style); real cluster incident
+Test slices: generated queries whose pair was labeled correct (per style; who labeled is in D20); real cluster incident
 snapshots, split into `real_incident_heldout` (runbook in val/test) and `real_incident_seen`
 (runbook in train: unseen query, seen document); hand-mapped Stack Overflow questions; optional
 hand-written queries. Incident relevance is document-level (every chunk of the scenario's
@@ -142,3 +142,16 @@ real-incident slices; read hit@k and MRR there. Known bias: generated val/test q
 bge-base round trip (D16), so bge-base is slightly favoured on generated slices; the
 real-incident, Stack Overflow and handwritten slices are free of it. `make baseline` refuses to
 run unless every frozen file matches MANIFEST.json.
+
+## D20: Claude-assisted labels with a blind human spot check (2026-10-03)
+All four review queues (220 test pairs, 150 Stack Overflow questions, 100 train-audit pairs,
+50 hard negatives) were labeled by Claude from `docs/LABELING_PROMPT.md` (`make label-export`,
+answers in `data/llm_labeling/answers/`, `make label-import`). A human then labeled a random
+sample of 30 test pairs blind, without seeing Claude's verdict (`make label-spot-check`, Spot
+check page). Agreement was 24/30 (0.8, `results/label_agreement.json`); all six disagreements
+were borderline (bare output with no question, or partial topical coverage), not clear errors.
+At freeze the human verdict replaces Claude's on every spot-checked item, and
+`MANIFEST.json` records how many labels came from each labeler. Consequence: the test set is
+Claude-labeled with a human audit, not fully human-labeled; treat differences of a few points on
+small slices (incident_snapshot n=4, real_incident_heldout n=10) as noise. The train audit found
+19/100 wrong pairs, an estimate of label noise in training data, not something fixed by hand.

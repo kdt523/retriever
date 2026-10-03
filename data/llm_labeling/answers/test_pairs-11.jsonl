@@ -1,0 +1,20 @@
+{"id": "7a2bf4bfc4719da0", "verdict": "correct", "also_relevant": ["B"], "reason": "emptyDir max size is the pod memory limit; enforce via policy"}
+{"id": "2ca921193ac21871", "verdict": "correct", "also_relevant": [], "reason": "kubelet rotates token past 80% TTL or 24 hours"}
+{"id": "8f55429937124ff0", "verdict": "correct", "also_relevant": [], "reason": "cloud route controller configures cross-node pod routes"}
+{"id": "3dccc91742a7da9d", "verdict": "correct", "also_relevant": ["B"], "reason": "MemoryPressure condition adds memory-pressure NoSchedule taint"}
+{"id": "1d676fcc4a37516d", "verdict": "correct", "also_relevant": ["B", "C"], "reason": "podFailurePolicy FailJob on exit code fails the Job immediately"}
+{"id": "0e3114c8b8e3655f", "verdict": "correct", "also_relevant": ["A"], "reason": "scheduler preempts lower-priority pods to place higher ones"}
+{"id": "59f0a9cb06c9066f", "verdict": "correct", "also_relevant": [], "reason": "kubectl attach -it is the docker attach equivalent"}
+{"id": "e75c414c28bf2b00", "verdict": "correct", "also_relevant": ["A", "C"], "reason": "explicit flags take precedence over kuberc option defaults"}
+{"id": "89b6ff92bb914bed", "verdict": "correct", "also_relevant": ["A", "D"], "reason": "CPU limit is a hard ceiling enforced per time slice"}
+{"id": "86706479c29846e2", "verdict": "correct", "also_relevant": [], "reason": "render_template alias with python jinja2 from stdin"}
+{"id": "075950c6f7a7c199", "verdict": "correct", "also_relevant": [], "reason": "success policy rules evaluated in order; first match wins"}
+{"id": "c584231194344c0a", "verdict": "correct", "also_relevant": [], "reason": "kubectl get pod -o yaml shows spec.serviceAccountName"}
+{"id": "3904b85b1520d82a", "verdict": "correct", "also_relevant": [], "reason": "taint special-hardware nodes; tolerate only on GPU pods"}
+{"id": "6af9f5386d853769", "verdict": "correct", "also_relevant": [], "reason": "describe job shows controller-uid selector and start/completion times"}
+{"id": "6e2b60c5c2dcfd5f", "verdict": "correct", "also_relevant": [], "reason": "v1.31+ adds terminal conditions only after pods terminate"}
+{"id": "bb33f0b0d1c41f45", "verdict": "wrong", "also_relevant": [], "reason": "only says full write access can remove quotas; no RBAC rule"}
+{"id": "8b82d5a5e2b69b21", "verdict": "correct", "also_relevant": ["C"], "reason": "update the pod template so the controller replaces pods"}
+{"id": "753287ba1e70f995", "verdict": "correct", "also_relevant": [], "reason": "Job controller defers Workload ownership to the parent"}
+{"id": "265534e05a3c7e91", "verdict": "correct", "also_relevant": [], "reason": "suspended Job pod resources mutable by non-admin clients"}
+{"id": "f2d55507a4973a6f", "verdict": "correct", "also_relevant": ["E"], "reason": "shows ServiceAccount YAML with imagePullSecrets added"}

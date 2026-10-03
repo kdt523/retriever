@@ -1,0 +1,25 @@
+{"id": "365b949cc16d6788", "verdict": "true_negative", "reason": "negative adds capabilities; does not verify privileged mode"}
+{"id": "ae69f018b515154c", "verdict": "true_negative", "reason": "negative covers Ingress defaultBackend, not Gateway advice"}
+{"id": "e273d390fb708b37", "verdict": "true_negative", "reason": "negative fixes pod node affinity conflicts, not PVC binding"}
+{"id": "ea11234142711c5a", "verdict": "true_negative", "reason": "negative is a hostPath example"}
+{"id": "87b2a2bd60511128", "verdict": "false_negative", "reason": "negative shows resizePolicy restartPolicy per resource"}
+{"id": "f330535f3a94d180", "verdict": "true_negative", "reason": "negative shows events and wait, not failedIndexes"}
+{"id": "5f7af275d8e26b4c", "verdict": "true_negative", "reason": "negative is a kubectl patch example"}
+{"id": "2438a618178de942", "verdict": "true_negative", "reason": "negative creates a secret from a literal; no history warning"}
+{"id": "c49ba3a4143c75ba", "verdict": "true_negative", "reason": "negative sets env from pod fields, not literal greetings"}
+{"id": "b39ff6f6b704a02a", "verdict": "true_negative", "reason": "negative is about HPA during rolling updates"}
+{"id": "7723b09598fb4625", "verdict": "true_negative", "reason": "negative covers mismatchLabelKeys affinity"}
+{"id": "cf3482f40b05e51f", "verdict": "true_negative", "reason": "negative covers ephemeral debug containers, not exec cat"}
+{"id": "ece770a6c132eefd", "verdict": "true_negative", "reason": "negative fixes LoadBalancer pending"}
+{"id": "5f67609a513f5a60", "verdict": "true_negative", "reason": "negative is workload topology scheduling, not routing hints"}
+{"id": "e0ef6b02b73afaa3", "verdict": "true_negative", "reason": "negative defines failureThreshold; no startup window"}
+{"id": "c1298c75b446d1a6", "verdict": "true_negative", "reason": "negative is PV reclaim policy, not snapshot classes"}
+{"id": "a529c0e335e41e8f", "verdict": "true_negative", "reason": "negative covers container restart rules"}
+{"id": "839c1699838b4675", "verdict": "true_negative", "reason": "negative covers dual-stack IP families"}
+{"id": "21c0a986e7d1165e", "verdict": "true_negative", "reason": "negative covers PodGroup priority fields"}
+{"id": "36db5e0f861e08ef", "verdict": "true_negative", "reason": "negative lists disruption reasons, not failure policy use"}
+{"id": "a7ba08052654ded0", "verdict": "true_negative", "reason": "negative is CrashLoopBackOff from missing config"}
+{"id": "c50563cabeb50f19", "verdict": "true_negative", "reason": "negative lists JSONPath operators"}
+{"id": "2475bae8d794a58d", "verdict": "true_negative", "reason": "negative compares retry timing, not the patch step"}
+{"id": "cb6a2a3c9fbd120d", "verdict": "true_negative", "reason": "negative explains describe pod output"}
+{"id": "30771319d40a3107", "verdict": "true_negative", "reason": "negative is about rolling updates"}

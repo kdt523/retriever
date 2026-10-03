@@ -1,0 +1,10 @@
+{"id": "1f3e575a81307a7c", "relevant": [], "reason": "PromQL counting kube-state-metrics jobs; out of scope"}
+{"id": "02e90f599f2a5e05", "relevant": [], "reason": "TLS termination design question; no chunk answers it"}
+{"id": "269b12e2164a4146", "relevant": [], "reason": "cluster DNS used from outside the cluster; not covered"}
+{"id": "94f17c59899dcd30", "relevant": [], "reason": "Prometheus federation scrape tuning; out of scope"}
+{"id": "067ff8d8b827ebc7", "relevant": [], "reason": "istio-citadel port exhaustion; out of scope"}
+{"id": "4d732983113ef1ce", "relevant": ["B"], "reason": "annotations are non-identifying metadata for tools"}
+{"id": "0acd3b315104dcfe", "relevant": [], "reason": "client container crash cause unknown; no chunk diagnoses it"}
+{"id": "abbd2973f825046b", "relevant": [], "reason": "microk8s dashboard-proxy timeout; out of scope"}
+{"id": "f01cf90c5f64bbe7", "relevant": ["E", "I"], "reason": "probe timeouts under load; loosen timeoutSeconds and keep healthz cheap"}
+{"id": "3bd46fad3c118cd2", "relevant": [], "reason": "ServiceAccount subject needs empty apiGroup; not stated"}

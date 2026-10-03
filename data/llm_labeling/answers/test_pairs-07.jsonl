@@ -1,0 +1,20 @@
+{"id": "3f29966fd974679b", "verdict": "correct", "also_relevant": ["A"], "reason": "Gt/Lt values must be valid signed 64-bit integers"}
+{"id": "0b2a7c93a1cefb32", "verdict": "correct", "also_relevant": ["A"], "reason": "gives the perl pi Job manifest"}
+{"id": "7eb64d3cca40a014", "verdict": "ambiguous", "also_relevant": [], "reason": "a bare command, not a question or symptom"}
+{"id": "8393496525da3d2f", "verdict": "correct", "also_relevant": [], "reason": "jobgroup label is not special; Kubernetes ignores it"}
+{"id": "93afafa7a015e418", "verdict": "correct", "also_relevant": [], "reason": "Job names must be at most 63 characters"}
+{"id": "53c8bc34e06b09a1", "verdict": "correct", "also_relevant": ["A"], "reason": "explains basename vs full-path matching rules"}
+{"id": "a553aac422ef23fb", "verdict": "ambiguous", "also_relevant": [], "reason": "describes a doc example taint setup, no question"}
+{"id": "5bf7b9d9c59350a8", "verdict": "wrong", "also_relevant": [], "reason": "page intro only; no causes or checks in this chunk"}
+{"id": "57a64292b0f33bc2", "verdict": "correct", "also_relevant": [], "reason": ".spec.serviceAccount is a deprecated alias for serviceAccountName"}
+{"id": "c8814ae9e2c47638", "verdict": "correct", "also_relevant": ["A"], "reason": "setHostnameAsFQDN: true writes the FQDN as hostname"}
+{"id": "8694e840edd5ff1b", "verdict": "ambiguous", "also_relevant": [], "reason": "bare EndpointSlice labels, no problem stated"}
+{"id": "b66c91b76ddab1aa", "verdict": "correct", "also_relevant": ["A", "B"], "reason": "dnsPolicy None requires dnsConfig"}
+{"id": "a7a26fc1e6ab9bce", "verdict": "correct", "also_relevant": [], "reason": "identifies this apiVersion as the kuberc preferences format"}
+{"id": "8795058db2d566fe", "verdict": "correct", "also_relevant": ["A"], "reason": "two-container Pod example with requests and limits"}
+{"id": "5ef562401b545417", "verdict": "ambiguous", "also_relevant": [], "reason": "bare command output, no problem stated"}
+{"id": "c11fa23bf0fe40e8", "verdict": "correct", "also_relevant": [], "reason": "bash loop with sed expands the Job template"}
+{"id": "594d542d8c36b2a6", "verdict": "correct", "also_relevant": ["A", "D"], "reason": "tokens must match --api-audiences"}
+{"id": "0c5ae36dd1e82041", "verdict": "correct", "also_relevant": [], "reason": "CCM node controller labels and updates Node objects"}
+{"id": "784c8fb57840613b", "verdict": "ambiguous", "also_relevant": [], "reason": "describe output of a headless Service, no question"}
+{"id": "cc27523f0636c414", "verdict": "correct", "also_relevant": [], "reason": "non-unique Job selector can delete unrelated pods"}

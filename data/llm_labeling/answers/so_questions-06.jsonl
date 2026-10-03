@@ -1,0 +1,10 @@
+{"id": "c3e4b6e69e0c8178", "relevant": ["F"], "reason": "envFrom a shared Secret/ConfigMap reuses all variables"}
+{"id": "8943f611252c2d26", "relevant": ["A", "E", "F", "G"], "reason": "serviceAccountToken projected volume mounts a rotating token"}
+{"id": "c371a4121c0d0eb1", "relevant": ["A"], "reason": "explains expanding a PVC by editing its requested size"}
+{"id": "a7a2a130daede193", "relevant": ["B", "C"], "reason": "hard pod anti-affinity filters nodes; inspect the workload yaml"}
+{"id": "ce945804d9f2d4a4", "relevant": ["A", "F", "G"], "reason": "kubelet restart keeps pods running and is detected as a restart"}
+{"id": "a16f825e3f5be9f0", "relevant": [], "reason": "kubeadm control-plane-endpoint migration; not covered"}
+{"id": "055a3c6aacf66427", "relevant": [], "reason": "application architecture question; no chunk answers it"}
+{"id": "6e59e152ffe81291", "relevant": [], "reason": "dhall-kubernetes package version; out of scope"}
+{"id": "fa0383873efe5b25", "relevant": ["A", "H"], "reason": "probe configuration fields and readiness for routing traffic"}
+{"id": "397791cb677de43a", "relevant": [], "reason": "kube-proxy uses iptables not sockets; no chunk explains it"}

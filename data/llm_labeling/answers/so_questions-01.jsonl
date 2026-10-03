@@ -1,0 +1,10 @@
+{"id": "ef3bedbcf3d92aae", "relevant": [], "reason": "Kafka operator vs Helm chart choice; no chunk covers it"}
+{"id": "5c491989bb6eac54", "relevant": [], "reason": "PowerShell install script TLS download failure; out of scope"}
+{"id": "374ffaa8bbddfd8b", "relevant": [], "reason": "port-forward hanging on ::1; no chunk explains it"}
+{"id": "621a4fe33c3a229b", "relevant": [], "reason": "docker client cannot talk to containerd socket; not covered"}
+{"id": "b6915171c094f4c4", "relevant": ["F", "H", "J"], "reason": "kubelet restarts the container after failureThreshold liveness failures"}
+{"id": "7731e9526980125c", "relevant": [], "reason": "GKE lab with wrong targetPort and names; no chunk diagnoses it"}
+{"id": "9e1b0aea8f407348", "relevant": [], "reason": "GCR per-IP pull quota; cloud-specific, not covered"}
+{"id": "1c9e8e4d2ccad7ef", "relevant": [], "reason": "yum package dependency for kubelet install; out of scope"}
+{"id": "bd85eec8d5578447", "relevant": [], "reason": "Elasticsearch self-signed cert in Node client; out of scope"}
+{"id": "270f815fb9470d1c", "relevant": ["C", "E"], "reason": "grant the leases get verb via a Role and binding"}

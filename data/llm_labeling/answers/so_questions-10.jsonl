@@ -1,0 +1,10 @@
+{"id": "8ee8ccb2420a6697", "relevant": [], "reason": "webhook must match the deployments/scale subresource; not covered"}
+{"id": "1ac1df40c467925a", "relevant": [], "reason": "EKS Fargate logging ConfigMap rules; out of scope"}
+{"id": "99078cfac7e32efc", "relevant": [], "reason": "OAuth proxy upstream scheme mismatch; not covered"}
+{"id": "342f829e6fb7a329", "relevant": [], "reason": "roleRef has no namespace field; no candidate states it"}
+{"id": "a50cd297ddd1eb1b", "relevant": [], "reason": "cluster autoscaler on kops; not covered"}
+{"id": "3ca060bc3ece1c57", "relevant": ["I"], "reason": "nodePort must be inside the 30000-32767 range"}
+{"id": "998fa4c8da034190", "relevant": ["D"], "reason": "running Pod fields are largely immutable to patch"}
+{"id": "327a0014d529ad4d", "relevant": [], "reason": "Docker-in-Docker socket mount; not covered"}
+{"id": "696ed003a2b3d85f", "relevant": [], "reason": "linkerd dtab routing; out of scope"}
+{"id": "d4b7b5d68b80aeb0", "relevant": [], "reason": "client-go generic helper refactor; out of scope"}

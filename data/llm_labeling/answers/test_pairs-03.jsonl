@@ -1,0 +1,20 @@
+{"id": "2551bd88d532c8ac", "verdict": "correct", "also_relevant": [], "reason": "check kubectl config and that the oidc-login helper is installed"}
+{"id": "3f4e5691b091623e", "verdict": "correct", "also_relevant": ["A"], "reason": "numeric Gt/Lt tolerations require integer values"}
+{"id": "65a81615c7c593be", "verdict": "wrong", "also_relevant": [], "reason": "only mentions CronJob capacity cleanup exists; no fields or steps"}
+{"id": "b4b8eee59c5d9f97", "verdict": "correct", "also_relevant": ["A", "B"], "reason": "activeDeadlineSeconds reached gives Failed with DeadlineExceeded"}
+{"id": "6446a067d24b9825", "verdict": "ambiguous", "also_relevant": [], "reason": "bare kubectl top line, no problem stated"}
+{"id": "a1f1fce06936b433", "verdict": "correct", "also_relevant": ["E"], "reason": "FQDN needs hostname, subdomain and a matching headless Service"}
+{"id": "c2514cd0efcb4694", "verdict": "correct", "also_relevant": ["A"], "reason": "this kubelet log line confirms the effective hairpin mode"}
+{"id": "83d0cade62fe4325", "verdict": "correct", "also_relevant": ["B"], "reason": "wget each pod IP and port directly, bypassing the Service"}
+{"id": "0985d741f0db1952", "verdict": "correct", "also_relevant": ["A", "B", "C"], "reason": "memory limit enforced by kernel OOM kill"}
+{"id": "64c4384b72c76238", "verdict": "ambiguous", "also_relevant": [], "reason": "pasted Job YAML with no question or problem"}
+{"id": "4a632a5d33e0b0a8", "verdict": "correct", "also_relevant": ["A"], "reason": "restartPolicy OnFailure reruns the container in the same pod"}
+{"id": "683c5c7b79cb1e84", "verdict": "ambiguous", "also_relevant": [], "reason": "copied documentation sentence, not a realistic query"}
+{"id": "db9f8cff1a6b6731", "verdict": "correct", "also_relevant": ["C"], "reason": "shows the pod resolv.conf search line and its expansion"}
+{"id": "a14e1d176d70b70a", "verdict": "correct", "also_relevant": [], "reason": "API server to kubelet unverified by default; set kubelet CA"}
+{"id": "322b288a4c6f901e", "verdict": "ambiguous", "also_relevant": [], "reason": "bare ClusterRole listing, no problem stated"}
+{"id": "e26385c2cecc3736", "verdict": "correct", "also_relevant": ["A"], "reason": "affinity to lower-priority pods blocks preemption"}
+{"id": "a3d5f871b063f0a6", "verdict": "correct", "also_relevant": [], "reason": "skip-mirror label stops Endpoints mirroring to EndpointSlices"}
+{"id": "4a0163e78e48c5ed", "verdict": "correct", "also_relevant": ["E"], "reason": "describes how the scheduler picks a node for preemption"}
+{"id": "54bcb6d43c3bb5fb", "verdict": "ambiguous", "also_relevant": [], "reason": "healthy pod listing copied from docs, no problem"}
+{"id": "37062939e4e5f359", "verdict": "correct", "also_relevant": [], "reason": "resize preemption does not set nominatedNodeName"}

@@ -1,0 +1,20 @@
+{"id": "793d0b1d1ab6cfe8", "verdict": "ambiguous", "also_relevant": [], "reason": "copied documentation sentence, not a realistic query"}
+{"id": "88d3f54e6a5b9781", "verdict": "correct", "also_relevant": [], "reason": "set --controllers=-taint-eviction-controller after 1.29"}
+{"id": "fe5122220cb5b1ea", "verdict": "correct", "also_relevant": ["A", "B"], "reason": "nominatedNodeName is set to the node where the pod preempted"}
+{"id": "1ec8ffc774356eb0", "verdict": "correct", "also_relevant": ["E"], "reason": "annotations file has one key=escaped-value per line"}
+{"id": "b423b45537198889", "verdict": "correct", "also_relevant": [], "reason": "issuer must be https and serve openid-configuration"}
+{"id": "05e103ef75f359a6", "verdict": "correct", "also_relevant": ["B", "C"], "reason": "many Jobs overload control plane; use other job patterns"}
+{"id": "abe1a42aadb61cb1", "verdict": "ambiguous", "also_relevant": [], "reason": "mangled pasted YAML, no question"}
+{"id": "2ff433fceed13da9", "verdict": "correct", "also_relevant": ["A"], "reason": "300s default toleration; DaemonSet pods are never evicted"}
+{"id": "e52d5d26ea6da8d9", "verdict": "correct", "also_relevant": ["B"], "reason": "hairpin-mode setting for pods reaching themselves via Service"}
+{"id": "bb66bf909a2be55a", "verdict": "correct", "also_relevant": [], "reason": "system log monitor supports file logs, journald and kmsg"}
+{"id": "78a454646a0108fe", "verdict": "ambiguous", "also_relevant": [], "reason": "mangled resources output, no question"}
+{"id": "5d360b600dbfac59", "verdict": "ambiguous", "also_relevant": [], "reason": "unclear whether Workload objects or finished Jobs are meant"}
+{"id": "578182dafb7e8402", "verdict": "correct", "also_relevant": ["A"], "reason": "this kube-proxy log line shows it is running and syncing"}
+{"id": "c3e419171fe44bf8", "verdict": "correct", "also_relevant": ["A", "D"], "reason": "work queue Job: leave completions unset, set parallelism"}
+{"id": "a0c9134237d3ccef", "verdict": "ambiguous", "also_relevant": [], "reason": "bare topology output fragment, no problem stated"}
+{"id": "03bd4ffdc52643e8", "verdict": "correct", "also_relevant": ["C"], "reason": "DaemonSet schedules a pod onto every new matching node"}
+{"id": "df3b5337b24bd4ed", "verdict": "ambiguous", "also_relevant": [], "reason": "copied documentation sentence, not a realistic query"}
+{"id": "f673a353ab5d7557", "verdict": "wrong", "also_relevant": [], "reason": "chunk only states the risk; prevention is in other sections"}
+{"id": "a500fcd23e340497", "verdict": "ambiguous", "also_relevant": [], "reason": "bare version output, no problem stated"}
+{"id": "01395631a4169f11", "verdict": "correct", "also_relevant": [], "reason": "memory-pressure taint blocks new BestEffort pods"}

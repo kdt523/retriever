@@ -1,0 +1,10 @@
+{"id": "9b0b664d17514e1c", "relevant": [], "reason": "detecting cluster upgrades or layout changes; not covered"}
+{"id": "d737e24312dc4798", "relevant": [], "reason": "Knative upstream request timeout; out of scope"}
+{"id": "243d179930c43e49", "relevant": ["A", "B", "E"], "reason": "mounted ConfigMaps update eventually; env vars need a restart"}
+{"id": "8e7c500fe7a215ca", "relevant": [], "reason": "candidates hold no concrete service troubleshooting steps"}
+{"id": "9a7d6711379dbf06", "relevant": [], "reason": "no chunk compares Docker HEALTHCHECK with Kubernetes probes"}
+{"id": "f70a35c8184c4257", "relevant": [], "reason": "mounting TLS files via Secret volume not in candidates"}
+{"id": "35d2dbae4532128a", "relevant": [], "reason": "EKS aws-auth username mapping; out of scope"}
+{"id": "ab73fdd3c516b48f", "relevant": [], "reason": "needs --- document separator; no candidate shows it"}
+{"id": "a7bfdeb9436769e9", "relevant": [], "reason": "nginx-ingress Helm custom template values; out of scope"}
+{"id": "024ebe3094746c73", "relevant": [], "reason": "minikube docker driver mount conflict; out of scope"}

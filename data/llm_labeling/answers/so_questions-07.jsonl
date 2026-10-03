@@ -1,0 +1,10 @@
+{"id": "ffb9e9024a17d5c4", "relevant": [], "reason": "needs a content-checking liveness probe; no probe chunk offered"}
+{"id": "8718500dce63d67d", "relevant": [], "reason": "static egress IP via NAT gateway; not covered"}
+{"id": "19ad2b4e43f81442", "relevant": ["G", "H"], "reason": "audit policy is a file passed via --audit-policy-file, not an API resource"}
+{"id": "e073c4f1d7be6b4b", "relevant": ["F", "H"], "reason": "PodDisruptionBudget keeps quorum during node upgrades"}
+{"id": "35f1d692a5e5abe9", "relevant": [], "reason": "kube-proxy IPVS mode on OpenShift; not covered"}
+{"id": "638616858d8e4da0", "relevant": ["J"], "reason": "LoadBalancer needs a cloud controller or bare-metal implementation"}
+{"id": "409bbb32b2661c18", "relevant": [], "reason": "parallel Deployment rollout via maxSurge; no candidate covers it"}
+{"id": "a4f6d2ce3517dc11", "relevant": [], "reason": "container runtime install on RHEL8; not covered"}
+{"id": "19fb93e42177bc09", "relevant": [], "reason": "schedule cannot come from a ConfigMap; no chunk says so"}
+{"id": "8be3297e684d9720", "relevant": [], "reason": "kubectl run -it --rm one-off pod; no candidate shows it"}

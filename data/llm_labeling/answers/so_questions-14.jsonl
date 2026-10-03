@@ -1,0 +1,10 @@
+{"id": "9c5eff8a0e2e80ce", "relevant": [], "reason": "raising node inotify sysctl needs a privileged host change; not covered"}
+{"id": "d2c012c7406d05e7", "relevant": [], "reason": "controller time zone offsets schedule; no time zone chunk offered"}
+{"id": "c6ddad2077c24690", "relevant": [], "reason": "Helm ingress-nginx not bound to minikube IP; not covered"}
+{"id": "a78b1b826ac1e935", "relevant": ["B"], "reason": "access modes depend on the volume provider's capabilities"}
+{"id": "0fb67068cca6e8d9", "relevant": ["A", "F"], "reason": "preferred weight is added to node score, not a hard rule"}
+{"id": "b00a500c53c9347b", "relevant": ["D"], "reason": "a context only references named cluster and user entries"}
+{"id": "4931bfeaf7ea3d6a", "relevant": ["B", "F", "G"], "reason": "read group/resource from the error, grant via Role and binding"}
+{"id": "684f579c9a5196dd", "relevant": [], "reason": "minikube persistent host directories; out of scope"}
+{"id": "13dc574ff89a64f3", "relevant": [], "reason": "mosquitto listener bind address; out of scope"}
+{"id": "3cf499d474629117", "relevant": [], "reason": "using a local Docker Desktop image; no candidate explains it"}

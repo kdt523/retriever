@@ -1,0 +1,20 @@
+{"id": "f9d081adae8f019a", "verdict": "correct", "also_relevant": ["B"], "reason": "runbook symptom lists this exact nslookup NXDOMAIN output"}
+{"id": "2fd845db5884b94e", "verdict": "correct", "also_relevant": ["A"], "reason": "says roll back first when a deploy happened in the last hour"}
+{"id": "9c472d64acec0c6b", "verdict": "correct", "also_relevant": ["C"], "reason": "one name failing means typo/namespace; all names means CoreDNS/policy"}
+{"id": "ab66e63f36b0c4ac", "verdict": "wrong", "also_relevant": [], "reason": "chunk only says to check resolv.conf; does not explain its contents"}
+{"id": "3dca8036bb2ba3cd", "verdict": "correct", "also_relevant": [], "reason": "gives kubectl rollout undo for a crash from a recent rollout"}
+{"id": "c964a267edbb0d0f", "verdict": "correct", "also_relevant": ["A", "D"], "reason": "kubectl logs --previous reads the crashed attempt"}
+{"id": "896a72332cf321e2", "verdict": "correct", "also_relevant": [], "reason": "read eviction message with kubectl describe pod under Message"}
+{"id": "95d5a6a3afd09a04", "verdict": "correct", "also_relevant": [], "reason": "eviction shows ContainerStatusUnknown with exit code 137"}
+{"id": "751a738754ffeb3d", "verdict": "correct", "also_relevant": ["A", "C"], "reason": "runbook symptoms list this exact BackOff restarting event"}
+{"id": "1c50dae0941e087e", "verdict": "correct", "also_relevant": ["E"], "reason": "cause: calling a Service in another namespace by short name"}
+{"id": "db74cabd76e38a0b", "verdict": "correct", "also_relevant": [], "reason": "creates the registry secret and adds it under imagePullSecrets"}
+{"id": "711da88ee18d1ea9", "verdict": "correct", "also_relevant": ["A", "B"], "reason": "states the container process exits; Kubernetes behaves correctly"}
+{"id": "71b3c26b489954a8", "verdict": "correct", "also_relevant": ["D"], "reason": "wrong name from config change: kubectl rollout undo"}
+{"id": "a1e63147b7701ad7", "verdict": "correct", "also_relevant": [], "reason": "lists missing or expired pull secret token as a cause"}
+{"id": "fee35e35841f58d1", "verdict": "correct", "also_relevant": ["A"], "reason": "lists new image startup bug, wrong command/args, dependency exits"}
+{"id": "a04ceacfef07822d", "verdict": "correct", "also_relevant": ["A"], "reason": "check pod has imagePullSecrets and secret exists in namespace"}
+{"id": "46fa7d23dfe76657", "verdict": "correct", "also_relevant": [], "reason": "lists low requests, unbounded logs/emptyDir, images, memory leaks"}
+{"id": "6fbb04117722fa66", "verdict": "correct", "also_relevant": ["B", "D"], "reason": "names resources.limits.ephemeral-storage and emptyDir sizeLimit"}
+{"id": "3e00ef21487f96d0", "verdict": "correct", "also_relevant": [], "reason": "escalate when pulls fail for every image on a node"}
+{"id": "83a60da6e48421b1", "verdict": "correct", "also_relevant": [], "reason": "symptom lists this exact pull rate limit error"}

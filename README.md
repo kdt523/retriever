@@ -37,6 +37,19 @@ make check        # lint + typecheck + tests
 
 Every run appends its config, wall-clock time, peak RAM/VRAM and metrics to `results/runs.csv`.
 
+### Phase 3 baselines (frozen test set, 269 queries, from `results/baseline.csv`)
+
+| Retriever | hit@1 | hit@10 | MRR@10 | NDCG@10 |
+| --- | --- | --- | --- | --- |
+| BM25 | 0.628 | 0.885 | 0.705 | 0.557 |
+| all-MiniLM-L6-v2 | 0.532 | 0.885 | 0.651 | 0.566 |
+| bge-small-en-v1.5 | 0.565 | 0.892 | 0.684 | 0.626 |
+| bge-base-en-v1.5 | 0.621 | 0.929 | 0.725 | 0.677 |
+| Hybrid BM25 + bge-small (RRF) | 0.665 | 0.941 | 0.761 | 0.658 |
+
+Test labels were written by Claude and audited by a blind human spot check (24/30 agreement,
+`results/label_agreement.json`); see `docs/DECISIONS.md` D20. Per-slice numbers are in the CSV.
+
 ## Repo layout
 
 ```

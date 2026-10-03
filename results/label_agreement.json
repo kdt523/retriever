@@ -1,0 +1,20 @@
+{
+  "n": 30,
+  "agreement": 0.8,
+  "confusion_human_vs_claude": {
+    "correct/ambiguous": 1,
+    "ambiguous/correct": 1,
+    "correct/correct": 21,
+    "wrong/ambiguous": 2,
+    "ambiguous/ambiguous": 3,
+    "wrong/correct": 2
+  },
+  "disagreements": [
+    "13d15f1a634388e2",
+    "482d92f9784bd90e",
+    "9727629767542f00",
+    "a7b30eab6e442f98",
+    "b82c3276be3b44d5",
+    "f5488f45720ca1c7"
+  ]
+}

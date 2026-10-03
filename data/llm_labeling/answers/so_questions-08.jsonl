@@ -1,0 +1,10 @@
+{"id": "cf75560d992bf941", "relevant": [], "reason": "cert-manager self-check DNS inside cluster; candidates generic"}
+{"id": "942c3b475c435234", "relevant": [], "reason": "Helm template dynamic key lookup; out of scope"}
+{"id": "6e996029cdca9b6a", "relevant": ["A", "I"], "reason": "NFS allows multiple writers; server must export the share"}
+{"id": "4d54ddbc81e2832f", "relevant": [], "reason": "Elasticsearch Helm chart JVM options; out of scope"}
+{"id": "90018ff5f250af0c", "relevant": [], "reason": "corrupt kubeconfig breaks Docker Desktop; not covered"}
+{"id": "3ea4d5da268c6881", "relevant": ["C", "I"], "reason": "list real context names with get-contexts, then use-context"}
+{"id": "88ba00f2eb4a8e15", "relevant": [], "reason": "Dashboard showing no data; not covered"}
+{"id": "a79d4da7b03487aa", "relevant": [], "reason": "Java ExecutorService performance; out of scope"}
+{"id": "32cd61b4d8984a0f", "relevant": [], "reason": "fluentd kafka plugin connectivity; out of scope"}
+{"id": "8eca8df0a4f20641", "relevant": [], "reason": "unknown variable names rule out fileKeyRef; needs entrypoint"}

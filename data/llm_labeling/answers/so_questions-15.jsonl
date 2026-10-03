@@ -1,0 +1,10 @@
+{"id": "f4fe0325d1e802dc", "relevant": [], "reason": "Traefik service-weights annotation; out of scope"}
+{"id": "cd851f18f408781e", "relevant": [], "reason": "Azure VNet peering to AKS; out of scope"}
+{"id": "13e05ef140ef073a", "relevant": [], "reason": "kind node scheduling despite capacity; no chunk diagnoses it"}
+{"id": "a116dbc98e94639d", "relevant": [], "reason": "kubeadm config API migration; not covered"}
+{"id": "8910272765337799", "relevant": [], "reason": "app falls back to localhost when env var missing; not covered"}
+{"id": "6b10c5f8f132cfb3", "relevant": [], "reason": "postgres hostPath ownership on Docker Desktop; not covered"}
+{"id": "5381afc4e6eecfe5", "relevant": ["A", "E"], "reason": "kubectl run -it --rm a client pod and connect by service name"}
+{"id": "c8a61230e1411eb7", "relevant": [], "reason": "Jenkins remote Docker daemon; out of scope"}
+{"id": "b9feb3e0a9ccab2d", "relevant": [], "reason": "kubectl has no pull; no candidate states it"}
+{"id": "c63accd5cb38f1d9", "relevant": [], "reason": "Istio Go client types; out of scope"}

@@ -1,0 +1,61 @@
+{
+  "corpus_sha256": "fcd836454bc2391a33fe4631d7f4b4e948daed8853cb35b7d5bc1a6d28c1db60",
+  "test_pair_review": {
+    "correct": 173,
+    "wrong": 10,
+    "ambiguous": 37
+  },
+  "labelers": {
+    "test_pairs": {
+      "claude": 190,
+      "human": 30
+    },
+    "so_questions": {
+      "claude": 150
+    }
+  },
+  "test_slices": {
+    "kubectl_output": 17,
+    "how_to": 64,
+    "symptom": 61,
+    "error_string": 27,
+    "incident_snapshot": 4,
+    "real_incident_seen": 54,
+    "real_incident_heldout": 10,
+    "stackoverflow": 32
+  },
+  "val_slices": {
+    "symptom": 251,
+    "how_to": 283,
+    "error_string": 51,
+    "kubectl_output": 101,
+    "incident_snapshot": 21,
+    "real_incident_heldout": 8
+  },
+  "files": {
+    "test_queries.jsonl": {
+      "sha256": "761a37a9949ffced7bdb78bec69a768417b9aabecccd9165e0a10fcb46ebbcd3",
+      "rows": 269
+    },
+    "test_qrels.jsonl": {
+      "sha256": "04717ed62cce85522a647225eed6fa92cfb655b8a5fe57d59e29fce77729afbb",
+      "rows": 744
+    },
+    "val_queries.jsonl": {
+      "sha256": "c9ebf4dd7c4083bf451df92063db77e6999c1200def3049e0431b459e73b7b54",
+      "rows": 715
+    },
+    "val_qrels.jsonl": {
+      "sha256": "4c6537d89ccd12b43150c33bcb6c9f7ecac5fb19acaf3615ab785678b8458940",
+      "rows": 759
+    },
+    "ood_val.jsonl": {
+      "sha256": "4d79fe30cccc72ed895a8a6801ba90d2513b49d3e432227b94c41be1439db1f5",
+      "rows": 59
+    },
+    "ood_test.jsonl": {
+      "sha256": "83cb7e0c229f3ec91f857946467438589aaf41d026332af4b24f0be4801c2fe4",
+      "rows": 59
+    }
+  }
+}

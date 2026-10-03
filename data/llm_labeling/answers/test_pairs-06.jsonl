@@ -1,0 +1,20 @@
+{"id": "e2f5c6911a3f60f7", "verdict": "correct", "also_relevant": ["A"], "reason": "explains what each resolv.conf search suffix is for"}
+{"id": "1ddff655febc1ec1", "verdict": "correct", "also_relevant": ["C", "D"], "reason": "kubectl exec pod -- command runs one command"}
+{"id": "0c46e373e71da75f", "verdict": "correct", "also_relevant": ["A", "C"], "reason": "Suspended/Resumed events come from toggling .spec.suspend"}
+{"id": "1ba7dbf725831cbf", "verdict": "correct", "also_relevant": [], "reason": "ConfigMap override not supported when NPD runs as Addon"}
+{"id": "4f2d03cbf0bc6d75", "verdict": "correct", "also_relevant": [], "reason": "spec.managedBy delegates Job reconciliation to external controller"}
+{"id": "c96a54a56b5f9d2e", "verdict": "correct", "also_relevant": [], "reason": "Pod spec value takes precedence over ServiceAccount"}
+{"id": "5c8ecc80c9beaf8b", "verdict": "ambiguous", "also_relevant": [], "reason": "pasted ServiceAccount YAML, no question"}
+{"id": "449a64a13fa1634c", "verdict": "correct", "also_relevant": [], "reason": "reconnect the VPN to restore cluster access"}
+{"id": "a329a6703393b382", "verdict": "correct", "also_relevant": ["B", "C"], "reason": "memory-pressure taint means the node has memory pressure"}
+{"id": "2362ef1a48d69c1d", "verdict": "correct", "also_relevant": [], "reason": "parallelism 0 effectively pauses the Job"}
+{"id": "4871151c96e9f81e", "verdict": "ambiguous", "also_relevant": [], "reason": "pasted Job YAML, no question"}
+{"id": "3a8619ec624277b2", "verdict": "correct", "also_relevant": [], "reason": "allowlist entry with all fields empty is a config error"}
+{"id": "0057f7f6a4e052db", "verdict": "wrong", "also_relevant": [], "reason": "describes the flag, not why it is unrecognized"}
+{"id": "82e7b822c2b43676", "verdict": "correct", "also_relevant": [], "reason": "Windows has no OOM killer; processes page to disk"}
+{"id": "a584a0a357fc0267", "verdict": "correct", "also_relevant": ["C"], "reason": "tolerationSeconds 6000 keeps pod bound to unreachable node"}
+{"id": "7bd44205a3d22b7d", "verdict": "correct", "also_relevant": [], "reason": "extended resources are custom-named, from device plugins"}
+{"id": "829f6ce0eb669239", "verdict": "correct", "also_relevant": ["A", "B"], "reason": "gang.minCount defaults to parallelism and stays mutable"}
+{"id": "f89da13aca6040cb", "verdict": "correct", "also_relevant": ["B", "C"], "reason": "nslookup the service name from a pod"}
+{"id": "a4b125c46713584a", "verdict": "correct", "also_relevant": [], "reason": "priorityClassName resolves to a priority; unknown class rejected"}
+{"id": "6e39dca138ab2206", "verdict": "correct", "also_relevant": ["A", "B"], "reason": "hostNetwork pods need ClusterFirstWithHostNet"}

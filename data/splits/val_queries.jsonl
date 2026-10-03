@@ -1,0 +1,715 @@
+{"qid": "val/00000", "query": "old unused container images and terminated pods are not getting cleaned up automatically", "slice": "symptom", "source": "k8s_docs"}
+{"qid": "val/00001", "query": "how do owner references work between services and endpoint slices", "slice": "how_to", "source": "k8s_docs"}
+{"qid": "val/00002", "query": "endpoint slice objects being modified unexpectedly by control plane", "slice": "symptom", "source": "k8s_docs"}
+{"qid": "val/00003", "query": "Cross-namespace owner references are disallowed by design", "slice": "error_string", "source": "k8s_docs"}
+{"qid": "val/00004", "query": "how to fix cross namespace owner references in version 1.20 and above", "slice": "how_to", "source": "k8s_docs"}
+{"qid": "val/00005", "query": "garbage collection failing because cluster-scoped resource references a namespaced owner", "slice": "symptom", "source": "k8s_docs"}
+{"qid": "val/00006", "query": "OwnerRefInvalidNamespace", "slice": "error_string", "source": "k8s_docs"}
+{"qid": "val/00007", "query": "how to find events related to invalid owner references across all namespaces", "slice": "how_to", "source": "k8s_docs"}
+{"qid": "val/00008", "query": "LAST SEEN TYPE REASON OBJECT SOURCE MESSAGE 2m Warning OwnerRefInvalidNamespace ClusterRole/auth-worker Invalid cross-namespace owner reference", "slice": "kubectl_output", "source": "k8s_docs"}
+{"qid": "val/00009", "query": "how to enable foreground cascading deletion when removing a replica set", "slice": "how_to", "source": "k8s_docs"}
+{"qid": "val/00010", "query": "deleting deployment leaves orphan pods running in the cluster", "slice": "symptom", "source": "k8s_docs"}
+{"qid": "val/00011", "query": "foregroundDeletion", "slice": "error_string", "source": "k8s_docs"}
+{"qid": "val/00012", "query": "NAME STATUS AGE ORDERS-API Terminating 45s metadata.deletionTimestamp: 2023-10-25T14:30:00Z metadata.finalizers: [foregroundDeletion]", "slice": "kubectl_output", "source": "k8s_docs"}
+{"qid": "val/00013", "query": "deployment stuck in deletion in progress state when trying to delete it", "slice": "symptom", "source": "k8s_docs"}
+{"qid": "val/00014", "query": "ownerReference.blockOwnerDeletion=true", "slice": "error_string", "source": "k8s_docs"}
+{"qid": "val/00015", "query": "how to configure blockOwnerDeletion field on dependent resources", "slice": "how_to", "source": "k8s_docs"}
+{"qid": "val/00016", "query": "dependents not blocking owner deletion during foreground cascade cleanup", "slice": "symptom", "source": "k8s_docs"}
+{"qid": "val/00017", "query": "how do I make the api server delete owner objects immediately while dependents are cleaned up later", "slice": "how_to", "source": "k8s_docs"}
+{"qid": "val/00018", "query": "api server removes the owner object right away but dependents are deleted asynchronously", "slice": "symptom", "source": "k8s_docs"}
+{"qid": "val/00019", "query": "child resources stay around after deleting the parent deployment unless a finalizer is set", "slice": "symptom", "source": "k8s_docs"}
+{"qid": "val/00020", "query": "how do I prevent cascading deletion so dependent resources are left behind", "slice": "how_to", "source": "k8s_docs"}
+{"qid": "val/00021", "query": "child resources are not automatically removed when deleting the owner object", "slice": "symptom", "source": "k8s_docs"}
+{"qid": "val/00022", "query": "deleting the deployment left all replica pods behind as orphans", "slice": "symptom", "source": "k8s_docs"}
+{"qid": "val/00023", "query": "external cleanup scripts keep breaking kubelet image removal behavior", "slice": "symptom", "source": "k8s_docs"}
+{"qid": "val/00024", "query": "HighThresholdPercent exceeded, triggering image garbage collection", "slice": "error_string", "source": "k8s_docs"}
+{"qid": "val/00025", "query": "how do I adjust high and low disk threshold percent for image cleanup on nodes", "slice": "how_to", "source": "k8s_docs"}
+{"qid": "val/00026", "query": "kubelet starts deleting old container images as soon as disk usage goes past the threshold", "slice": "symptom", "source": "k8s_docs"}
+{"qid": "val/00027", "query": "imageMaximumGCAge validation failed: duration cannot be empty", "slice": "error_string", "source": "k8s_docs"}
+{"qid": "val/00028", "query": "how do I set an absolute maximum age for unused local images in the kubelet config", "slice": "how_to", "source": "k8s_docs"}
+{"qid": "val/00029", "query": "restarting the kubelet reset our image age tracking and caused old unused images to stick around", "slice": "symptom", "source": "k8s_docs"}
+{"qid": "val/00030", "query": "how do I limit the number of dead containers per pod in the cluster", "slice": "how_to", "source": "k8s_docs"}
+{"qid": "val/00031", "query": "too many exited containers are piling up on nodes because min age is set to zero", "slice": "symptom", "source": "k8s_docs"}
+{"qid": "val/00032", "query": "what happens when max per pod container conflicts with max global containers in kubelet", "slice": "how_to", "source": "k8s_docs"}
+{"qid": "val/00033", "query": "kubelet automatically reduced max per pod container limits because the global dead container count was too high", "slice": "symptom", "source": "k8s_docs"}
+{"qid": "val/00034", "query": "no matches for kind \"PodGroup\" in version \"scheduling.k8s.io/v1beta1\"", "slice": "error_string", "source": "k8s_docs"}
+{"qid": "val/00035", "query": "how do I enable the scheduling.k8s.io/v1beta1 api group for podgroup scheduling", "slice": "how_to", "source": "k8s_docs"}
+{"qid": "val/00036", "query": "ml training jobs are deadlocking because pods schedule partially and exhaust cluster capacity", "slice": "symptom", "source": "k8s_docs"}
+{"qid": "val/00037", "query": "how does the scheduler handle batching pods belonging to a podgroup", "slice": "how_to", "source": "k8s_docs"}
+{"qid": "val/00038", "query": "NAME PHASE AGE PODGROUP-NAME batch-worker-group Pending 4m payments-batch", "slice": "kubectl_output", "source": "k8s_docs"}
+{"qid": "val/00039", "query": "scheduler is evaluating pods individually instead of together as part of their podgroup", "slice": "symptom", "source": "k8s_docs"}
+{"qid": "val/00040", "query": "how do I check the snapshotting phase duration for podgroup scheduling cycles", "slice": "how_to", "source": "k8s_docs"}
+{"qid": "val/00041", "query": "kube-scheduler log: taking single snapshot of cluster state for podgroup payments-batch-7c9d8", "slice": "incident_snapshot", "source": "k8s_docs"}
+{"qid": "val/00042", "query": "race conditions occurring while scheduler evaluates podgroup node placements", "slice": "symptom", "source": "k8s_docs"}
+{"qid": "val/00043", "query": "how does the scheduler requeue unschedulable pods when a podgroup fails minCount", "slice": "how_to", "source": "k8s_docs"}
+{"qid": "val/00044", "query": "some pods in the group got scheduled but the rest are stuck unschedulable without triggering preemption", "slice": "symptom", "source": "k8s_docs"}
+{"qid": "val/00045", "query": "PodGroupPostFilter extension point returned Success for group payments-batch", "slice": "error_string", "source": "k8s_docs"}
+{"qid": "val/00046", "query": "how to configure PodGroupPostFilter and DefaultPreemption extension points in the scheduler", "slice": "how_to", "source": "k8s_docs"}
+{"qid": "val/00047", "query": "podgroups are stuck returning to the scheduling queue repeatedly without binding any pods after preemption runs", "slice": "symptom", "source": "k8s_docs"}
+{"qid": "val/00048", "query": "how does the default podgroup scheduling algorithm evaluate minCount constraints", "slice": "how_to", "source": "k8s_docs"}
+{"qid": "val/00049", "query": "kube-scheduler event: PodGroup cart-sync-group deemed unschedulable after PlacementFeasible returned failure", "slice": "incident_snapshot", "source": "k8s_docs"}
+{"qid": "val/00050", "query": "scheduler skips PostFilter and immediately treats the whole podgroup as unschedulable when a single pod fails to fit", "slice": "symptom", "source": "k8s_docs"}
+{"qid": "val/00051", "query": "how to configure custom plugins for the placement scheduling algorithm in a podgroup", "slice": "how_to", "source": "k8s_docs"}
+{"qid": "val/00052", "query": "NAME ALGORITHM AGE GROUP auth-placement PlacementScheduling 2h auth-api-group", "slice": "kubectl_output", "source": "k8s_docs"}
+{"qid": "val/00053", "query": "need to use an alternative placement scheduling algorithm for specific podgroups in the cluster", "slice": "symptom", "source": "k8s_docs"}
+{"qid": "val/00054", "query": "failed calling extension point PlacementGeneratePlugin for group ledger-batch", "slice": "error_string", "source": "k8s_docs"}
+{"qid": "val/00055", "query": "how do I implement the PlacementGeneratePlugin for custom node candidate generation", "slice": "how_to", "source": "k8s_docs"}
+{"qid": "val/00056", "query": "custom placement generate plugin is failing to produce feasible node subsets for the podgroup", "slice": "symptom", "source": "k8s_docs"}
+{"qid": "val/00057", "query": "how to validate proposed placements using the default podgroup scheduling algorithm", "slice": "how_to", "source": "k8s_docs"}
+{"qid": "val/00058", "query": "placement is not marked as feasible even though enough pods can fit", "slice": "symptom", "source": "k8s_docs"}
+{"qid": "val/00059", "query": "how does PlacementScorePlugin handle heterogeneous PodGroups in the scheduling cycle", "slice": "how_to", "source": "k8s_docs"}
+{"qid": "val/00060", "query": "cart-worker-8zn7s5m8fz-vjjvs 0/1 Pending 0 (12s ago) | Warning FailedScheduling 3m scheduler heterogeneous PodGroup placement algorithm limitation", "slice": "incident_snapshot", "source": "k8s_docs"}
+{"qid": "val/00061", "query": "why are pods with inter-pod affinity failing to be placed in our custom scheduler", "slice": "symptom", "source": "k8s_docs"}
+{"qid": "val/00062", "query": "PodGroup rejected: all member pods must share the same .spec.schedulerName", "slice": "error_string", "source": "k8s_docs"}
+{"qid": "val/00063", "query": "how to configure schedulerName for all pods in a PodGroup to pass validation", "slice": "how_to", "source": "k8s_docs"}
+{"qid": "val/00064", "query": "pods in a podgroup are getting rejected because of schedulername mismatch", "slice": "symptom", "source": "k8s_docs"}
+{"qid": "val/00065", "query": "how to enable CompositePodGroups for multi-level group hierarchies in kubernetes", "slice": "how_to", "source": "k8s_docs"}
+{"qid": "val/00066", "query": "leaf podgroups are not associating with parent compositepodgroups under scheduling.k8s.io/v1alpha3", "slice": "symptom", "source": "k8s_docs"}
+{"qid": "val/00067", "query": "how does the scheduler validate configuration consistency for root CompositePodGroups", "slice": "how_to", "source": "k8s_docs"}
+{"qid": "val/00068", "query": "ledger-sync-root 0/1 Pending 0 (5s ago) | Warning HierarchyValidationFailed 1m hierarchy shape changed concurrently, requeuing CompositePodGroup", "slice": "incident_snapshot", "source": "k8s_docs"}
+{"qid": "val/00069", "query": "compositepodgroup keeps getting requeued because the hierarchy shape changed concurrently", "slice": "symptom", "source": "k8s_docs"}
+{"qid": "val/00070", "query": "how are candidate placements generated for child compositepodgroups using PlacementGeneratePlugin", "slice": "how_to", "source": "k8s_docs"}
+{"qid": "val/00071", "query": "child podgroups are not restricting their node subsets to the parent compositepodgroup placement", "slice": "symptom", "source": "k8s_docs"}
+{"qid": "val/00072", "query": "PlacementFeasible check failed: policy constraints can no longer be satisfied, aborting CompositePodGroup evaluation", "slice": "error_string", "source": "k8s_docs"}
+{"qid": "val/00073", "query": "how to debug PlacementFeasible plugin failures during compositepodgroup recursive traversal", "slice": "how_to", "source": "k8s_docs"}
+{"qid": "val/00074", "query": "how does PlacementScorePlugin score feasible candidate placements across descendant leaf podgroups", "slice": "how_to", "source": "k8s_docs"}
+{"qid": "val/00075", "query": "COMPOSITE_GROUP PLACEMENT_CANDIDATE SCORE FEASIBLE DECISION analytics-root zone-a-pool 95 true Committed", "slice": "kubectl_output", "source": "k8s_docs"}
+{"qid": "val/00076", "query": "CompositePodGroup unschedulable: no feasible placement found among generated candidates", "slice": "error_string", "source": "k8s_docs"}
+{"qid": "val/00077", "query": "analytics-pipeline-root 0/1 Unschedulable 0 (2m ago) | Warning FailedScheduling 5m no feasible placement found among generated candidates for CompositePodGroup", "slice": "incident_snapshot", "source": "k8s_docs"}
+{"qid": "val/00078", "query": "entire compositepodgroup marked as unschedulable because no feasible placement was found", "slice": "symptom", "source": "k8s_docs"}
+{"qid": "val/00079", "query": "how to fix suboptimal placement when using compositepodgroups in cluster scheduling", "slice": "how_to", "source": "k8s_docs"}
+{"qid": "val/00080", "query": "Warning FailedScheduling 4m2s (x3 over 5m10s) default-scheduler 0/1 nodes are available: insufficient cpu, greedy scheduling failed for compositepodgroup", "slice": "kubectl_output", "source": "k8s_docs"}
+{"qid": "val/00081", "query": "scheduler fails to find valid placement for compositepodgroup hierarchy even though capacity exists", "slice": "symptom", "source": "k8s_docs"}
+{"qid": "val/00082", "query": "how to inspect scheduling condition status on podgroups", "slice": "how_to", "source": "k8s_docs"}
+{"qid": "val/00083", "query": "status: conditions: - lastTransitionTime: \"2023-10-25T14:20:10Z\" status: \"True\" type: PodGroupInitiallyScheduled", "slice": "kubectl_output", "source": "k8s_docs"}
+{"qid": "val/00084", "query": "need to check if podgroups have completed their initial scheduling phase successfully", "slice": "symptom", "source": "k8s_docs"}
+{"qid": "val/00085", "query": "PodGroupInitiallyScheduled condition set to False with reason Unschedulable", "slice": "error_string", "source": "k8s_docs"}
+{"qid": "val/00086", "query": "how to query podgroup conditions using jsonpath in kubectl", "slice": "how_to", "source": "k8s_docs"}
+{"qid": "val/00087", "query": "gang pods failed to meet mincount during scheduling cycle", "slice": "symptom", "source": "k8s_docs"}
+{"qid": "val/00088", "query": "how does the noderesourcesfit plugin calculate placement scores using bin packing", "slice": "how_to", "source": "k8s_docs"}
+{"qid": "val/00089", "query": "NAME TYPE AGE TopologyPlacement PlacementGeneratePlugin active NodeResourcesFit PlacementScorePlugin active", "slice": "kubectl_output", "source": "k8s_docs"}
+{"qid": "val/00090", "query": "want to know how topology placement plugin groups nodes based on topology keys", "slice": "symptom", "source": "k8s_docs"}
+{"qid": "val/00091", "query": "how to change plugin weights in kubeschedulerconfiguration for bin packing resource allocation", "slice": "how_to", "source": "k8s_docs"}
+{"qid": "val/00092", "query": "Error: strict decoding error: unknown field \"plugins.score.weight\" in KubeSchedulerConfiguration", "slice": "kubectl_output", "source": "k8s_docs"}
+{"qid": "val/00093", "query": "need to adjust noderesourcesfit and podgrouppodsactive plugin weights to prioritize pod placement", "slice": "symptom", "source": "k8s_docs"}
+{"qid": "val/00094", "query": "no matches for kind \"CompositePodGroup\" in version \"scheduling.k8s.io/v1alpha3\"", "slice": "error_string", "source": "k8s_docs"}
+{"qid": "val/00095", "query": "how to enable multi-level topology placements with compositepodgroups", "slice": "how_to", "source": "k8s_docs"}
+{"qid": "val/00096", "query": "topology aware scheduling plugins are not evaluating multilevel hierarchies properly", "slice": "symptom", "source": "k8s_docs"}
+{"qid": "val/00097", "query": "how does topologyplacement generate candidate placements for child compositepodgroups", "slice": "how_to", "source": "k8s_docs"}
+{"qid": "val/00098", "query": "scheduler is not subdividing node sets correctly down the compositepodgroup hierarchy", "slice": "symptom", "source": "k8s_docs"}
+{"qid": "val/00099", "query": "how do scoring plugins evaluate candidate placements for a CompositePodGroup", "slice": "how_to", "source": "k8s_docs"}
+{"qid": "val/00100", "query": "what does the NodeResourcesFit scoring plugin calculate for hierarchical pod groups", "slice": "how_to", "source": "k8s_docs"}
+{"qid": "val/00101", "query": "placement scoring is not favoring nodes with enough capacity for all descendant pods in the group", "slice": "symptom", "source": "k8s_docs"}
+{"qid": "val/00102", "query": "how does the Host Networking Service manage networking resources on Windows nodes", "slice": "how_to", "source": "k8s_docs"}
+{"qid": "val/00103", "query": "what components are responsible for creating virtual network adapters for Windows containers", "slice": "how_to", "source": "k8s_docs"}
+{"qid": "val/00104", "query": "trying to understand how Windows container vNICs connect to the vSwitch", "slice": "symptom", "source": "k8s_docs"}
+{"qid": "val/00105", "query": "how do CNI implementations pass network details into Windows pods without file mapping", "slice": "how_to", "source": "k8s_docs"}
+{"qid": "val/00106", "query": "why doesn't mounting resolv conf work inside Windows containers", "slice": "how_to", "source": "k8s_docs"}
+{"qid": "val/00107", "query": "DNS and route configurations are missing in Windows container because file mappings aren't working", "slice": "symptom", "source": "k8s_docs"}
+{"qid": "val/00108", "query": "how does Azure-CNI integrate pods with Azure Virtual Network capabilities", "slice": "how_to", "source": "k8s_docs"}
+{"qid": "val/00109", "query": "which networking mode connects containers directly to the underlay network while rewriting MAC addresses", "slice": "how_to", "source": "k8s_docs"}
+{"qid": "val/00110", "query": "inter-node connectivity is failing when using win-bridge network mode without proper routing", "slice": "symptom", "source": "k8s_docs"}
+{"qid": "val/00111", "query": "how do I isolate virtual container networks from the host underlay using VXLAN", "slice": "how_to", "source": "k8s_docs"}
+{"qid": "val/00112", "query": "what prerequisites are needed on Windows Server 2019 to run overlay container networks", "slice": "how_to", "source": "k8s_docs"}
+{"qid": "val/00113", "query": "overlay network setup is failing because of missing hotfixes on the Windows node", "slice": "symptom", "source": "k8s_docs"}
+{"qid": "val/00114", "query": "how do I deploy ovn-kubernetes on Windows worker nodes", "slice": "how_to", "source": "k8s_docs"}
+{"qid": "val/00115", "query": "which CNI plugin uses GENEVE or STT tunneling for transparent networking", "slice": "how_to", "source": "k8s_docs"}
+{"qid": "val/00116", "query": "transparent network mode is dropping packets between nodes that are not on the same host", "slice": "symptom", "source": "k8s_docs"}
+{"qid": "val/00117", "query": "how does the Flannel CNI plugin delegate to win-overlay on Windows nodes", "slice": "how_to", "source": "k8s_docs"}
+{"qid": "val/00118", "query": "where does Flannel read its CNI configuration file on Windows", "slice": "how_to", "source": "k8s_docs"}
+{"qid": "val/00119", "query": "check what traffic flows work between pods and services on windows nodes", "slice": "how_to", "source": "k8s_docs"}
+{"qid": "val/00120", "query": "NAME TYPE CLUSTER-IP EXTERNAL-IP PORT(S) AGE windows-backend ClusterIP 10.96.45.12 <none> 80/TCP 2h", "slice": "kubectl_output", "source": "k8s_docs"}
+{"qid": "val/00121", "query": "not sure if dns names resolve correctly for services inside windows node containers", "slice": "symptom", "source": "k8s_docs"}
+{"qid": "val/00122", "query": "configure ipam options for windows nodes in our cluster", "slice": "how_to", "source": "k8s_docs"}
+{"qid": "val/00123", "query": "Name: aks-winpool-34857285-vmss000001 Namespace: prod IPAM: host-local Status: Ready", "slice": "kubectl_output", "source": "k8s_docs"}
+{"qid": "val/00124", "query": "windows node ip allocation is failing because of unsupported ipam settings", "slice": "symptom", "source": "k8s_docs"}
+{"qid": "val/00125", "query": "enable direct server return on windows vswitch ports to lower latency", "slice": "how_to", "source": "k8s_docs"}
+{"qid": "val/00126", "query": "EndpointSlice: app-ingress-endpoints Mode: DSR vSwitchPort: enabled SourceIP: preserved", "slice": "kubectl_output", "source": "k8s_docs"}
+{"qid": "val/00127", "query": "load balancer traffic latency is too high on our windows server worker nodes", "slice": "symptom", "source": "k8s_docs"}
+{"qid": "val/00128", "query": "find what service types are supported when running workloads on windows nodes", "slice": "how_to", "source": "k8s_docs"}
+{"qid": "val/00129", "query": "loadbalancer service traffic fails to reach pods running on windows worker nodes", "slice": "symptom", "source": "k8s_docs"}
+{"qid": "val/00130", "query": "enable session affinity for client ip routing on a windows service", "slice": "how_to", "source": "k8s_docs"}
+{"qid": "val/00131", "query": "preserve client source ip for ingress traffic arriving at windows nodes", "slice": "how_to", "source": "k8s_docs"}
+{"qid": "val/00132", "query": "Name: ledger-service Namespace: finance Type: LoadBalancer External Traffic Policy: Local IP Families: IPv4, IPv6", "slice": "kubectl_output", "source": "k8s_docs"}
+{"qid": "val/00133", "query": "backend pods are losing the original client ip address behind the load balancer", "slice": "symptom", "source": "k8s_docs"}
+{"qid": "val/00134", "query": "debug why ping from a windows container to an external address fails", "slice": "how_to", "source": "k8s_docs"}
+{"qid": "val/00135", "query": "icmp ping packets to the outside internet get dropped inside windows pods", "slice": "symptom", "source": "k8s_docs"}
+{"qid": "val/00136", "query": "check flannel vxlan backend constraints for windows nodes", "slice": "how_to", "source": "k8s_docs"}
+{"qid": "val/00137", "query": "NAME TYPE STATUS AGE cni-node-win-sz78k Ready 12d Version: flannel v0.12.0 VNI: 4096 UDPPort: 4789", "slice": "kubectl_output", "source": "k8s_docs"}
+{"qid": "val/00138", "query": "how do I configure automatic storage provisioning without manually creating PVs", "slice": "how_to", "source": "k8s_docs"}
+{"qid": "val/00139", "query": "why do we keep having to manually create persistent volumes for every cloud disk request", "slice": "symptom", "source": "k8s_docs"}
+{"qid": "val/00140", "query": "NAME PROVISIONER RECLAIMPOLICY VOLUMEMOUNTMODE AGE fast-ssd kubernetes.io/gce-pd Delete Filesystem 4d2h", "slice": "kubectl_output", "source": "k8s_docs"}
+{"qid": "val/00141", "query": "users are complaining about the complexity of provisioning different storage types", "slice": "symptom", "source": "k8s_docs"}
+{"qid": "val/00142", "query": "StorageClass.metadata.name: Invalid value: \"slow_disk\": a DNS subdomain name must consist of lower case alphanumeric characters", "slice": "error_string", "source": "k8s_docs"}
+{"qid": "val/00143", "query": "how do I create a storage class manifest for standard google persistent disks", "slice": "how_to", "source": "k8s_docs"}
+{"qid": "val/00144", "query": "NAME PROVISIONER RECLAIMPOLICY VOLUMEMOUNTMODE AGE slow kubernetes.io/gce-pd Delete Filesystem 22h fast kubernetes.io/gce-pd Delete Filesystem 22h", "slice": "kubectl_output", "source": "k8s_docs"}
+{"qid": "val/00145", "query": "the annotation \"volume.beta.kubernetes.io/storage-class\" is deprecated and no longer effective", "slice": "error_string", "source": "k8s_docs"}
+{"qid": "val/00146", "query": "how do I specify the storage class inside a persistent volume claim in newer k8s versions", "slice": "how_to", "source": "k8s_docs"}
+{"qid": "val/00147", "query": "pvc is stuck and warning that the storage class annotation is deprecated", "slice": "symptom", "source": "k8s_docs"}
+{"qid": "val/00148", "query": "Multiple default storage classes found for PVC ledger-claim, using most recently created", "slice": "error_string", "source": "k8s_docs"}
+{"qid": "val/00149", "query": "how to mark a storage class as default so claims without storageClassName pick it up automatically", "slice": "how_to", "source": "k8s_docs"}
+{"qid": "val/00150", "query": "pvc creation fails because multiple storage classes are marked as default and kubernetes picks the wrong one", "slice": "symptom", "source": "k8s_docs"}
+{"qid": "val/00151", "query": "how do I set the volume binding mode to spread single-zone storage across multizone cluster pods", "slice": "how_to", "source": "k8s_docs"}
+{"qid": "val/00152", "query": "pods in multi-zone cluster are failing to attach single-zone volumes in the right zone", "slice": "symptom", "source": "k8s_docs"}
+{"qid": "val/00153", "query": "where can I check the maximum allowed disk attachments per node for cloud providers", "slice": "how_to", "source": "k8s_docs"}
+{"qid": "val/00154", "query": "cart-worker-node-04 Ready 14d v1.28.3 | Warning: AttachedVolumesLimitExceeded: node has reached maximum volume attachment limit for azure disk storage", "slice": "incident_snapshot", "source": "k8s_docs"}
+{"qid": "val/00155", "query": "what is the default limit for amazon EBS volume attachments per node in the scheduler", "slice": "how_to", "source": "k8s_docs"}
+{"qid": "val/00156", "query": "Capacity: attachable-volumes-aws-ebs: 39 attachable-volumes-gce-pd: 16 cpu: 8 memory: 32Gi", "slice": "kubectl_output", "source": "k8s_docs"}
+{"qid": "val/00157", "query": "our worker nodes are rejecting new persistent disk attachments because we hit the default capacity limit", "slice": "symptom", "source": "k8s_docs"}
+{"qid": "val/00158", "query": "how do I find out the maximum number of EBS volumes that can be attached to an m5 instance", "slice": "how_to", "source": "k8s_docs"}
+{"qid": "val/00159", "query": "checking how many persistent disks can be safely attached to a single GCE node", "slice": "symptom", "source": "k8s_docs"}
+{"qid": "val/00160", "query": "how are volume attachment limits determined for migrated in-tree storage plugins", "slice": "how_to", "source": "k8s_docs"}
+{"qid": "val/00161", "query": "node-volume-stats-controller 0/1 Running | attach limit calculation falling back to defaults for migrated plugin", "slice": "incident_snapshot", "source": "k8s_docs"}
+{"qid": "val/00162", "query": "migrated in-tree volume plugins are not reporting the correct attach limits", "slice": "symptom", "source": "k8s_docs"}
+{"qid": "val/00163", "query": "unknown feature gate MutableCSINodeAllocatableCount for component kubelet", "slice": "error_string", "source": "k8s_docs"}
+{"qid": "val/00164", "query": "how do I enable dynamic adjustment of node volume limits for CSI drivers", "slice": "how_to", "source": "k8s_docs"}
+{"qid": "val/00165", "query": "ResourceExhausted: maximum attachable volume limit reached for node ip-10-100-42-12.ec2.internal", "slice": "error_string", "source": "k8s_docs"}
+{"qid": "val/00166", "query": "how do I configure the update period for csi driver volume allocatable counts", "slice": "how_to", "source": "k8s_docs"}
+{"qid": "val/00167", "query": "how do I prevent pods from being scheduled on nodes that lack a specific CSI driver", "slice": "how_to", "source": "k8s_docs"}
+{"qid": "val/00168", "query": "failed to scale up node group worker-pool-east: csi node information missing in scheduling simulation", "slice": "error_string", "source": "k8s_docs"}
+{"qid": "val/00169", "query": "how do I configure cluster autoscaler to respect CSI volume limits during scale-up", "slice": "how_to", "source": "k8s_docs"}
+{"qid": "val/00170", "query": "cluster autoscaler is failing to provision new nodes for pending pods because volume limits were ignored", "slice": "symptom", "source": "k8s_docs"}
+{"qid": "val/00171", "query": "how do I specify an existing persistent volume claim as a datasource for cloning", "slice": "how_to", "source": "k8s_docs"}
+{"qid": "val/00172", "query": "volume cloning is failing because the source PVC is currently mounted and in use by an active pod", "slice": "symptom", "source": "k8s_docs"}
+{"qid": "val/00173", "query": "VolumeMode mismatch between source PVC ledger-pvc-src and destination PVC ledger-pvc-dst", "slice": "error_string", "source": "k8s_docs"}
+{"qid": "val/00174", "query": "cannot clone a raw block volume because the source storage mode does not match the destination request", "slice": "symptom", "source": "k8s_docs"}
+{"qid": "val/00175", "query": "how do I make a new persistent volume claim by duplicating an existing pvc in the same namespace", "slice": "how_to", "source": "k8s_docs"}
+{"qid": "val/00176", "query": "NAME STATUS VOLUME CAPACITY ACCESS MODES STORAGECLASS AGE clone-of-pvc-1 Bound pvc-2b3c4 10Gi RWO cloning 12s", "slice": "kubectl_output", "source": "k8s_docs"}
+{"qid": "val/00177", "query": "need to set the correct storage size request when making a pvc copy from an existing volume source", "slice": "symptom", "source": "k8s_docs"}
+{"qid": "val/00178", "query": "can I delete the original pvc after creating a cloned volume without breaking the clone", "slice": "how_to", "source": "k8s_docs"}
+{"qid": "val/00179", "query": "cloned persistent volume claim is still tied to the source pvc and cannot be managed separately", "slice": "symptom", "source": "k8s_docs"}
+{"qid": "val/00180", "query": "what api object should I create to request a point in time storage snapshot as a regular cluster user", "slice": "how_to", "source": "k8s_docs"}
+{"qid": "val/00181", "query": "need to distinguish between cluster level storage snapshots and user requested snapshots", "slice": "symptom", "source": "k8s_docs"}
+{"qid": "val/00182", "query": "how can database admins create backups of persistent storage before running risky updates", "slice": "how_to", "source": "k8s_docs"}
+{"qid": "val/00183", "query": "looking for a standardized way to duplicate disk contents at a specific timestamp without provisioning full extra volumes", "slice": "symptom", "source": "k8s_docs"}
+{"qid": "val/00184", "query": "no matches for kind \"VolumeSnapshot\" in version \"snapshot.storage.k8s.io/v1\"", "slice": "error_string", "source": "k8s_docs"}
+{"qid": "val/00185", "query": "which sidecar helper container needs to be deployed alongside the storage driver for snapshot operations", "slice": "how_to", "source": "k8s_docs"}
+{"qid": "val/00186", "query": "volume snapshots are failing because the snapshot controller and crds are missing from the control plane", "slice": "symptom", "source": "k8s_docs"}
+{"qid": "val/00187", "query": "how to handle multi zone storage topology restrictions when restoring a disk snapshot in a cluster", "slice": "how_to", "source": "k8s_docs"}
+{"qid": "val/00188", "query": "snapshots created in one zone are not accessible when trying to restore them in another zone of the cluster", "slice": "symptom", "source": "k8s_docs"}
+{"qid": "val/00189", "query": "how do I set up pre-provisioned volume snapshots", "slice": "how_to", "source": "k8s_docs"}
+{"qid": "val/00190", "query": "pre-provisioned volume snapshot contents are missing from the cluster api", "slice": "symptom", "source": "k8s_docs"}
+{"qid": "val/00191", "query": "how do I trigger a dynamic storage snapshot from a persistent volume claim", "slice": "how_to", "source": "k8s_docs"}
+{"qid": "val/00192", "query": "need to pass storage provider specific parameters when snapshotting a pvc dynamically", "slice": "symptom", "source": "k8s_docs"}
+{"qid": "val/00193", "query": "how does the snapshot controller map volume snapshots to contents", "slice": "how_to", "source": "k8s_docs"}
+{"qid": "val/00194", "query": "NAME READYTOUSE SOURCEPVC SOURCENAME AGE snapshot-cart false pvc-orders snap-content-ledger 2m", "slice": "kubectl_output", "source": "k8s_docs"}
+{"qid": "val/00195", "query": "how to prevent pvc deletion while backup snapshot is in progress", "slice": "how_to", "source": "k8s_docs"}
+{"qid": "val/00196", "query": "persistentvolumeclaim deletion is stuck and wont delete while taking a snapshot", "slice": "symptom", "source": "k8s_docs"}
+{"qid": "val/00197", "query": "how do I configure deletion policy to retain underlying storage snapshots", "slice": "how_to", "source": "k8s_docs"}
+{"qid": "val/00198", "query": "NAME DRIVER DELETIONPOLICY AGE snapcontent-prod-01 hostpath.csi.k8s.io Retain 14d", "slice": "kubectl_output", "source": "k8s_docs"}
+{"qid": "val/00199", "query": "deleting the volumesnapshot object removed the underlying storage snapshot too", "slice": "symptom", "source": "k8s_docs"}
+{"qid": "val/00200", "query": "how to specify the persistent volume claim name in a dynamic volumesnapshot yaml", "slice": "how_to", "source": "k8s_docs"}
+{"qid": "val/00201", "query": "NAME READYTOUSE SOURCEPVC AGE ledger-backup true pvc-ledger-data 5m", "slice": "kubectl_output", "source": "k8s_docs"}
+{"qid": "val/00202", "query": "how to write a volumesnapshotcontent manifest for dynamic provisioning", "slice": "how_to", "source": "k8s_docs"}
+{"qid": "val/00203", "query": "NAME DRIVER AGE snapcontent-a240-d77565 hostpath.csi.k8s.io 45s", "slice": "kubectl_output", "source": "k8s_docs"}
+{"qid": "val/00204", "query": "snapshot common controller failed to create volumesnapshotcontent object", "slice": "symptom", "source": "k8s_docs"}
+{"qid": "val/00205", "query": "how do I find the volume handle needed for pre-provisioned snapshot content", "slice": "how_to", "source": "k8s_docs"}
+{"qid": "val/00206", "query": "NAME SNAPSHOTHANDLE DRIVER AGE snapcontent-test-abc csi-hostpath-snapclass hostpath.csi.k8s.io 10m", "slice": "kubectl_output", "source": "k8s_docs"}
+{"qid": "val/00207", "query": "spec.sourceVolumeMode in VolumeSnapshotContent must be either Filesystem or Block", "slice": "error_string", "source": "k8s_docs"}
+{"qid": "val/00208", "query": "how do I specify the CSI snapshot id on a pre-provisioned volume snapshot content object", "slice": "how_to", "source": "k8s_docs"}
+{"qid": "val/00209", "query": "volume snapshot content missing the backend storage identifier field", "slice": "symptom", "source": "k8s_docs"}
+{"qid": "val/00210", "query": "how do I enable changing the volume mode when restoring from a snapshot", "slice": "how_to", "source": "k8s_docs"}
+{"qid": "val/00211", "query": "NAME CREATEDAT volumesnapshotcontents.snapshot.storage.k8s.io 2023-10-15T10:00:00Z", "slice": "kubectl_output", "source": "k8s_docs"}
+{"qid": "val/00212", "query": "forbidden to convert the mode of a volume snapshot without cluster permission", "slice": "symptom", "source": "k8s_docs"}
+{"qid": "val/00213", "query": "VolumeSnapshotTopology feature gate is not enabled on csi-snapshotter", "slice": "error_string", "source": "k8s_docs"}
+{"qid": "val/00214", "query": "how do I restrict dynamically created snapshots to specific zones in a multi-zone cluster", "slice": "how_to", "source": "k8s_docs"}
+{"qid": "val/00215", "query": "invalid dataSource kind for PersistentVolumeClaim provisioning", "slice": "error_string", "source": "k8s_docs"}
+{"qid": "val/00216", "query": "how do I create a new persistent volume pre-populated with snapshot data", "slice": "how_to", "source": "k8s_docs"}
+{"qid": "val/00217", "query": "persistentvolumeclaim configuration missing data source reference for snapshot restoration", "slice": "symptom", "source": "k8s_docs"}
+{"qid": "val/00218", "query": "no kind \"CompositePodGroup\" is registered for version scheduling.k8s.io/v1alpha3", "slice": "error_string", "source": "k8s_docs"}
+{"qid": "val/00219", "query": "how do I define a non-leaf node in a multi-level workload hierarchy", "slice": "how_to", "source": "k8s_docs"}
+{"qid": "val/00220", "query": "the server could not find the requested resource batch/v1alpha3 CompositePodGroup", "slice": "error_string", "source": "k8s_docs"}
+{"qid": "val/00221", "query": "how do I enable the composite pod group feature gate in my cluster", "slice": "how_to", "source": "k8s_docs"}
+{"qid": "val/00222", "query": "how do I configure a gang scheduling policy with a minimum group count for composite workloads", "slice": "how_to", "source": "k8s_docs"}
+{"qid": "val/00223", "query": "gang scheduled child groups failing to start simultaneously because minGroupCount is unmet", "slice": "symptom", "source": "k8s_docs"}
+{"qid": "val/00224", "query": "spec.parentCompositePodGroupName: Invalid value: \"\": parent group must be specified", "slice": "error_string", "source": "k8s_docs"}
+{"qid": "val/00225", "query": "how do I link a non-root composite pod group to its parent group", "slice": "how_to", "source": "k8s_docs"}
+{"qid": "val/00226", "query": "child composite pod groups detached from their root workload hierarchy", "slice": "symptom", "source": "k8s_docs"}
+{"qid": "val/00227", "query": "how do I link a CompositePodGroup back to its Workload object template in the spec", "slice": "how_to", "source": "k8s_docs"}
+{"qid": "val/00228", "query": "spec: workloadRef: workloadName: hierarchical-workload templateName: replica-group", "slice": "kubectl_output", "source": "k8s_docs"}
+{"qid": "val/00229", "query": "need to find the yaml field name that points the composite pod group to the workload reference template", "slice": "symptom", "source": "k8s_docs"}
+{"qid": "val/00230", "query": "why is the status field empty on composite pod groups in the alpha release", "slice": "how_to", "source": "k8s_docs"}
+{"qid": "val/00231", "query": "compositepodgroup status conditions are not being updated by the scheduler", "slice": "symptom", "source": "k8s_docs"}
+{"qid": "val/00232", "query": "scheduler is not populating status tracking for composite pod groups", "slice": "symptom", "source": "k8s_docs"}
+{"qid": "val/00233", "query": "how do I write a manifest for a root composite pod group requiring at least two child groups", "slice": "how_to", "source": "k8s_docs"}
+{"qid": "val/00234", "query": "looking for the command to inspect composite pod groups and view details for gang scheduling policies", "slice": "symptom", "source": "k8s_docs"}
+{"qid": "val/00235", "query": "explain the hierarchy relationship between workloads compositepodgroups podgroups and pods", "slice": "how_to", "source": "k8s_docs"}
+{"qid": "val/00236", "query": "what field links a pod to its corresponding leaf pod group in scheduling settings", "slice": "how_to", "source": "k8s_docs"}
+{"qid": "val/00237", "query": "how do workload controllers generate top down descendant objects and leaf pod groups", "slice": "symptom", "source": "k8s_docs"}
+{"qid": "val/00238", "query": "how do runtime scheduling state resources like podgroups and compositepodgroups reference parent workloads", "slice": "how_to", "source": "k8s_docs"}
+{"qid": "val/00239", "query": "apiVersion: scheduling.k8s.io/v1alpha3 kind: PodGroup metadata: name: workers-a-0 namespace: default spec: parentCompositePodGroupName: root-group-0", "slice": "kubectl_output", "source": "k8s_docs"}
+{"qid": "val/00240", "query": "worker pods failing to bind because podgroup minCount gang scheduling policy is not met", "slice": "symptom", "source": "k8s_docs"}
+{"qid": "val/00241", "query": "how do I update replicasets using declarative deployment objects without direct manual manipulation", "slice": "how_to", "source": "k8s_docs"}
+{"qid": "val/00242", "query": "what is the best practice for adopting existing resources into a new deployment", "slice": "how_to", "source": "k8s_docs"}
+{"qid": "val/00243", "query": "should we manually manage replicasets owned by a deployment or let the controller handle it", "slice": "symptom", "source": "k8s_docs"}
+{"qid": "val/00244", "query": "how do I pause a deployment rollout to apply multiple pod template fixes and resume it later", "slice": "how_to", "source": "k8s_docs"}
+{"qid": "val/00245", "query": "how do I scale up a deployment and clean up older unused replicasets", "slice": "how_to", "source": "k8s_docs"}
+{"qid": "val/00246", "query": "how do I write a basic deployment manifest with three replicas using nginx", "slice": "how_to", "source": "k8s_docs"}
+{"qid": "val/00247", "query": "need an example deployment yaml file configuration with matchlabels and selectors", "slice": "symptom", "source": "k8s_docs"}
+{"qid": "val/00248", "query": "how do I configure selector and pod template labels in a deployment", "slice": "how_to", "source": "k8s_docs"}
+{"qid": "val/00249", "query": "deployment spec needs to link the replicaset to specific pod labels", "slice": "symptom", "source": "k8s_docs"}
+{"qid": "val/00250", "query": "how do I use matchExpressions and matchLabels in a deployment selector", "slice": "how_to", "source": "k8s_docs"}
+{"qid": "val/00251", "query": "matchLabels: app: payments", "slice": "kubectl_output", "source": "k8s_docs"}
+{"qid": "val/00252", "query": "need to set up the container image version and name inside the pod template", "slice": "symptom", "source": "k8s_docs"}
+{"qid": "val/00253", "query": "need to check if the new deployment actually got created in the cluster", "slice": "symptom", "source": "k8s_docs"}
+{"qid": "val/00254", "query": "NAME READY UP-TO-DATE AVAILABLE AGE cart-deploy 0/3 0 0 2s", "slice": "kubectl_output", "source": "k8s_docs"}
+{"qid": "val/00255", "query": "want to understand what the ready and up to date columns mean in kubectl get deployments", "slice": "symptom", "source": "k8s_docs"}
+{"qid": "val/00256", "query": "how do I view the replicasets created by a specific deployment", "slice": "how_to", "source": "k8s_docs"}
+{"qid": "val/00257", "query": "how is the replicaset name generated from the deployment name", "slice": "how_to", "source": "k8s_docs"}
+{"qid": "val/00258", "query": "NAME DESIRED CURRENT READY AGE payments-worker-s5llfzs7bb 2 2 2 45s", "slice": "kubectl_output", "source": "k8s_docs"}
+{"qid": "val/00259", "query": "trying to figure out what the current column means when listing replicasets", "slice": "symptom", "source": "k8s_docs"}
+{"qid": "val/00260", "query": "NAME READY STATUS RESTARTS AGE LABELS cart-2kf7f8nkc9-sv9p5 1/1 Running 0 22s app=cart,pod-template-hash=5d8f7c6b9d", "slice": "kubectl_output", "source": "k8s_docs"}
+{"qid": "val/00261", "query": "need to verify the pod template hash label on running pods", "slice": "symptom", "source": "k8s_docs"}
+{"qid": "val/00262", "query": "how do I avoid label conflicts between different deployments and statefulsets", "slice": "how_to", "source": "k8s_docs"}
+{"qid": "val/00263", "query": "Warning: the selector \"app=cart\" is already used by deployment frontend", "slice": "kubectl_output", "source": "k8s_docs"}
+{"qid": "val/00264", "query": "controllers are behaving weirdly because their selectors overlap", "slice": "symptom", "source": "k8s_docs"}
+{"qid": "val/00265", "query": "how do I fix the pod-template-hash label on a deployment", "slice": "how_to", "source": "k8s_docs"}
+{"qid": "val/00266", "query": "child replicasets are overlapping after manually editing labels", "slice": "symptom", "source": "k8s_docs"}
+{"qid": "val/00267", "query": "how do I update the container image version for a deployment using kubectl", "slice": "how_to", "source": "k8s_docs"}
+{"qid": "val/00268", "query": "how do I check the rollout progress of a deployment", "slice": "how_to", "source": "k8s_docs"}
+{"qid": "val/00269", "query": "deployment rollout is stuck in progress waiting for replicas", "slice": "symptom", "source": "k8s_docs"}
+{"qid": "val/00270", "query": "how do I list replicasets to verify scale down during a deployment update", "slice": "how_to", "source": "k8s_docs"}
+{"qid": "val/00271", "query": "too many pods are going down at the same time during a deployment update", "slice": "symptom", "source": "k8s_docs"}
+{"qid": "val/00272", "query": "how does max surge control the number of active pods during an update", "slice": "how_to", "source": "k8s_docs"}
+{"qid": "val/00273", "query": "Replicas: 3 desired | 4 updated | 5 total | 3 available | 1 unavailable", "slice": "kubectl_output", "source": "k8s_docs"}
+{"qid": "val/00274", "query": "deployment creates too many extra pods before killing the old ones", "slice": "symptom", "source": "k8s_docs"}
+{"qid": "val/00275", "query": "how do I inspect the rolling update strategy and conditions of a deployment", "slice": "how_to", "source": "k8s_docs"}
+{"qid": "val/00276", "query": "Name: auth-api Namespace: prod Replicas: 3 desired | 3 updated | 3 total | 3 available | 0 unavailable StrategyType: RollingUpdate", "slice": "kubectl_output", "source": "k8s_docs"}
+{"qid": "val/00277", "query": "deployment describe shows unavailable replicas but no error message", "slice": "symptom", "source": "k8s_docs"}
+{"qid": "val/00278", "query": "Scaled up replica set ledger-worker-nn9l2lr6k to 3", "slice": "error_string", "source": "k8s_docs"}
+{"qid": "val/00279", "query": "Events: Type Reason Age From Message Normal ScalingReplicaSet 3m deployment-controller Scaled up replica set cart-7d8b6f5-203538 to 3", "slice": "kubectl_output", "source": "k8s_docs"}
+{"qid": "val/00280", "query": "deployment controller events show rapid scaling up and down of replica sets", "slice": "symptom", "source": "k8s_docs"}
+{"qid": "val/00281", "query": "how do I check the rollout progress and replicaset scaling events of a deployment", "slice": "how_to", "source": "k8s_docs"}
+{"qid": "val/00282", "query": "Normal ScalingReplicaSet 14s deployment-controller Scaled down replica set cart-deployment-78549688 to 0", "slice": "kubectl_output", "source": "k8s_docs"}
+{"qid": "val/00283", "query": "deployment rolling update is scaling both old and new replicasets simultaneously", "slice": "symptom", "source": "k8s_docs"}
+{"qid": "val/00284", "query": "deployment consumes more resources than maxSurge allows during rolling updates", "slice": "symptom", "source": "k8s_docs"}
+{"qid": "val/00285", "query": "terminating pods are not counted towards availableReplicas in kubernetes deployments", "slice": "symptom", "source": "k8s_docs"}
+{"qid": "val/00286", "query": "what happens during deployment rollover when multiple updates happen at the same time", "slice": "how_to", "source": "k8s_docs"}
+{"qid": "val/00287", "query": "updating a deployment while a rollout is already running causes the previous replicaset to be added to old replicasets and scaled down", "slice": "symptom", "source": "k8s_docs"}
+{"qid": "val/00288", "query": "does a deployment wait for current replica creation to finish before switching to a new image update", "slice": "how_to", "source": "k8s_docs"}
+{"qid": "val/00289", "query": "deployment aborts creating current image replicas to start new ones when updated mid rollout", "slice": "symptom", "source": "k8s_docs"}
+{"qid": "val/00290", "query": "deployment starts killing pods immediately when updating image before previous replicas finish creation", "slice": "symptom", "source": "k8s_docs"}
+{"qid": "val/00291", "query": "The Deployment \"auth-api\" is invalid: spec.selector: Invalid value: v1.LabelSelector...", "slice": "error_string", "source": "k8s_docs"}
+{"qid": "val/00292", "query": "how do I change a deployment label selector without deleting running pods", "slice": "how_to", "source": "k8s_docs"}
+{"qid": "val/00293", "query": "kubectl apply fails when trying to modify the immutable label selector on a deployment", "slice": "symptom", "source": "k8s_docs"}
+{"qid": "val/00294", "query": "why does changing a selector key value cause existing pods to be orphaned in my deployment", "slice": "how_to", "source": "k8s_docs"}
+{"qid": "val/00295", "query": "narrowing a deployment label selector orphans the old replicaset and creates a brand new one", "slice": "symptom", "source": "k8s_docs"}
+{"qid": "val/00296", "query": "how do I clean up removed labels from existing pods and replicasets after broadening a selector", "slice": "how_to", "source": "k8s_docs"}
+{"qid": "val/00297", "query": "trigger a rollout to remove old label keys left over from a selector change", "slice": "how_to", "source": "k8s_docs"}
+{"qid": "val/00298", "query": "old labels still persist on existing pods after changing to a broader deployment selector", "slice": "symptom", "source": "k8s_docs"}
+{"qid": "val/00299", "query": "why doesn't scaling my deployment create a new rollout revision", "slice": "how_to", "source": "k8s_docs"}
+{"qid": "val/00300", "query": "ledger-worker-7jsn8bplh6-6rrvc 0/1 CrashLoopBackOff 5 (15s ago) | Last State: Terminated Reason: Error Exit Code: 1 | rollbacks failing due to image typo nginx:1.161", "slice": "incident_snapshot", "source": "k8s_docs"}
+{"qid": "val/00301", "query": "how do I check if my deployment rollout is stuck", "slice": "how_to", "source": "k8s_docs"}
+{"qid": "val/00302", "query": "deployment update is hanging and not finishing the rollout", "slice": "symptom", "source": "k8s_docs"}
+{"qid": "val/00303", "query": "cart-deploy-fntzm5wksb-rnwhl 0/1 ImagePullBackOff 0 15s | rs showing desired 1 current 1 ready 0", "slice": "incident_snapshot", "source": "k8s_docs"}
+{"qid": "val/00304", "query": "new pods from the updated replica set are stuck in image pull loop", "slice": "symptom", "source": "k8s_docs"}
+{"qid": "val/00305", "query": "how do I check the deployment description when a rollout fails", "slice": "how_to", "source": "k8s_docs"}
+{"qid": "val/00306", "query": "where are maxUnavailable rolling update settings defined in kubernetes", "slice": "how_to", "source": "k8s_docs"}
+{"qid": "val/00307", "query": "why did the deployment controller automatically stop scaling up my new replica set", "slice": "symptom", "source": "k8s_docs"}
+{"qid": "val/00308", "query": "events list showing repeated scaling events: Scaled down replica set cart-api-2035384211 to 2 then scaled up replica set cart-api-1564180365 to 2", "slice": "incident_snapshot", "source": "k8s_docs"}
+{"qid": "val/00309", "query": "1m 1m 1 {deployment-controller } Normal ScalingReplicaSet Scaled up replica set auth-api-2035384211 to 3", "slice": "kubectl_output", "source": "k8s_docs"}
+{"qid": "val/00310", "query": "22s 22s 1 {deployment-controller } Normal ScalingReplicaSet Scaled up replica set frontend-1564180365 to 1", "slice": "kubectl_output", "source": "k8s_docs"}
+{"qid": "val/00311", "query": "how can I revert my deployment back to the previous stable revision", "slice": "how_to", "source": "k8s_docs"}
+{"qid": "val/00312", "query": "13s 13s 1 {deployment-controller } Normal ScalingReplicaSet Scaled down replica set auth-worker-2035384211 to 0", "slice": "kubectl_output", "source": "k8s_docs"}
+{"qid": "val/00313", "query": "bad deployment update went through and now I need to roll back to the old version", "slice": "symptom", "source": "k8s_docs"}
+{"qid": "val/00314", "query": "how do I add a change cause message to deployment revisions", "slice": "how_to", "source": "k8s_docs"}
+{"qid": "val/00315", "query": "how to set kubernetes io change cause annotation on a deployment", "slice": "how_to", "source": "k8s_docs"}
+{"qid": "val/00316", "query": "REVISION CHANGE-CAUSE 1 <none> 2 <none>", "slice": "kubectl_output", "source": "k8s_docs"}
+{"qid": "val/00317", "query": "how do I view container image details for a specific deployment revision", "slice": "how_to", "source": "k8s_docs"}
+{"qid": "val/00318", "query": "checking history to see what image version was used in past deployment revision", "slice": "symptom", "source": "k8s_docs"}
+{"qid": "val/00319", "query": "how do i revert a deployment back to version 2", "slice": "how_to", "source": "k8s_docs"}
+{"qid": "val/00320", "query": "need to undo the last rollout and go back to an earlier revision", "slice": "symptom", "source": "k8s_docs"}
+{"qid": "val/00321", "query": "how to verify if a deployment rollback worked correctly", "slice": "how_to", "source": "k8s_docs"}
+{"qid": "val/00322", "query": "checking if my rolled back service is running as expected", "slice": "symptom", "source": "k8s_docs"}
+{"qid": "val/00323", "query": "how to check deployment revision annotation and strategy type", "slice": "how_to", "source": "k8s_docs"}
+{"qid": "val/00324", "query": "how to view deployment events for replica set scaling", "slice": "how_to", "source": "k8s_docs"}
+{"qid": "val/00325", "query": "Normal ScalingReplicaSet 12m deployment-controller Scaled up replica set cart-blwszn7g5k to 3", "slice": "kubectl_output", "source": "k8s_docs"}
+{"qid": "val/00326", "query": "checking deployment history for replica scaling actions", "slice": "symptom", "source": "k8s_docs"}
+{"qid": "val/00327", "query": "Rolled back deployment \"auth-api\" to revision 2", "slice": "error_string", "source": "k8s_docs"}
+{"qid": "val/00328", "query": "Normal DeploymentRollback 15s deployment-controller Rolled back deployment \"ledger-worker\" to revision 2", "slice": "kubectl_output", "source": "k8s_docs"}
+{"qid": "val/00329", "query": "seeing deployment rollback events in the event stream after undoing", "slice": "symptom", "source": "k8s_docs"}
+{"qid": "val/00330", "query": "deployment.apps/auth-api scaled", "slice": "kubectl_output", "source": "k8s_docs"}
+{"qid": "val/00331", "query": "need to scale up my deployment replicas to ten instances", "slice": "symptom", "source": "k8s_docs"}
+{"qid": "val/00332", "query": "how does proportional scaling work during rolling updates", "slice": "how_to", "source": "k8s_docs"}
+{"qid": "val/00333", "query": "NAME DESIRED CURRENT UP-TO-DATE AVAILABLE AGE ledger-worker 10 10 10 10 50s", "slice": "kubectl_output", "source": "k8s_docs"}
+{"qid": "val/00334", "query": "replicas getting balanced across old and new replica sets during a rollout", "slice": "symptom", "source": "k8s_docs"}
+{"qid": "val/00335", "query": "new rollout is blocked because of max unavailable constraints after updating image", "slice": "symptom", "source": "k8s_docs"}
+{"qid": "val/00336", "query": "how do I make the autoscaler distribute new scale up replicas across multiple replica sets instead of just the latest one", "slice": "how_to", "source": "k8s_docs"}
+{"qid": "val/00337", "query": "scaling up our deployment added all the new pods to the same old replica set instead of spreading them", "slice": "symptom", "source": "k8s_docs"}
+{"qid": "val/00338", "query": "how can I check the replica counts for each active replica set in my deployment", "slice": "how_to", "source": "k8s_docs"}
+{"qid": "val/00339", "query": "nginx-deployment-1989198191 7 7 0 7m nginx-deployment-618515232 11 11 11 7m", "slice": "kubectl_output", "source": "k8s_docs"}
+{"qid": "val/00340", "query": "need to see the breakdown of desired and current pods across different deployment revision replica sets", "slice": "symptom", "source": "k8s_docs"}
+{"qid": "val/00341", "query": "how do I temporarily freeze deployment rollouts so I can apply multiple configuration patches without triggering builds", "slice": "how_to", "source": "k8s_docs"}
+{"qid": "val/00342", "query": "deployment.apps/nginx-deployment paused", "slice": "kubectl_output", "source": "k8s_docs"}
+{"qid": "val/00343", "query": "deployment keeps triggering updates every time I change something and I want to hold off until all fixes are ready", "slice": "symptom", "source": "k8s_docs"}
+{"qid": "val/00344", "query": "how to verify that a paused deployment is not creating new revision history when updating images", "slice": "how_to", "source": "k8s_docs"}
+{"qid": "val/00345", "query": "deployment.apps/nginx-deployment image updated", "slice": "kubectl_output", "source": "k8s_docs"}
+{"qid": "val/00346", "query": "updated the container image on a frozen deployment and now need to check that no new rollout history was spawned", "slice": "symptom", "source": "k8s_docs"}
+{"qid": "val/00347", "query": "how to resume a frozen deployment rollout so all pending resource and image changes take effect", "slice": "how_to", "source": "k8s_docs"}
+{"qid": "val/00348", "query": "deployment.apps/nginx-deployment resource requirements updated", "slice": "kubectl_output", "source": "k8s_docs"}
+{"qid": "val/00349", "query": "applied several resource limit updates while the rollout was suspended and now want to trigger the pending updates", "slice": "symptom", "source": "k8s_docs"}
+{"qid": "val/00350", "query": "what deployment status conditions are set when a rollout is marked as progressing by the controller", "slice": "how_to", "source": "k8s_docs"}
+{"qid": "val/00351", "query": "trying to find out what causes kubernetes to flag a deployment status condition as progressing during a scale up", "slice": "symptom", "source": "k8s_docs"}
+{"qid": "val/00352", "query": "what exact conditions must be met for a kubernetes deployment rollout to be considered complete", "slice": "how_to", "source": "k8s_docs"}
+{"qid": "val/00353", "query": "deployment rollout finished updating all pods but I need to know why the progressing condition still retains true", "slice": "symptom", "source": "k8s_docs"}
+{"qid": "val/00354", "query": "how can I check the exit status of a rollout command to confirm a successful deployment", "slice": "how_to", "source": "k8s_docs"}
+{"qid": "val/00355", "query": "Waiting for rollout to finish: 2 of 3 updated replicas are available... deployment \"nginx-deployment\" successfully rolled out", "slice": "kubectl_output", "source": "k8s_docs"}
+{"qid": "val/00356", "query": "need to verify via command line output if our application rollout finished successfully with zero exit status", "slice": "symptom", "source": "k8s_docs"}
+{"qid": "val/00357", "query": "how do I configure progress deadline seconds in a deployment spec", "slice": "how_to", "source": "k8s_docs"}
+{"qid": "val/00358", "query": "deployment rollout is stuck and never finishes updating the newest replicaset", "slice": "symptom", "source": "k8s_docs"}
+{"qid": "val/00359", "query": "how to detect when a deployment rollout stalls and fails to progress", "slice": "symptom", "source": "k8s_docs"}
+{"qid": "val/00360", "query": "how to check deployment conditions when rollout has transient errors", "slice": "how_to", "source": "k8s_docs"}
+{"qid": "val/00361", "query": "Conditions: Type Status Reason ---- ------ ------ Available True MinimumReplicasAvailable Progressing True ReplicaSetUpdated ReplicaFailure True FailedCreate", "slice": "kubectl_output", "source": "k8s_docs"}
+{"qid": "val/00362", "query": "deployment gets stuck due to insufficient quota and shows replica failure", "slice": "symptom", "source": "k8s_docs"}
+{"qid": "val/00363", "query": "how to resolve insufficient quota error blocking deployment rollouts", "slice": "how_to", "source": "k8s_docs"}
+{"qid": "val/00364", "query": "Conditions: Type Status Reason ---- ------ ------ Available True MinimumReplicasAvailable Progressing False ProgressDeadlineExceeded ReplicaFailure True FailedCreate", "slice": "kubectl_output", "source": "k8s_docs"}
+{"qid": "val/00365", "query": "Conditions: Type Status Reason ---- ------ ------ Available True MinimumReplicasAvailable Progressing True NewReplicaSetAvailable", "slice": "kubectl_output", "source": "k8s_docs"}
+{"qid": "val/00366", "query": "how to check if cart deployment achieved minimum availability", "slice": "how_to", "source": "k8s_docs"}
+{"qid": "val/00367", "query": "error: deployment \"ledger-worker\" exceeded its progress deadline", "slice": "error_string", "source": "k8s_docs"}
+{"qid": "val/00368", "query": "Waiting for rollout to finish: 1 out of 2 new replicas have been updated... error: deployment \"auth-api\" exceeded its progress deadline", "slice": "kubectl_output", "source": "k8s_docs"}
+{"qid": "val/00369", "query": "kubectl rollout status command exits with status 1 when deployment stalls", "slice": "symptom", "source": "k8s_docs"}
+{"qid": "val/00370", "query": "can I roll back or pause a deployment that has already failed", "slice": "how_to", "source": "k8s_docs"}
+{"qid": "val/00371", "query": "how to manage a deployment stuck in a failed state", "slice": "how_to", "source": "k8s_docs"}
+{"qid": "val/00372", "query": "what happens to rollback capability if I set revision history limit to zero", "slice": "how_to", "source": "k8s_docs"}
+{"qid": "val/00373", "query": "how do i set up a canary rollout using deployments in production", "slice": "how_to", "source": "k8s_docs"}
+{"qid": "val/00374", "query": "need to direct a small fraction of traffic to a new version of auth-api using separate deployment manifests", "slice": "symptom", "source": "k8s_docs"}
+{"qid": "val/00375", "query": "what metadata fields are mandatory when writing a deployment config", "slice": "how_to", "source": "k8s_docs"}
+{"qid": "val/00376", "query": "getting weird pod hostnames because of the deployment name format i picked", "slice": "symptom", "source": "k8s_docs"}
+{"qid": "val/00377", "query": "what restart policy values are allowed inside a deployment pod template spec", "slice": "how_to", "source": "k8s_docs"}
+{"qid": "val/00378", "query": "deployment validation fails because restart policy is set incorrectly in the template spec", "slice": "symptom", "source": "k8s_docs"}
+{"qid": "val/00379", "query": "prevent kubectl apply from overwriting manual replica scaling on ledger-worker", "slice": "how_to", "source": "k8s_docs"}
+{"qid": "val/00380", "query": "hpa scaling gets overridden every time someone applies the deployment yaml manually", "slice": "symptom", "source": "k8s_docs"}
+{"qid": "val/00381", "query": "Deployment.spec.selector is immutable after creation", "slice": "error_string", "source": "k8s_docs"}
+{"qid": "val/00382", "query": "fix api rejection caused by mismatched selector and template labels in apps/v1 deployment", "slice": "how_to", "source": "k8s_docs"}
+{"qid": "val/00383", "query": "cant update deployment selector after creation because the api rejects the patch", "slice": "symptom", "source": "k8s_docs"}
+{"qid": "val/00384", "query": "troubleshoot conflicting controllers managing pods with overlapping label selectors", "slice": "how_to", "source": "k8s_docs"}
+{"qid": "val/00385", "query": "two different deployments are fighting over the same pods and scaling up and down randomly", "slice": "symptom", "source": "k8s_docs"}
+{"qid": "val/00386", "query": "configure rolling update versus recreate strategy in deployment yaml", "slice": "how_to", "source": "k8s_docs"}
+{"qid": "val/00387", "query": "need to change default update strategy so old pods get completely wiped before new ones spin up", "slice": "symptom", "source": "k8s_docs"}
+{"qid": "val/00388", "query": "ensure old pods terminate completely before upgrade when using recreate deployment strategy", "slice": "how_to", "source": "k8s_docs"}
+{"qid": "val/00389", "query": "all pods in payments namespace get terminated immediately during upgrade causing downtime before new revision starts", "slice": "symptom", "source": "k8s_docs"}
+{"qid": "val/00390", "query": "how do I configure rolling update strategy parameters for my deployment", "slice": "how_to", "source": "k8s_docs"}
+{"qid": "val/00391", "query": "StrategyType: RollingUpdate RollingUpdate: {maxSurge: 25%, maxUnavailable: 25%}", "slice": "kubectl_output", "source": "k8s_docs"}
+{"qid": "val/00392", "query": "how do rollouts handle scaling old and new replica sets simultaneously", "slice": "symptom", "source": "k8s_docs"}
+{"qid": "val/00393", "query": "how do I set maxUnavailable percentage for checkout-api rolling update", "slice": "how_to", "source": "k8s_docs"}
+{"qid": "val/00394", "query": "MaxUnavailable: 30% of desired pods", "slice": "kubectl_output", "source": "k8s_docs"}
+{"qid": "val/00395", "query": "deployment update drops available pods below expected minimum during rollout", "slice": "symptom", "source": "k8s_docs"}
+{"qid": "val/00396", "query": "how to configure maxSurge on inventory-worker deployment", "slice": "how_to", "source": "k8s_docs"}
+{"qid": "val/00397", "query": "MaxSurge: 30% over desired replicas", "slice": "kubectl_output", "source": "k8s_docs"}
+{"qid": "val/00398", "query": "new pods exceed replica count limit during rolling update deployment", "slice": "symptom", "source": "k8s_docs"}
+{"qid": "val/00399", "query": "how do I change the deployment progress timeout seconds", "slice": "how_to", "source": "k8s_docs"}
+{"qid": "val/00400", "query": "auth-api-dbn4bjtj4-x6wxm 0/1 Running 0 (12m) | Deployment status: Condition Progressing False Reason: ProgressDeadlineExceeded", "slice": "incident_snapshot", "source": "k8s_docs"}
+{"qid": "val/00401", "query": "how to set minReadySeconds so pods must stay stable before being marked available", "slice": "how_to", "source": "k8s_docs"}
+{"qid": "val/00402", "query": "MinReadySeconds: 0", "slice": "kubectl_output", "source": "k8s_docs"}
+{"qid": "val/00403", "query": "pods get marked ready immediately and traffic hits them before initialization finishes", "slice": "symptom", "source": "k8s_docs"}
+{"qid": "val/00404", "query": "TerminatingReplicas: 4", "slice": "kubectl_output", "source": "k8s_docs"}
+{"qid": "val/00405", "query": "terminating pods taking too long and total pod count exceeds replica limit", "slice": "symptom", "source": "k8s_docs"}
+{"qid": "val/00406", "query": "how to limit old replica sets stored in etcd for rollbacks", "slice": "how_to", "source": "k8s_docs"}
+{"qid": "val/00407", "query": "REVISION_HISTORY_LIMIT: 10", "slice": "kubectl_output", "source": "k8s_docs"}
+{"qid": "val/00408", "query": "kubectl get rs output is cluttered with too many old revision replica sets", "slice": "symptom", "source": "k8s_docs"}
+{"qid": "val/00409", "query": "how do I pause a deployment so updates to pod template do not trigger rollouts", "slice": "how_to", "source": "k8s_docs"}
+{"qid": "val/00410", "query": "Paused: true", "slice": "kubectl_output", "source": "k8s_docs"}
+{"qid": "val/00411", "query": "making changes to deployment spec triggers rolling update automatically when I want to batch changes", "slice": "symptom", "source": "k8s_docs"}
+{"qid": "val/00412", "query": "how do pods get linked to a replicaset via ownerreferences", "slice": "how_to", "source": "k8s_docs"}
+{"qid": "val/00413", "query": "metadata: ownerReferences: - apiVersion: apps/v1 kind: ReplicaSet name: payments-worker-6f8d9b", "slice": "kubectl_output", "source": "k8s_docs"}
+{"qid": "val/00414", "query": "replicaset is adopting existing unowned pods that match its selector labels", "slice": "symptom", "source": "k8s_docs"}
+{"qid": "val/00415", "query": "when is it appropriate to use a replicaset instead of a deployment", "slice": "how_to", "source": "k8s_docs"}
+{"qid": "val/00416", "query": "why should I use a deployment instead of a replicaset directly", "slice": "how_to", "source": "k8s_docs"}
+{"qid": "val/00417", "query": "managing raw replicasets manually without declarative updates", "slice": "symptom", "source": "k8s_docs"}
+{"qid": "val/00418", "query": "how to write a basic replicaset yaml manifest with matchlabels", "slice": "how_to", "source": "k8s_docs"}
+{"qid": "val/00419", "query": "NAME DESIRED CURRENT READY AGE cart-service 3 3 3 14s", "slice": "kubectl_output", "source": "k8s_docs"}
+{"qid": "val/00420", "query": "how to inspect detailed status of a replicaset using describe", "slice": "how_to", "source": "k8s_docs"}
+{"qid": "val/00421", "query": "NAME DESIRED CURRENT READY AGE ledger-worker 2 2 2 45s", "slice": "kubectl_output", "source": "k8s_docs"}
+{"qid": "val/00422", "query": "need to check status of a specific replicaset in the cluster", "slice": "symptom", "source": "k8s_docs"}
+{"qid": "val/00423", "query": "how to check the owner reference of a running pod in yaml format", "slice": "how_to", "source": "k8s_docs"}
+{"qid": "val/00424", "query": "verify which replicaset owns a specific pod instance", "slice": "symptom", "source": "k8s_docs"}
+{"qid": "val/00425", "query": "how to prevent bare pods from matching a replicaset selector", "slice": "how_to", "source": "k8s_docs"}
+{"qid": "val/00426", "query": "apiVersion: v1 kind: Pod metadata: name: standalone-pod labels: tier: payments", "slice": "kubectl_output", "source": "k8s_docs"}
+{"qid": "val/00427", "query": "bare pods are getting automatically adopted by existing controllers because of matching labels", "slice": "symptom", "source": "k8s_docs"}
+{"qid": "val/00428", "query": "why do pods get terminated right after being acquired by an over-capacity replicaset", "slice": "how_to", "source": "k8s_docs"}
+{"qid": "val/00429", "query": "newly created bare pods get immediately terminated after being adopted by a replicaset", "slice": "symptom", "source": "k8s_docs"}
+{"qid": "val/00430", "query": "how do I get a replicaset to adopt already running standalone pods in the cluster", "slice": "how_to", "source": "k8s_docs"}
+{"qid": "val/00431", "query": "replicaset adopted existing manually created pods instead of spinning up brand new ones from scratch", "slice": "symptom", "source": "k8s_docs"}
+{"qid": "val/00432", "query": "ReplicaSet.spec.metadata.name: Invalid value: \"cart_service\": a DNS subdomain must consist of lower case alphanumeric characters", "slice": "error_string", "source": "k8s_docs"}
+{"qid": "val/00433", "query": "what naming restrictions apply to replicaset metadata names for dns label compatibility", "slice": "how_to", "source": "k8s_docs"}
+{"qid": "val/00434", "query": "replicaset name causes weird pod hostnames and fails dns subdomain validation checks", "slice": "symptom", "source": "k8s_docs"}
+{"qid": "val/00435", "query": "what values are permitted for pod restart policy inside a replicaset template spec", "slice": "how_to", "source": "k8s_docs"}
+{"qid": "val/00436", "query": "api server rejected my replicaset manifest because of invalid restart policy settings in the pod template", "slice": "symptom", "source": "k8s_docs"}
+{"qid": "val/00437", "query": "ReplicaSet.spec.selector does not match ReplicaSet.spec.template.metadata.labels", "slice": "error_string", "source": "k8s_docs"}
+{"qid": "val/00438", "query": "how must matchLabels be structured between spec selector and template metadata in a replicaset", "slice": "how_to", "source": "k8s_docs"}
+{"qid": "val/00439", "query": "replicaset creation keeps failing because template labels do not match selector rules", "slice": "symptom", "source": "k8s_docs"}
+{"qid": "val/00440", "query": "what is the default number of replicas created when the replicas field is omitted from a replicaset spec", "slice": "how_to", "source": "k8s_docs"}
+{"qid": "val/00441", "query": "deploying a replicaset without specifying replica count results in exactly one pod running", "slice": "symptom", "source": "k8s_docs"}
+{"qid": "val/00442", "query": "how do I delete a replicaset along with all its owned pods using api propagation policy", "slice": "how_to", "source": "k8s_docs"}
+{"qid": "val/00443", "query": "replicaset.apps/ledger-worker-rjfwqm62w deleted pod/ledger-worker-rjfwqm62w-dxd82 deleted pod/ledger-worker-rjfwqm62w-lbj4s deleted", "slice": "kubectl_output", "source": "k8s_docs"}
+{"qid": "val/00444", "query": "deleting a replicaset automatically purged all underlying worker pods from the payments namespace", "slice": "symptom", "source": "k8s_docs"}
+{"qid": "val/00445", "query": "how do I delete a replicaset via rest api without killing the pods it owns", "slice": "how_to", "source": "k8s_docs"}
+{"qid": "val/00446", "query": "replicaset.apps/cart-api-lxr657tc5j deleted (orphaned)", "slice": "kubectl_output", "source": "k8s_docs"}
+{"qid": "val/00447", "query": "orphan cascade option failed to leave pods running when deleting the parent controller", "slice": "symptom", "source": "k8s_docs"}
+{"qid": "val/00448", "query": "ReplicaSet does not support rolling updates to pod templates", "slice": "error_string", "source": "k8s_docs"}
+{"qid": "val/00449", "query": "how can I safely perform rolling updates on pods since replicasets do not support it directly", "slice": "how_to", "source": "k8s_docs"}
+{"qid": "val/00450", "query": "newly created replicaset adopted old pods but completely ignored changes made to the new pod template", "slice": "symptom", "source": "k8s_docs"}
+{"qid": "val/00451", "query": "NAME DESIRED CURRENT READY TERMINATING_REPLICAS ledger-worker-7c9d8 5 5 5 2", "slice": "kubectl_output", "source": "k8s_docs"}
+{"qid": "val/00452", "query": "how to exclude a pod from a replicaset without stopping it", "slice": "how_to", "source": "k8s_docs"}
+{"qid": "val/00453", "query": "pods keep getting automatically recreated when I detach them from the replicaset", "slice": "symptom", "source": "k8s_docs"}
+{"qid": "val/00454", "query": "what is the pod deletion order algorithm when scaling down a replicaset", "slice": "how_to", "source": "k8s_docs"}
+{"qid": "val/00455", "query": "why are newly created pods deleted first when scaling down the deployment", "slice": "symptom", "source": "k8s_docs"}
+{"qid": "val/00456", "query": "Invalid value for annotation controller.kubernetes.io/pod-deletion-cost: must be an integer", "slice": "error_string", "source": "k8s_docs"}
+{"qid": "val/00457", "query": "FEATURE GATES: PodDeletionCost=false", "slice": "kubectl_output", "source": "k8s_docs"}
+{"qid": "val/00458", "query": "apiserver load is too high due to frequent pod deletion cost updates", "slice": "symptom", "source": "k8s_docs"}
+{"qid": "val/00459", "query": "how to prioritize spark worker pod deletion using deletion cost annotation", "slice": "how_to", "source": "k8s_docs"}
+{"qid": "val/00460", "query": "controller.kubernetes.io/pod-deletion-cost: 450", "slice": "kubectl_output", "source": "k8s_docs"}
+{"qid": "val/00461", "query": "spark driver is scaling down the wrong pods based on utilization", "slice": "symptom", "source": "k8s_docs"}
+{"qid": "val/00462", "query": "how to configure horizontal pod autoscaler to target a replicaset instead of deployment", "slice": "how_to", "source": "k8s_docs"}
+{"qid": "val/00463", "query": "NAME REFERENCE TARGETS MINPODS MAXPODS REPLICAS AGE frontend-scaler ReplicaSet/frontend 12%/50% 3 10 3 4m", "slice": "kubectl_output", "source": "k8s_docs"}
+{"qid": "val/00464", "query": "hpa is failing to scale the frontend replicaset based on cpu usage", "slice": "symptom", "source": "k8s_docs"}
+{"qid": "val/00465", "query": "why should I use deployments instead of raw replicasets", "slice": "how_to", "source": "k8s_docs"}
+{"qid": "val/00466", "query": "managing rolling updates manually with standalone replicasets is too complicated", "slice": "symptom", "source": "k8s_docs"}
+{"qid": "val/00467", "query": "how do I ensure a single pod gets recreated on node failure without a deployment", "slice": "how_to", "source": "k8s_docs"}
+{"qid": "val/00468", "query": "when should I use a daemonset instead of a replicaSet for logging pods", "slice": "how_to", "source": "k8s_docs"}
+{"qid": "val/00469", "query": "batch processing pods stay running forever instead of exiting after completion", "slice": "symptom", "source": "k8s_docs"}
+{"qid": "val/00470", "query": "can I use set-based selectors with replicationcontrollers", "slice": "how_to", "source": "k8s_docs"}
+{"qid": "val/00471", "query": "label selector matching fails when upgrading from older replication controllers to replicasets", "slice": "symptom", "source": "k8s_docs"}
+{"qid": "val/00472", "query": "how do I combine multiple yaml manifests into a single file separated by dashes", "slice": "how_to", "source": "k8s_docs"}
+{"qid": "val/00473", "query": "deploying multiple application resources requires running apply multiple times", "slice": "symptom", "source": "k8s_docs"}
+{"qid": "val/00474", "query": "what order should I create services and deployments when using multiple manifest files", "slice": "how_to", "source": "k8s_docs"}
+{"qid": "val/00475", "query": "service/payments-svc created deployment.apps/payments-api created", "slice": "kubectl_output", "source": "k8s_docs"}
+{"qid": "val/00476", "query": "scheduler fails to spread pods across nodes properly when deploying service and deployment simultaneously", "slice": "symptom", "source": "k8s_docs"}
+{"qid": "val/00477", "query": "how do I apply a kubernetes manifest directly from a url in git", "slice": "how_to", "source": "k8s_docs"}
+{"qid": "val/00478", "query": "microservices fail to resolve dns names when deployed across different files", "slice": "symptom", "source": "k8s_docs"}
+{"qid": "val/00479", "query": "where can I find a list of tools for packaging pre-configured kubernetes resources", "slice": "how_to", "source": "k8s_docs"}
+{"qid": "val/00480", "query": "NAME CHART VERSION APP VERSION DESCRIPTION cart-service 2.1.0 1.18.0 Helm chart for shopping cart", "slice": "kubectl_output", "source": "k8s_docs"}
+{"qid": "val/00481", "query": "need a package manager for deploying complex applications with multiple charts", "slice": "symptom", "source": "k8s_docs"}
+{"qid": "val/00482", "query": "how do I update manifest configurations without using external templating tools", "slice": "how_to", "source": "k8s_docs"}
+{"qid": "val/00483", "query": "how do I delete multiple deployments and services using a label selector", "slice": "how_to", "source": "k8s_docs"}
+{"qid": "val/00484", "query": "deployment.apps \"cart-api\" deleted service \"cart-svc\" deleted", "slice": "kubectl_output", "source": "k8s_docs"}
+{"qid": "val/00485", "query": "need to bulk delete resources from a manifest file without listing them all individually", "slice": "symptom", "source": "k8s_docs"}
+{"qid": "val/00486", "query": "how can I chain kubectl commands to get services created from a directory of manifests", "slice": "how_to", "source": "k8s_docs"}
+{"qid": "val/00487", "query": "trying to pipe output name format into another kubectl get command using xargs", "slice": "symptom", "source": "k8s_docs"}
+{"qid": "val/00488", "query": "error: you must provide one or more resources by argument or filename (.json|.yaml|.yml|stdin)", "slice": "error_string", "source": "k8s_docs"}
+{"qid": "val/00489", "query": "how do I apply manifests stored across multiple subdirectories", "slice": "how_to", "source": "k8s_docs"}
+{"qid": "val/00490", "query": "kubectl apply fails when manifests are organized in nested subfolders instead of a flat directory", "slice": "symptom", "source": "k8s_docs"}
+{"qid": "val/00491", "query": "how do I recursively apply all yaml manifests in a directory tree", "slice": "how_to", "source": "k8s_docs"}
+{"qid": "val/00492", "query": "getting errors when running apply on a folder structure that contains nested config subdirectories", "slice": "symptom", "source": "k8s_docs"}
+{"qid": "val/00493", "query": "how to pass multiple filename flags along with the recursive option in kubectl", "slice": "how_to", "source": "k8s_docs"}
+{"qid": "val/00494", "query": "need to target multiple separate folders recursively with kubectl apply", "slice": "symptom", "source": "k8s_docs"}
+{"qid": "val/00495", "query": "want to update application images gradually without causing downtime for users", "slice": "symptom", "source": "k8s_docs"}
+{"qid": "val/00496", "query": "how do I configure max surge on a deployment rollout strategy", "slice": "how_to", "source": "k8s_docs"}
+{"qid": "val/00497", "query": "how do I perform an incremental update on a deployment manifest using kubectl edit", "slice": "how_to", "source": "k8s_docs"}
+{"qid": "val/00498", "query": "want to change the container image in a deployment without causing downtime", "slice": "symptom", "source": "k8s_docs"}
+{"qid": "val/00499", "query": "how do I check the rollout progress of a statefulset without waiting for it to complete", "slice": "how_to", "source": "k8s_docs"}
+{"qid": "val/00500", "query": "deployment \"ledger-worker\" successfully rolled out", "slice": "kubectl_output", "source": "k8s_docs"}
+{"qid": "val/00501", "query": "need to monitor a deployment update and set a timeout for the rollout status", "slice": "symptom", "source": "k8s_docs"}
+{"qid": "val/00502", "query": "how do I set up a canary release alongside a stable deployment using track labels", "slice": "how_to", "source": "k8s_docs"}
+{"qid": "val/00503", "query": "need to run a new version of auth-api with fewer replicas alongside the stable release for testing", "slice": "symptom", "source": "k8s_docs"}
+{"qid": "val/00504", "query": "how do I configure a service selector to direct traffic to both stable and canary pods", "slice": "how_to", "source": "k8s_docs"}
+{"qid": "val/00505", "query": "adjusting replica counts for stable and canary tracks to change traffic ratios", "slice": "symptom", "source": "k8s_docs"}
+{"qid": "val/00506", "query": "how do I add a description annotation to an existing pod and verify it in yaml format", "slice": "how_to", "source": "k8s_docs"}
+{"qid": "val/00507", "query": "pod/ledger-worker-v2-5d9f8-x4k2l annotated", "slice": "kubectl_output", "source": "k8s_docs"}
+{"qid": "val/00508", "query": "need to attach non identifying metadata to a running cart pod", "slice": "symptom", "source": "k8s_docs"}
+{"qid": "val/00509", "query": "how do I scale down a deployment replica count and set up an autoscaler with min and max limits", "slice": "how_to", "source": "k8s_docs"}
+{"qid": "val/00510", "query": "deployment.apps/cart-service scaled", "slice": "kubectl_output", "source": "k8s_docs"}
+{"qid": "val/00511", "query": "traffic load is dropping so need to reduce deployment replicas and setup autoscaling", "slice": "symptom", "source": "k8s_docs"}
+{"qid": "val/00512", "query": "how do I verify that a horizontal pod autoscaler was successfully created for a deployment", "slice": "how_to", "source": "k8s_docs"}
+{"qid": "val/00513", "query": "horizontalpodautoscaler.autoscaling/auth-service autoscaled", "slice": "kubectl_output", "source": "k8s_docs"}
+{"qid": "val/00514", "query": "checking if the autoscaler resource is properly bound and scaling the payment replicas automatically", "slice": "symptom", "source": "k8s_docs"}
+{"qid": "val/00515", "query": "how do I apply configuration changes from a git repository yaml file without losing unmanaged property edits", "slice": "how_to", "source": "k8s_docs"}
+{"qid": "val/00516", "query": "pushing declarative config updates to the cluster using server side apply", "slice": "symptom", "source": "k8s_docs"}
+{"qid": "val/00517", "query": "how do I modify a deployment configuration using my default terminal text editor", "slice": "how_to", "source": "k8s_docs"}
+{"qid": "val/00518", "query": "i need to export a deployment yaml to disk, change some settings in a text editor, and push it back live without doing apply manually", "slice": "symptom", "source": "k8s_docs"}
+{"qid": "val/00519", "query": "how can I apply a json merge patch to update a resource in place", "slice": "how_to", "source": "k8s_docs"}
+{"qid": "val/00520", "query": "deployment.apps/ledger-worker patched", "slice": "kubectl_output", "source": "k8s_docs"}
+{"qid": "val/00521", "query": "want to update specific fields on a running api object without replacing the whole manifest", "slice": "symptom", "source": "k8s_docs"}
+{"qid": "val/00522", "query": "how do I force recreate a deployment when immutable fields need to be changed", "slice": "how_to", "source": "k8s_docs"}
+{"qid": "val/00523", "query": "deployment.apps/cart-service deleted deployment.apps/cart-service replaced", "slice": "kubectl_output", "source": "k8s_docs"}
+{"qid": "val/00524", "query": "need to wipe and immediately re-create a broken deployment from a yaml file because the update failed on immutable fields", "slice": "symptom", "source": "k8s_docs"}
+{"qid": "val/00525", "query": "PodLevelResources feature gate is not enabled", "slice": "error_string", "source": "k8s_docs"}
+{"qid": "val/00526", "query": "how do I configure cpu and memory allocations directly on the pod spec rather than per container", "slice": "how_to", "source": "k8s_docs"}
+{"qid": "val/00527", "query": "container resource limits are overriding my pod settings and i need the top-level values to take priority", "slice": "symptom", "source": "k8s_docs"}
+{"qid": "val/00528", "query": "check how pod-level resource definitions affect the quality of service class and oom scoring", "slice": "how_to", "source": "k8s_docs"}
+{"qid": "val/00529", "query": "QoS Class: Guaranteed OOM Score Adjust: -998", "slice": "kubectl_output", "source": "k8s_docs"}
+{"qid": "val/00530", "query": "unsure whether container limits or pod-level resource allocations dictate the oom score calculation", "slice": "symptom", "source": "k8s_docs"}
+{"qid": "val/00531", "query": "Pod-level resources are not supported for Windows pods", "slice": "error_string", "source": "k8s_docs"}
+{"qid": "val/00532", "query": "what feature gate enables in-place resizing for pod-level resource allocations", "slice": "how_to", "source": "k8s_docs"}
+{"qid": "val/00533", "query": "topology manager is ignoring pod-level resources and not aligning cpu and memory correctly", "slice": "symptom", "source": "k8s_docs"}
+{"qid": "val/00534", "query": "how do I write a pod yaml that defines memory requests and limits at the pod level", "slice": "how_to", "source": "k8s_docs"}
+{"qid": "val/00535", "query": "how do I verify that pod-level memory limits were correctly applied to a running pod", "slice": "how_to", "source": "k8s_docs"}
+{"qid": "val/00536", "query": "Name: memory-demo Namespace: pod-resources-example Limits: memory: 200Mi Requests: memory: 100Mi", "slice": "kubectl_output", "source": "k8s_docs"}
+{"qid": "val/00537", "query": "applied a pod manifest with memory restrictions and now need to inspect the full yaml output to confirm the resource block is correct", "slice": "symptom", "source": "k8s_docs"}
+{"qid": "val/00538", "query": "how do I check the actual memory usage of a pod using kubectl top", "slice": "how_to", "source": "k8s_docs"}
+{"qid": "val/00539", "query": "i need to check if my app is staying within its assigned memory limits", "slice": "symptom", "source": "k8s_docs"}
+{"qid": "val/00540", "query": "how do I set a CPU limit and request directly in a pod specification", "slice": "how_to", "source": "k8s_docs"}
+{"qid": "val/00541", "query": "apiVersion: v1 kind: Pod metadata: name: cpu-demo namespace: pod-resources-example", "slice": "kubectl_output", "source": "k8s_docs"}
+{"qid": "val/00542", "query": "want to write a pod yaml that defines cpu requests and limits for the container args", "slice": "symptom", "source": "k8s_docs"}
+{"qid": "val/00543", "query": "how do I apply a pod resource configuration manifest and inspect its yaml output", "slice": "how_to", "source": "k8s_docs"}
+{"qid": "val/00544", "query": "checking that my applied cpu resource limits show up correctly in the pod specification", "slice": "symptom", "source": "k8s_docs"}
+{"qid": "val/00545", "query": "how to determine if a container is getting throttled by its CPU limit", "slice": "how_to", "source": "k8s_docs"}
+{"qid": "val/00546", "query": "why is my container only using about one cpu core even though I configured it to attempt using two", "slice": "symptom", "source": "k8s_docs"}
+{"qid": "val/00547", "query": "spec.resources: Forbidden: pod-level resources and container-level resources cannot be mixed", "slice": "error_string", "source": "k8s_docs"}
+{"qid": "val/00548", "query": "how do I configure resource requests at both the pod and container level simultaneously", "slice": "how_to", "source": "k8s_docs"}
+{"qid": "val/00549", "query": "trying to understand how container resource settings interact when pod level limits are also defined", "slice": "symptom", "source": "k8s_docs"}
+{"qid": "val/00550", "query": "how to write a multi container pod yaml where one container has explicit resources and another inherits", "slice": "how_to", "source": "k8s_docs"}
+{"qid": "val/00551", "query": "apiVersion: v1 kind: Pod metadata: name: pod-resources-demo namespace: pod-resources-example", "slice": "kubectl_output", "source": "k8s_docs"}
+{"qid": "val/00552", "query": "how do I verify that both container and pod level resource limits are correctly applied", "slice": "how_to", "source": "k8s_docs"}
+{"qid": "val/00553", "query": "inspecting a pod's yaml to confirm the inherited cpu and memory values match expectations", "slice": "symptom", "source": "k8s_docs"}
+{"qid": "val/00554", "query": "how do pod level resource limits affect containers that do not have their own explicit limits", "slice": "how_to", "source": "k8s_docs"}
+{"qid": "val/00555", "query": "resources: limits: cpu: \"1\" memory: 200Mi requests: cpu: \"1\" memory: 100Mi", "slice": "kubectl_output", "source": "k8s_docs"}
+{"qid": "val/00556", "query": "checking if a container without resource settings will inherit the maximum limits of the whole pod", "slice": "symptom", "source": "k8s_docs"}
+{"qid": "val/00557", "query": "how do I add noexec and nosuid bind mount options to a volume mount in a deployment spec", "slice": "how_to", "source": "k8s_docs"}
+{"qid": "val/00558", "query": "we need to prevent execution of binaries inside a mounted emptyDir volume on our pods", "slice": "symptom", "source": "k8s_docs"}
+{"qid": "val/00559", "query": "how to verify bind mount options inside a running container", "slice": "how_to", "source": "k8s_docs"}
+{"qid": "val/00560", "query": "NAME READY STATUS RESTARTS AGE bind-mount-options-demo 1/1 Running 0 2m", "slice": "kubectl_output", "source": "k8s_docs"}
+{"qid": "val/00561", "query": "spec.volumes[0].emptyDir.mode: Invalid value: 2000: must be between 0 and 01777", "slice": "error_string", "source": "k8s_docs"}
+{"qid": "val/00562", "query": "users are deleting each other files in the shared tmp volume because the default permissions are too open", "slice": "symptom", "source": "k8s_docs"}
+{"qid": "val/00563", "query": "how to check directory permissions on an emptydir volume inside a pod", "slice": "how_to", "source": "k8s_docs"}
+{"qid": "val/00564", "query": "want to make sure the sticky bit is correctly applied to our shared mount point", "slice": "symptom", "source": "k8s_docs"}
+{"qid": "val/00565", "query": "Forbidden: Pod updates which change the QoS class are not allowed", "slice": "error_string", "source": "k8s_docs"}
+{"qid": "val/00566", "query": "how does kubernetes determine qos classes for pod eviction decisions", "slice": "how_to", "source": "k8s_docs"}
+{"qid": "val/00567", "query": "why is the control plane rejecting our resource resizing request with an error about qos classes", "slice": "symptom", "source": "k8s_docs"}
+{"qid": "val/00568", "query": "Containers must have resource requests and limits set for Guaranteed QoS", "slice": "error_string", "source": "k8s_docs"}
+{"qid": "val/00569", "query": "what are the exact requirements for a pod to get the guaranteed qos class", "slice": "how_to", "source": "k8s_docs"}
+{"qid": "val/00570", "query": "our payment pods keep getting assigned burstable instead of guaranteed class", "slice": "symptom", "source": "k8s_docs"}
+{"qid": "val/00571", "query": "how to write a pod manifest where memory and cpu limits match requests for guaranteed qos", "slice": "how_to", "source": "k8s_docs"}
+{"qid": "val/00572", "query": "need an example yaml for setting up strict cpu and memory allocations on a cart api container", "slice": "symptom", "source": "k8s_docs"}
+{"qid": "val/00573", "query": "how to check the assigned qos class in a pod yaml output", "slice": "how_to", "source": "k8s_docs"}
+{"qid": "val/00574", "query": "qosClass: Guaranteed", "slice": "kubectl_output", "source": "k8s_docs"}
+{"qid": "val/00575", "query": "checking if kubernetes automatically populated the memory request to match our limit", "slice": "symptom", "source": "k8s_docs"}
+{"qid": "val/00576", "query": "how to set pod qos to burstable with memory requests and limits", "slice": "how_to", "source": "k8s_docs"}
+{"qid": "val/00577", "query": "qosClass: Burstable resources: limits: memory: 200Mi requests: memory: 100Mi", "slice": "kubectl_output", "source": "k8s_docs"}
+{"qid": "val/00578", "query": "need to configure a pod manifest so it gets classified as burstable", "slice": "symptom", "source": "k8s_docs"}
+{"qid": "val/00579", "query": "qosClass: BestEffort containers: - image: nginx name: qos-demo-3-ctr", "slice": "kubectl_output", "source": "k8s_docs"}
+{"qid": "val/00580", "query": "pods are getting unexpected qos classes when they have no resource limits", "slice": "symptom", "source": "k8s_docs"}
+{"qid": "val/00581", "query": "how to specify resource requests for only one container in a multi container pod", "slice": "how_to", "source": "k8s_docs"}
+{"qid": "val/00582", "query": "checking qos class behavior for a pod with multiple containers where only one has memory request", "slice": "symptom", "source": "k8s_docs"}
+{"qid": "val/00583", "query": "how to check overall cluster health and node registration status", "slice": "how_to", "source": "k8s_docs"}
+{"qid": "val/00584", "query": "need to verify if all worker nodes are properly joined and ready in the cluster", "slice": "symptom", "source": "k8s_docs"}
+{"qid": "val/00585", "query": "how to inspect a node that went down or disconnected from the network", "slice": "how_to", "source": "k8s_docs"}
+{"qid": "val/00586", "query": "nodes are showing up as notready and pods are getting evicted after five minutes", "slice": "symptom", "source": "k8s_docs"}
+{"qid": "val/00587", "query": "where are the log files located for kube apiserver and scheduler", "slice": "how_to", "source": "k8s_docs"}
+{"qid": "val/00588", "query": "-rw-r--r-- 1 root root 42185 Nov 12 14:22 kube-apiserver.log -rw-r--r-- 1 root root 19842 Nov 12 14:20 kube-scheduler.log", "slice": "kubectl_output", "source": "k8s_docs"}
+{"qid": "val/00589", "query": "need to find control plane log paths on a systemd based cluster node", "slice": "symptom", "source": "k8s_docs"}
+{"qid": "val/00590", "query": "/var/log/kube-proxy.log", "slice": "error_string", "source": "k8s_docs"}
+{"qid": "val/00591", "query": "where do i check kubelet logs for worker nodes", "slice": "how_to", "source": "k8s_docs"}
+{"qid": "val/00592", "query": "need to check proxy traffic routing logs on the node", "slice": "symptom", "source": "k8s_docs"}
+{"qid": "val/00593", "query": "what are the main failure causes when a cluster goes down", "slice": "how_to", "source": "k8s_docs"}
+{"qid": "val/00594", "query": "persistent storage lost and cluster is acting weird", "slice": "symptom", "source": "k8s_docs"}
+{"qid": "val/00595", "query": "what happens to running pods if the api server backing storage is lost", "slice": "how_to", "source": "k8s_docs"}
+{"qid": "val/00596", "query": "api server vm died and now we cant schedule any new pods in prod", "slice": "symptom", "source": "k8s_docs"}
+{"qid": "val/00597", "query": "kubelet failing to start new pods on the node", "slice": "error_string", "source": "k8s_docs"}
+{"qid": "val/00598", "query": "node payments-worker-01 marked unhealthy | kubelet software fault | replication controllers spawning replacement pods on other nodes", "slice": "incident_snapshot", "source": "k8s_docs"}
+{"qid": "val/00599", "query": "kubelet crashed on the worker node and now the scheduler is moving workloads everywhere", "slice": "symptom", "source": "k8s_docs"}
+{"qid": "val/00600", "query": "how to configure automatic vm restarts for control plane nodes", "slice": "how_to", "source": "k8s_docs"}
+{"qid": "val/00601", "query": "what mitigations prevent downtime when etcd data directory is lost", "slice": "how_to", "source": "k8s_docs"}
+{"qid": "val/00602", "query": "we need to setup periodic snapshots for etcd volumes to recover from operator errors", "slice": "symptom", "source": "k8s_docs"}
+{"qid": "val/00603", "query": "how should containers be built so they survive sudden node restarts", "slice": "how_to", "source": "k8s_docs"}
+{"qid": "val/00604", "query": "protect service availability during node failures using replication controllers", "slice": "how_to", "source": "k8s_docs"}
+{"qid": "val/00605", "query": "deploy stateful database with insecure default settings for testing", "slice": "how_to", "source": "k8s_docs"}
+{"qid": "val/00606", "query": "how to deploy a replicated mysql statefulset with asynchronous replication", "slice": "how_to", "source": "k8s_docs"}
+{"qid": "val/00607", "query": "how do I create the configmap for deploying mysql in a statefulset", "slice": "how_to", "source": "k8s_docs"}
+{"qid": "val/00608", "query": "apiVersion: v1 kind: ConfigMap metadata: name: mysql labels: app: mysql", "slice": "kubectl_output", "source": "k8s_docs"}
+{"qid": "val/00609", "query": "need the yaml configuration for setting up the mysql configmap with primary and replica sections", "slice": "symptom", "source": "k8s_docs"}
+{"qid": "val/00610", "query": "how do mysql pods know whether to apply primary or replica configuration from the configmap", "slice": "how_to", "source": "k8s_docs"}
+{"qid": "val/00611", "query": "mysql-1 0/2 CrashLoopBackOff 2 (15s ago) | config validation failed: super-read-only conflict on primary server", "slice": "incident_snapshot", "source": "k8s_docs"}
+{"qid": "val/00612", "query": "how do I route write queries exclusively to the primary mysql pod in kubernetes", "slice": "how_to", "source": "k8s_docs"}
+{"qid": "val/00613", "query": "writes are failing because the client service is load balancing update statements across replica pods", "slice": "symptom", "source": "k8s_docs"}
+{"qid": "val/00614", "query": "how can I check the startup progress of my mysql statefulset pods", "slice": "how_to", "source": "k8s_docs"}
+{"qid": "val/00615", "query": "NAME READY STATUS RESTARTS AGE mysql-0 2/2 Running 0 2m mysql-1 2/2 Running 0 1m mysql-2 2/2 Running 0 1m", "slice": "kubectl_output", "source": "k8s_docs"}
+{"qid": "val/00616", "query": "statefulset pods are stuck and not making any progress during startup phase", "slice": "symptom", "source": "k8s_docs"}
+{"qid": "val/00617", "query": "how does the statefulset controller order pod creation during initialization", "slice": "how_to", "source": "k8s_docs"}
+{"qid": "val/00618", "query": "pods are being created out of order instead of following their ordinal index sequence", "slice": "symptom", "source": "k8s_docs"}
+{"qid": "val/00619", "query": "Standard input is empty Error executing init-mysql: failed to resolve hostname ordinal", "slice": "error_string", "source": "k8s_docs"}
+{"qid": "val/00620", "query": "how do init containers determine their ordinal index to set the mysql server id", "slice": "how_to", "source": "k8s_docs"}
+{"qid": "val/00621", "query": "init container fails to parse the hostname for generating custom config files with ordinal numbers", "slice": "symptom", "source": "k8s_docs"}
+{"qid": "val/00622", "query": "how are primary and replica roles assigned based on the pod ordinal during initialization", "slice": "how_to", "source": "k8s_docs"}
+{"qid": "val/00623", "query": "mysql-1 1/2 Init:0/2 0 30s | init-mysql container waiting for primary.cnf to apply replica settings", "slice": "incident_snapshot", "source": "k8s_docs"}
+{"qid": "val/00624", "query": "replicas are starting before the primary mysql server is fully ready to accept replication streams", "slice": "symptom", "source": "k8s_docs"}
+{"qid": "val/00625", "query": "how do replica pods clone existing data from another running pod when using an empty persistent volume", "slice": "how_to", "source": "k8s_docs"}
+{"qid": "val/00626", "query": "cart-replica-2 0/2 Init:1/2 0 1m | clone-mysql log: copying existing data from cart-replica-0 persistent volume", "slice": "incident_snapshot", "source": "k8s_docs"}
+{"qid": "val/00627", "query": "newly scaled replica pods cannot sync up because replication logs do not go back far enough", "slice": "symptom", "source": "k8s_docs"}
+{"qid": "val/00628", "query": "how do stateful pods clone existing data from the previous ordinal index in a statefulset", "slice": "how_to", "source": "k8s_docs"}
+{"qid": "val/00629", "query": "ledger-worker-1 0/1 Running 0 (45s ago) | clone script active copying data from ledger-worker-0", "slice": "incident_snapshot", "source": "k8s_docs"}
+{"qid": "val/00630", "query": "mysql replicas fail to find the primary server after getting a new pod ip address", "slice": "symptom", "source": "k8s_docs"}
+{"qid": "val/00631", "query": "how do mysql replica pods handle incoming requests for data clones during scale up", "slice": "how_to", "source": "k8s_docs"}
+{"qid": "val/00632", "query": "payments-db-2 1/1 Running 2 (10m ago) | xtrabackup server listening for clone connections from replica pods", "slice": "incident_snapshot", "source": "k8s_docs"}
+{"qid": "val/00633", "query": "how do I send test queries to the primary mysql database using a temporary client pod", "slice": "how_to", "source": "k8s_docs"}
+{"qid": "val/00634", "query": "pod \"mysql-client\" created", "slice": "kubectl_output", "source": "k8s_docs"}
+{"qid": "val/00635", "query": "need a way to run mysql commands against mysql-0 without installing client tools locally", "slice": "symptom", "source": "k8s_docs"}
+{"qid": "val/00636", "query": "how do I route test queries to any ready mysql server using the read service hostname", "slice": "how_to", "source": "k8s_docs"}
+{"qid": "val/00637", "query": "Waiting for pod default/mysql-client to be running, status is Pending, pod ready: false", "slice": "kubectl_output", "source": "k8s_docs"}
+{"qid": "val/00638", "query": "temporary mysql client pod output shows deletion after executing select statement", "slice": "symptom", "source": "k8s_docs"}
+{"qid": "val/00639", "query": "bash: mysql: command not found in temporary loop container", "slice": "error_string", "source": "k8s_docs"}
+{"qid": "val/00640", "query": "how can I verify that the mysql read service distributes client connections across multiple servers in a loop", "slice": "how_to", "source": "k8s_docs"}
+{"qid": "val/00641", "query": "how to stop the server id monitoring loop using keyboard shortcuts", "slice": "how_to", "source": "k8s_docs"}
+{"qid": "val/00642", "query": "+-------------+---------------------+ | @@server_id | NOW() | +-------------+---------------------+ | 101 | 2006-01-02 15:04:07 | +-------------+---------------------+", "slice": "kubectl_output", "source": "k8s_docs"}
+{"qid": "val/00643", "query": "how do I test replica availability by forcing a mysql pod out of the ready state while running queries", "slice": "how_to", "source": "k8s_docs"}
+{"qid": "val/00644", "query": "auth-api-db-1 0/1 Running 1 (2m ago) | node not ready | forced out of ready state during load test", "slice": "incident_snapshot", "source": "k8s_docs"}
+{"qid": "val/00645", "query": "replica pool availability checks fail when pods drop out of ready status", "slice": "symptom", "source": "k8s_docs"}
+{"qid": "val/00646", "query": "how do I break the mysql readiness probe in a statefulset pod", "slice": "how_to", "source": "k8s_docs"}
+{"qid": "val/00647", "query": "mysql container shows 1/2 ready after breaking the check command", "slice": "symptom", "source": "k8s_docs"}
+{"qid": "val/00648", "query": "how do I restore the mysql binary inside a running container", "slice": "how_to", "source": "k8s_docs"}
+{"qid": "val/00649", "query": "NAME READY STATUS RESTARTS AGE mysql-2 1/2 Running 0 3m", "slice": "kubectl_output", "source": "k8s_docs"}
+{"qid": "val/00650", "query": "how to recreate a deleted mysql pod in a statefulset", "slice": "how_to", "source": "k8s_docs"}
+{"qid": "val/00651", "query": "mysql-2 0/1 Terminated 0 10s | pod deleted manually and recreated by statefulset controller", "slice": "incident_snapshot", "source": "k8s_docs"}
+{"qid": "val/00652", "query": "statefulset recreates deleted pod automatically with same persistent volume", "slice": "symptom", "source": "k8s_docs"}
+{"qid": "val/00653", "query": "how to find which node a mysql pod is running on", "slice": "how_to", "source": "k8s_docs"}
+{"qid": "val/00654", "query": "NAME READY STATUS RESTARTS AGE IP NODE mysql-2 2/2 Running 0 15m 10.244.5.27 kubernetes-node-9l2t", "slice": "kubectl_output", "source": "k8s_docs"}
+{"qid": "val/00655", "query": "need to check node location of statefulset pods before draining", "slice": "symptom", "source": "k8s_docs"}
+{"qid": "val/00656", "query": "how to safely drain a node running stateful applications", "slice": "how_to", "source": "k8s_docs"}
+{"qid": "val/00657", "query": "node drain command needs special flags to evict pods correctly", "slice": "symptom", "source": "k8s_docs"}
+{"qid": "val/00658", "query": "how to uncordon a kubernetes node after maintenance", "slice": "how_to", "source": "k8s_docs"}
+{"qid": "val/00659", "query": "node remains unschedulable after draining and needs to be returned to normal", "slice": "symptom", "source": "k8s_docs"}
+{"qid": "val/00660", "query": "NAME READY STATUS RESTARTS AGE mysql-3 1/1 Running 0 45s mysql-4 0/1 ContainerCreating 0 5s", "slice": "kubectl_output", "source": "k8s_docs"}
+{"qid": "val/00661", "query": "new replicas coming up in a statefulset after scaling command", "slice": "symptom", "source": "k8s_docs"}
+{"qid": "val/00662", "query": "do persistent volume claims get deleted when scaling down a statefulset", "slice": "how_to", "source": "k8s_docs"}
+{"qid": "val/00663", "query": "pvcs remain after scaling down replicas in statefulset", "slice": "symptom", "source": "k8s_docs"}
+{"qid": "val/00664", "query": "Liveness probe failed: Get \"http://10.244.2.31:9000/healthz\": context deadline exceeded (Client.Timeout exceeded while awaiting headers)", "slice": "error_string", "source": "runbook"}
+{"qid": "val/00665", "query": "quote-api pods keep restarting over and over again without any application errors in the logs", "slice": "symptom", "source": "runbook"}
+{"qid": "val/00666", "query": "how do I check the liveness probe timeout and failure threshold settings for a pod", "slice": "how_to", "source": "runbook"}
+{"qid": "val/00667", "query": "Type Reason Age From Message Warning Unhealthy 2m (x5 over 10m) kubelet Liveness probe failed: Get http://10.244.1.55:8080/healthz: dial tcp: i/o timeout", "slice": "kubectl_output", "source": "runbook"}
+{"qid": "val/00668", "query": "want to figure out if our health check endpoint is getting slow because of heavy database queries or cpu throttling", "slice": "symptom", "source": "runbook"}
+{"qid": "val/00669", "query": "why does checking external dependencies inside the health handler cause cascading restarts across all pods", "slice": "how_to", "source": "runbook"}
+{"qid": "val/00670", "query": "ledger-worker-6jgh494d-zbhx5 0/1 CrashLoopBackOff 12 (15s ago) | Warning Unhealthy: Liveness probe failed | thread pool exhausted under heavy load", "slice": "incident_snapshot", "source": "runbook"}
+{"qid": "val/00671", "query": "every time there is a traffic spike our service gets killed repeatedly because the health check takes too long", "slice": "symptom", "source": "runbook"}
+{"qid": "val/00672", "query": "how do I add a startup probe to prevent killing slow starting apps in the payments namespace", "slice": "how_to", "source": "runbook"}
+{"qid": "val/00673", "query": "how do I roll back a deployment when a recent update made the liveness probe too strict", "slice": "how_to", "source": "runbook"}
+{"qid": "val/00674", "query": "need to loosen the timeout and failure threshold on our health checks so they stop triggering restarts", "slice": "symptom", "source": "runbook"}
+{"qid": "val/00675", "query": "error when evicting pods/\"search-indexer-shbg6tx2bj-nkmq7\" -n \"search\" (will retry after 5s): Cannot evict pod as it would violate the pod's disruption budget.", "slice": "error_string", "source": "runbook"}
+{"qid": "val/00676", "query": "NAME MIN AVAILABLE MAX UNAVAILABLE ALLOWED DISRUPTIONS AGE search-indexer 1 N/A 0 4d", "slice": "kubectl_output", "source": "runbook"}
+{"qid": "val/00677", "query": "node drain on worker-2 is completely stuck because the pod disruption budget won't allow any evictions", "slice": "symptom", "source": "runbook"}
+{"qid": "val/00678", "query": "how do I find which pods are blocking a node drain in the prod namespace", "slice": "how_to", "source": "runbook"}
+{"qid": "val/00679", "query": "why are node upgrades stalling when other replicas in the deployment are currently unhealthy", "slice": "how_to", "source": "runbook"}
+{"qid": "val/00680", "query": "node draining fails immediately because minAvailable is set equal to our single replica count", "slice": "symptom", "source": "runbook"}
+{"qid": "val/00681", "query": "how do I scale up a deployment to allow pdb evictions during node maintenance", "slice": "how_to", "source": "runbook"}
+{"qid": "val/00682", "query": "how do I uncordon a worker node after a failed drain attempt", "slice": "how_to", "source": "runbook"}
+{"qid": "val/00683", "query": "need to change minavailable to maxunavailable in our pod disruption budget so maintenance can proceed", "slice": "symptom", "source": "runbook"}
+{"qid": "val/00684", "query": "deployment is stuck with ready 2 out of 3 replicas and no new pods are being created anywhere", "slice": "symptom", "source": "runbook"}
+{"qid": "val/00685", "query": "how do I check resourcequota usage against hard limits in a namespace", "slice": "how_to", "source": "runbook"}
+{"qid": "val/00686", "query": "NAME HARD USED team-quota 4Gi 3.5Gi", "slice": "kubectl_output", "source": "runbook"}
+{"qid": "val/00687", "query": "need to find which failing controller is triggering quota exceeded errors", "slice": "symptom", "source": "runbook"}
+{"qid": "val/00688", "query": "what causes resourcequota exceeded errors during rolling updates with maxsurge", "slice": "how_to", "source": "runbook"}
+{"qid": "val/00689", "query": "pods failing to create because namespace memory quota is full of old completed jobs", "slice": "symptom", "source": "runbook"}
+{"qid": "val/00690", "query": "why did scaling up our deployment trigger namespace quota limits", "slice": "symptom", "source": "runbook"}
+{"qid": "val/00691", "query": "how to configure maxsurge zero on a rollout so it fits within strict memory quotas", "slice": "how_to", "source": "runbook"}
+{"qid": "val/00692", "query": "what should I do when a deployment fails due to exceeded resource quota limits", "slice": "how_to", "source": "runbook"}
+{"qid": "val/00693", "query": "dial tcp 10.96.41.7:8000: connect: connection refused", "slice": "error_string", "source": "runbook"}
+{"qid": "val/00694", "query": "NAME TYPE CLUSTER-IP EXTERNAL-IP PORT(S) AGE inventory ClusterIP 10.96.41.7 <none> 8000/TCP 2h | Selector: app=inventory | Endpoints: <none>", "slice": "kubectl_output", "source": "runbook"}
+{"qid": "val/00695", "query": "dns works for our internal service but all tcp connections get immediately refused", "slice": "symptom", "source": "runbook"}
+{"qid": "val/00696", "query": "how do I check if my service selector matches the running pod labels", "slice": "how_to", "source": "runbook"}
+{"qid": "val/00697", "query": "ENDPOINTSLISE NAME AGE inventory-0 45s", "slice": "kubectl_output", "source": "runbook"}
+{"qid": "val/00698", "query": "what causes empty endpointslices when the targetport is misconfigured", "slice": "how_to", "source": "runbook"}
+{"qid": "val/00699", "query": "service has empty endpoints because someone changed the app version label on the pods", "slice": "symptom", "source": "runbook"}
+{"qid": "val/00700", "query": "why are all the endpoints missing from my service even though the pods are running", "slice": "symptom", "source": "runbook"}
+{"qid": "val/00701", "query": "how do I rollback a deployment that broke service endpoints by changing pod labels", "slice": "how_to", "source": "runbook"}
+{"qid": "val/00702", "query": "how to fix targetport mismatch on a kubernetes service", "slice": "how_to", "source": "runbook"}
+{"qid": "val/00703", "query": "service endpoints are empty because all backend pods are currently unready", "slice": "symptom", "source": "runbook"}
+{"qid": "val/00704", "query": "how do I fix a service endpoint mismatch in ledger-worker deployment", "slice": "how_to", "source": "runbook"}
+{"qid": "val/00705", "query": "cart-api-jkhl8t78mf-bmqwh 1/1 Running 0 15h | endpoints list is empty due to selector mismatch | routing traffic failing to backend", "slice": "incident_snapshot", "source": "runbook"}
+{"qid": "val/00706", "query": "checkout service has zero endpoints even though pods are running in payments namespace", "slice": "symptom", "source": "runbook"}
+{"qid": "incident/liveness-timeout/full", "query": "event: Warning Unhealthy Liveness probe failed: Get \"http://10.42.1.14:8080/healthz\": context deadline exceeded (Client.Timeout exceeded while awaiting headers) | event: Normal Killing Container search-api failed liveness probe, will be restarted", "slice": "real_incident_heldout", "source": "runbook"}
+{"qid": "incident/liveness-timeout/brief", "query": "Warning Unhealthy Liveness probe failed: Get \"http://10.42.1.14:8080/healthz\": context deadline exceeded (Client.Timeout exceeded while awaiting headers)", "slice": "real_incident_heldout", "source": "runbook"}
+{"qid": "incident/pdb-blocks-drain/full", "query": "error when evicting pods/\"ledger-x4mrjd7bhp-c52jg\" -n \"prod\" (will retry after 5s): Cannot evict pod as it would violate the pod's disruption budget. | There are pending pods in node \"worker-1\" when an error occurred: error when evicting pods/\"ledger-x4mrjd7bhp-c52jg\" -n \"prod\": global timeout reached: 20s | error: unable to drain node \"worker-1\" due to error: error when evicting pods/\"ledger-x4mrjd7bhp-c52jg\" -n \"prod\": global timeout reached: 20s, continuing command... | error when evicting pods/\"ledger-x4mrjd7bhp-c52jg\" -n \"prod\": global timeout reached: 20s", "slice": "real_incident_heldout", "source": "runbook"}
+{"qid": "incident/pdb-blocks-drain/brief", "query": "error when evicting pods/\"ledger-dft7q4np44-zwbgl\" -n \"prod\" (will retry after 5s): Cannot evict pod as it would violate the pod's disruption budget.", "slice": "real_incident_heldout", "source": "runbook"}
+{"qid": "incident/quota-exceeded/full", "query": "reports-95cctck7fx-c68p5 0/1 ContainerCreating 0 | reports-95cctck7fx-fz2lg 0/1 ContainerCreating 0 | Status: Pending | State: Waiting | Reason: ContainerCreating | event: Warning FailedCreate Error creating: pods \"reports-95cctck7fx-ttf96\" is forbidden: exceeded quota: compute-quota, requested: limits.memory=128Mi,requests.memory=96Mi, used: limits.memory=256Mi,requests.memory=192Mi, limited: limits.memory=256Mi,requests.memory=256Mi | event: Warning FailedCreate Error creating: pods \"reports-95cctck7fx-gdkw5\" is forbidden: exceeded quota: compute-quota, requested: limits.memory=128Mi,requests.memory=96Mi, used: limits.memory=256Mi,requests.memory=192Mi, limited: limits.memory=256Mi,requests.memory=256Mi | event: Warning FailedCreate Error creating: pods \"reports-95cctck7fx-gnprt\" is forbidden: exceeded quota: compute-quota, requested: limits.memory=128Mi,requests.memory=96Mi, used: limits.memory=256Mi,requests.memory=192Mi, limited: limits.memory=256Mi,requests.memory=256Mi | event: Warning FailedCreate Error creating: pods \"reports-95cctck7fx-72z67\" is forbidden: exceeded quota: compute-quota, requested: limits.memory=128Mi,requests.memory=96Mi, used: limits.memory=256Mi,requests.memory=192Mi, limited: limits.memory=256Mi,requests.memory=256Mi | Pods Status: 2 Running / 0 Waiting / 0 Succeeded / 0 Failed | ReplicaFailure True FailedCreate | Warning FailedCreate 2s replicaset-controller Error creating: pods \"reports-95cctck7fx-ttf96\" is forbidden: exceeded quota: compute-quota, requested: limits.memory=128Mi,requests.memory=96Mi, used: limits.memory=256Mi,requests.memory=192Mi, limited: limits.memory=256Mi,requests.memory=256Mi | Warning FailedCreate 2s replicaset-controller Error creating: pods \"reports-95cctck7fx-74772\" is forbidden: exceeded quota: compute-quota, requested: limits.memory=128Mi,requests.memory=96Mi, used: limits.memory=256Mi,requests.memory=192Mi, limited: limits.memory=256Mi,requests.memory=256Mi", "slice": "real_incident_heldout", "source": "runbook"}
+{"qid": "incident/quota-exceeded/brief", "query": "reports-2644jj7wt2-727tx 0/1 ContainerCreating 0 | Warning FailedCreate Error creating: pods \"reports-2644jj7wt2-g5pxc\" is forbidden: exceeded quota: compute-quota, requested: limits.memory=128Mi,requests.memory=96Mi, used: limits.memory=256Mi,requests.memory=192Mi, limited: limits.memory=256Mi,requests.memory=256Mi", "slice": "real_incident_heldout", "source": "runbook"}
+{"qid": "incident/service-selector-mismatch/full", "query": "log: ERROR GET http://orders:8000/ failed: URLError(ConnectionRefusedError(111, 'Connection refused'))", "slice": "real_incident_heldout", "source": "runbook"}
+{"qid": "incident/service-selector-mismatch/brief", "query": "log: ERROR GET http://orders:8000/ failed: URLError(ConnectionRefusedError(111, 'Connection refused'))", "slice": "real_incident_heldout", "source": "runbook"}

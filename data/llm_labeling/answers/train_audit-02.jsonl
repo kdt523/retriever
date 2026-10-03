@@ -1,0 +1,50 @@
+{"id": "f89ae1336c083a65", "verdict": "correct", "reason": "lists these as purely mutating fields to eliminate"}
+{"id": "8c1f56cb3793437b", "verdict": "correct", "reason": "each WorkloadItem node carries a default config"}
+{"id": "3bf7e70938ec51f6", "verdict": "correct", "reason": "the two template fields are a union; cannot set both"}
+{"id": "a1b338a828b172f1", "verdict": "wrong", "reason": "describes an example route; no way to check the backend port"}
+{"id": "382038592b9e707f", "verdict": "correct", "reason": "lists required csi-provisioner, attacher and resizer versions"}
+{"id": "752af4262f2524cc", "verdict": "wrong", "reason": "pasted Workload YAML, no question"}
+{"id": "3b5552842bc40801", "verdict": "correct", "reason": "audit mode label records violations without blocking"}
+{"id": "e1baa9d1d3b75364", "verdict": "correct", "reason": "ACTIVE 0 with LAST SCHEDULE means the job finished"}
+{"id": "7a26fdd88929b50b", "verdict": "correct", "reason": "ReduceDefaultCrashLoopBackOffDecay starts retries at 1s"}
+{"id": "675fb0e9839e1dbf", "verdict": "correct", "reason": "lists HostProcess container use cases"}
+{"id": "47f5b106c7c6a732", "verdict": "correct", "reason": "LoadBalancer EXTERNAL-IP pending symptoms"}
+{"id": "e31c1a439ca4be98", "verdict": "correct", "reason": "kubelet tries both auth sources if one fails"}
+{"id": "a6a323c43ee83b1f", "verdict": "wrong", "reason": "normal Started event, no problem or question"}
+{"id": "ea8154af644729de", "verdict": "correct", "reason": "set the same constraints on all pods; label nodes consistently"}
+{"id": "db561be1a5701abc", "verdict": "correct", "reason": "user namespaces keep volume ownership; set runAsUser/fsGroup"}
+{"id": "0d8f7bfbc3a62467", "verdict": "correct", "reason": "node-failure replacement keeps the existing PVC"}
+{"id": "6e35e447dda7d0d3", "verdict": "correct", "reason": "disruptionMode supports Single and All; v1.36 limits"}
+{"id": "042b442c74c1e7bc", "verdict": "correct", "reason": "tls.secretName in the Ingress spec"}
+{"id": "87d871f2742ad9ad", "verdict": "correct", "reason": "namespace labels can warn and audit for restricted"}
+{"id": "765276b6fa01eb38", "verdict": "wrong", "reason": "pasted PDB status, no question"}
+{"id": "0e643b3bc813ad16", "verdict": "correct", "reason": "lists distributions using cgroup v2 by default"}
+{"id": "83753925570fea16", "verdict": "correct", "reason": "runbook symptom lists this exact Redis error"}
+{"id": "1168295dfcdd1631", "verdict": "correct", "reason": "jsonpath on ephemeralContainers env shows the variables"}
+{"id": "daf324fdf531a31e", "verdict": "correct", "reason": "after disabling PSP, delete associated roles and bindings"}
+{"id": "254f0f3c450170cf", "verdict": "correct", "reason": "enable CompositePodGroup gate and v1alpha3 API group"}
+{"id": "23f74c0b73a22e46", "verdict": "correct", "reason": "Kubernetes only surfaces volume health, never acts on it"}
+{"id": "aa63cbd56f3b79e9", "verdict": "correct", "reason": "force delete frees the name and can duplicate pods"}
+{"id": "7c0c5f5c1264b47c", "verdict": "correct", "reason": "keep CPU requests low and limits higher for bursts"}
+{"id": "a7e57152564f0553", "verdict": "correct", "reason": "docker tag and push the job image"}
+{"id": "d7b2519a329c409f", "verdict": "correct", "reason": "static pod manifest in /etc/kubernetes/manifests"}
+{"id": "0d404196671e645d", "verdict": "correct", "reason": "podAntiAffinity spreads cache replicas across nodes"}
+{"id": "0ecf49d103552c5f", "verdict": "wrong", "reason": "says csi-proxy is needed but not how to install it"}
+{"id": "f94c3605e48a9dce", "verdict": "correct", "reason": "walks through draining with a PDB in place"}
+{"id": "0ed9c3d5d7cae973", "verdict": "correct", "reason": "lists app errors and short activeDeadlineSeconds as causes"}
+{"id": "0645b3c323b72f18", "verdict": "correct", "reason": "Endpoints deprecated in favour of EndpointSlice"}
+{"id": "683862513671c5f0", "verdict": "wrong", "reason": "chunk lacks the sidecar YAML; only explains the example"}
+{"id": "0c9614ee7a91238b", "verdict": "correct", "reason": "set seLinuxChangePolicy: Recursive to opt out"}
+{"id": "c15026d7c3c86c20", "verdict": "correct", "reason": "Kubernetes accepts only a subset of bash env syntax"}
+{"id": "224a6891e3a780a2", "verdict": "correct", "reason": "one from entry with both selectors, YAML shown"}
+{"id": "97f94bfbfe7b42ed", "verdict": "correct", "reason": "kubelet requires CRI v1 since 1.26"}
+{"id": "5ea578b3be863636", "verdict": "correct", "reason": "RC metadata labels may differ and do not affect behavior"}
+{"id": "06204eea4e9b2baf", "verdict": "correct", "reason": "expansion completes only once a pod uses the PVC"}
+{"id": "fc6cd27c06265af8", "verdict": "correct", "reason": "init containers need a restartPolicy to run as sidecars"}
+{"id": "c004fd8f8e567a00", "verdict": "correct", "reason": "raise the quota or use an Ingress instead"}
+{"id": "e1a4521453c37a6d", "verdict": "correct", "reason": "use env.valueFrom to select a single key"}
+{"id": "4adc42b2fae0d252", "verdict": "correct", "reason": "NotReady node symptoms: Unknown conditions, Terminating pods"}
+{"id": "10a304ea5d5c89dd", "verdict": "correct", "reason": "eliminate purely mutating PSP fields first"}
+{"id": "0f1927ef11ac959e", "verdict": "correct", "reason": "v1.36 limitation on PodGroup fields lifted in v1.37"}
+{"id": "e08787572db8c4ca", "verdict": "correct", "reason": "controlledResources restricts VPA to memory"}
+{"id": "387e536a123ddb9c", "verdict": "correct", "reason": "annotation replaced by ingressClassName field"}

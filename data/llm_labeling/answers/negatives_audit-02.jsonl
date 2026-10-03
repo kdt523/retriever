@@ -1,0 +1,25 @@
+{"id": "1a3cd94096263ed7", "verdict": "true_negative", "reason": "negative covers Pending from insufficient resources"}
+{"id": "700edac4998ea7ce", "verdict": "true_negative", "reason": "negative is a pod-level resize restart example"}
+{"id": "fd30bb22ec53dbc7", "verdict": "true_negative", "reason": "negative decodes a dockerconfigjson secret"}
+{"id": "720d5820cc5825c9", "verdict": "true_negative", "reason": "negative covers Windows storage limitations"}
+{"id": "884a567be921a560", "verdict": "true_negative", "reason": "negative covers installing kompose, not converting"}
+{"id": "39968c77990fd88c", "verdict": "true_negative", "reason": "negative is an Indexed Job describe output"}
+{"id": "7ca5f532a7b70d34", "verdict": "true_negative", "reason": "negative execs env across pods, not env-file logs"}
+{"id": "cf9d0b200f5ced3a", "verdict": "true_negative", "reason": "negative is Ingress path matching"}
+{"id": "e785597efa240207", "verdict": "true_negative", "reason": "negative covers overlapping PDB selectors"}
+{"id": "c3f46d193d0f0771", "verdict": "true_negative", "reason": "negative covers topology-aware gang scheduling"}
+{"id": "04298ab48a64591a", "verdict": "true_negative", "reason": "negative covers helm rollback"}
+{"id": "51aa90edbaf2ff64", "verdict": "true_negative", "reason": "negative creates credspec resources, not authorization"}
+{"id": "2b747eb622feefe3", "verdict": "true_negative", "reason": "negative covers PodReadyToStartContainers and Initialized"}
+{"id": "5a6cd2d2e73d96ac", "verdict": "true_negative", "reason": "negative covers SupplementalGroupsPolicy"}
+{"id": "bebc43b1c84edb72", "verdict": "true_negative", "reason": "negative covers cross-namespace dataSourceRef"}
+{"id": "da1358ae1dd42fe2", "verdict": "true_negative", "reason": "negative is GMSA troubleshooting"}
+{"id": "7a511f10368794e8", "verdict": "true_negative", "reason": "negative introduces readiness probes"}
+{"id": "d42703a50473c813", "verdict": "true_negative", "reason": "negative is a work-queue Job definition"}
+{"id": "79c346bfa6583249", "verdict": "true_negative", "reason": "negative covers topology spread conventions"}
+{"id": "b3ff2c18f8b62826", "verdict": "true_negative", "reason": "negative shows FailedScheduling events"}
+{"id": "be949286c15768ba", "verdict": "true_negative", "reason": "negative introduces user namespaces; no volumeDevices rule"}
+{"id": "a541217e5d3792ec", "verdict": "true_negative", "reason": "negative is HPA missing metrics symptoms"}
+{"id": "25c0e6bdbbcec761", "verdict": "true_negative", "reason": "negative covers admission denial checks"}
+{"id": "f13548595e732258", "verdict": "true_negative", "reason": "negative covers ConfigMap generators"}
+{"id": "73d15d8cf9f58a98", "verdict": "true_negative", "reason": "negative covers local ephemeral storage quotas"}

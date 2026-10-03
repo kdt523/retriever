@@ -1,0 +1,20 @@
+{"id": "b6ed13f4dcaa747e", "verdict": "correct", "also_relevant": ["A", "B"], "reason": "setHostnameAsFQDN fails when FQDN exceeds 64 characters"}
+{"id": "3db47cb3c8325c53", "verdict": "correct", "also_relevant": ["E"], "reason": "tolerating NoExecute keeps running pods; tolerationSeconds"}
+{"id": "c63a5a957f33b964", "verdict": "correct", "also_relevant": ["A", "C"], "reason": "per-index backoff records failed indexes and fails the Job"}
+{"id": "ea0135e4a9ec2130", "verdict": "correct", "also_relevant": ["D"], "reason": "Workload/PodGroup carry ownerReferences and are garbage collected"}
+{"id": "68996cafa0b40f71", "verdict": "correct", "also_relevant": ["A", "C"], "reason": "kubectl get endpointslices -l kubernetes.io/service-name=..."}
+{"id": "508085a97d52d6e7", "verdict": "ambiguous", "also_relevant": [], "reason": "pending doc example pod, no cause or question stated"}
+{"id": "e484d7e994828577", "verdict": "correct", "also_relevant": ["C"], "reason": "if kubernetes.default fails, debug the DNS service itself"}
+{"id": "25f3827a2d0a745d", "verdict": "correct", "also_relevant": [], "reason": "first step: add one or more PriorityClasses"}
+{"id": "08424ce7aad555f8", "verdict": "correct", "also_relevant": ["A"], "reason": "Indexed Job exposes the index as JOB_COMPLETION_INDEX"}
+{"id": "a2b91b1e1bbd83b3", "verdict": "correct", "also_relevant": [], "reason": "NoExecute evicts non-tolerating pods immediately"}
+{"id": "7f407d79577b413a", "verdict": "correct", "also_relevant": [], "reason": "clients must dedupe across slices; see kube-proxy EndpointSliceCache"}
+{"id": "b82c3276be3b44d5", "verdict": "ambiguous", "also_relevant": [], "reason": "pasted volume spec, no question"}
+{"id": "2bd28b81ce6df9b3", "verdict": "correct", "also_relevant": [], "reason": "--allowlist-entry required with Allowlist, key=value form"}
+{"id": "5d700b8c67bcc71b", "verdict": "correct", "also_relevant": ["A", "C"], "reason": "shows credentialPluginAllowlist configuration"}
+{"id": "035c6540023bb0e1", "verdict": "ambiguous", "also_relevant": [], "reason": "pasted JSON patch fragment, no question"}
+{"id": "70b100a43e13c56d", "verdict": "correct", "also_relevant": ["B"], "reason": "override NPD config with a ConfigMap"}
+{"id": "001df932b6ee998c", "verdict": "correct", "also_relevant": ["A", "C"], "reason": "pods reference their PodGroup via spec.schedulingGroup"}
+{"id": "e4b79b1c92f73e3c", "verdict": "ambiguous", "also_relevant": [], "reason": "healthy kubectl get svc output, no problem stated"}
+{"id": "2ff0e5919d4e82b2", "verdict": "correct", "also_relevant": ["A", "B"], "reason": "exec into container, install and run tcpdump and ps"}
+{"id": "1d73d79b4d7b6f52", "verdict": "correct", "also_relevant": [], "reason": "set a positive .spec.completions for fixed completion count"}

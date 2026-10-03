@@ -1,0 +1,10 @@
+{"id": "6ec2b2c561172370", "relevant": [], "reason": "Istio VirtualService prefix rewrite; out of scope"}
+{"id": "5ed58cb35b55f152", "relevant": [], "reason": "restart on peer IP changes; no candidate addresses it"}
+{"id": "6ede967bf781446d", "relevant": [], "reason": "nginx rewrite-target and asset base path; not covered"}
+{"id": "68986f42eb6b383d", "relevant": [], "reason": "Strimzi advertised host on minikube; out of scope"}
+{"id": "674e40317463d20b", "relevant": [], "reason": "kube-dns on docker bridge IP with flannel; not covered"}
+{"id": "8f23692c91edd02b", "relevant": [], "reason": "kubectl top sorting and head; no candidate shows it"}
+{"id": "1bfbe361728633dd", "relevant": ["C", "I"], "reason": "NFS PV data lives on the NFS server, not the node"}
+{"id": "67a997041178508d", "relevant": [], "reason": "Ansible Jinja escaping of go-template; out of scope"}
+{"id": "68aea16cbf6d932d", "relevant": [], "reason": "EC2 security group blocks 6443 for kubeadm join; not covered"}
+{"id": "7a27e7e14db48523", "relevant": [], "reason": "labels must be on the pod template; no chunk states it"}

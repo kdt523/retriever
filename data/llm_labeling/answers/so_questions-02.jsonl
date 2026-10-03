@@ -1,0 +1,10 @@
+{"id": "495e298f1068eb0f", "relevant": [], "reason": "Python GIL/uWSGI availability design; no chunk covers it"}
+{"id": "60e8f5b2fc3b852d", "relevant": [], "reason": "needs -n namespace on create secret; no candidate shows it"}
+{"id": "1392f8c7537535c6", "relevant": [], "reason": "kubebuilder controller-gen tooling; out of scope"}
+{"id": "8929730ed04f4d64", "relevant": ["B"], "reason": "service-dns discovery needs a headless Service returning pod IPs"}
+{"id": "2d8f72176860eba5", "relevant": [], "reason": "Pending with no events points at the scheduler; not covered"}
+{"id": "1e8baffbf07b7813", "relevant": [], "reason": "PromQL dashboard query; out of scope"}
+{"id": "caa424fd1b4f1c69", "relevant": [], "reason": "IBM ingress controller annotation merging; out of scope"}
+{"id": "1876187ff3b33d5c", "relevant": ["C"], "reason": "delete the owning Deployment instead of the pod"}
+{"id": "12c228420e34fe7a", "relevant": [], "reason": "port-forward binds 127.0.0.1 inside docker; not covered"}
+{"id": "7d136cba4752c795", "relevant": [], "reason": "PVC without StorageClass; no candidate addresses it"}

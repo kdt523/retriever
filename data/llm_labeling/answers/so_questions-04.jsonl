@@ -1,0 +1,10 @@
+{"id": "0b35bee55a76256a", "relevant": [], "reason": "Terraform provider kubeconfig path in CI; out of scope"}
+{"id": "ebdecb974f3b1e06", "relevant": [], "reason": "periodic rollout restart via CronJob not covered"}
+{"id": "7ca72ed0b5a97b8c", "relevant": [], "reason": "GKE single ingress across namespaces; not covered"}
+{"id": "d3fb9bdf8050f71a", "relevant": [], "reason": "Stackdriver aligner error for external metrics; GCP-specific"}
+{"id": "3e4a5b5151882609", "relevant": [], "reason": "kubeadm custom certificates and rotation; not covered"}
+{"id": "079ea2dc5c208cd0", "relevant": [], "reason": "postStart ordering with mysqld; candidates are generic MySQL examples"}
+{"id": "07bcd8a3a13c8c32", "relevant": ["A", "B", "C"], "reason": "startup probe avoids weakening liveness deadlock detection"}
+{"id": "47735578dee5648f", "relevant": [], "reason": "kube-prometheus-stack Helm values; out of scope"}
+{"id": "89a8185c9e3c2a9e", "relevant": ["A"], "reason": "shows correct lowercase create configmap with --from-file key=path"}
+{"id": "5360d1191539b3d0", "relevant": [], "reason": "KEDA scale-in killing long jobs; not covered"}

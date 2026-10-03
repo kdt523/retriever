@@ -1,0 +1,20 @@
+{"id": "804323d672bc5a85", "verdict": "correct", "also_relevant": [], "reason": "symptom lists this exact ghcr 403 anonymous token error"}
+{"id": "ddb81a6bc0e4baae", "verdict": "correct", "also_relevant": [], "reason": "defines what the MutableSchedulingDirectivesForSuspendedJobs gate allows"}
+{"id": "482d92f9784bd90e", "verdict": "correct", "also_relevant": ["D"], "reason": "memory units: use the Mi suffix"}
+{"id": "34871933c73c2550", "verdict": "ambiguous", "also_relevant": [], "reason": "contradictory snapshot: exit 0 Completed yet backoff limit reached"}
+{"id": "ecf074fb6c42ceda", "verdict": "ambiguous", "also_relevant": [], "reason": "copied table header row, not a realistic query"}
+{"id": "5fefb075b18a72a0", "verdict": "correct", "also_relevant": [], "reason": "400m memory means 0.4 bytes; meant 400Mi"}
+{"id": "13d15f1a634388e2", "verdict": "correct", "also_relevant": [], "reason": "only one PriorityClass may set globalDefault true"}
+{"id": "4140aacabba3ec92", "verdict": "correct", "also_relevant": [], "reason": "dedicated nodes: taint plus label and required node affinity"}
+{"id": "f5488f45720ca1c7", "verdict": "correct", "also_relevant": ["A", "B"], "reason": "FailJob pod failure policy rule adds FailureTarget condition"}
+{"id": "31039c410c644f67", "verdict": "correct", "also_relevant": ["D"], "reason": "defines PreferNoSchedule as soft NoSchedule"}
+{"id": "8928ec082910865b", "verdict": "correct", "also_relevant": [], "reason": "Job runs a task to completion then stops; CronJob on schedule"}
+{"id": "be6b81bd47803442", "verdict": "correct", "also_relevant": [], "reason": "this exact error means troubleshoot kubectl connectivity"}
+{"id": "289a87657a28a681", "verdict": "correct", "also_relevant": [], "reason": "OOMKilled troubleshooting: set a higher memory limit"}
+{"id": "ee7b17a131cc5839", "verdict": "ambiguous", "also_relevant": [], "reason": "healthy running job pod snapshot, no problem to answer"}
+{"id": "ab8928fd32560d16", "verdict": "correct", "also_relevant": ["A", "E"], "reason": "Job failed because pod failures exceeded backoffLimit"}
+{"id": "e7448925af6be45b", "verdict": "correct", "also_relevant": ["A", "D"], "reason": "controller creates replacement as soon as termination is apparent"}
+{"id": "62bd78722bab8632", "verdict": "correct", "also_relevant": [], "reason": "dnsConfig nameservers allow at most 3 IPs"}
+{"id": "0e18c4647285bab6", "verdict": "correct", "also_relevant": [], "reason": "shows jsonpath check of spec.imagePullSecrets on a new pod"}
+{"id": "fbb1b0f5ba31d7d9", "verdict": "correct", "also_relevant": [], "reason": "review NetworkPolicy ingress rules affecting target pods"}
+{"id": "17036ad01cc87871", "verdict": "ambiguous", "also_relevant": [], "reason": "bare EndpointSlice listing, no problem stated"}

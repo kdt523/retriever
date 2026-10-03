@@ -1,0 +1,10 @@
+{"id": "a7105e27ad561450", "relevant": [], "reason": "removing Helm 2 Tiller resources; not covered"}
+{"id": "d42748841751b707", "relevant": [], "reason": "cluster-wide corporate CA injection; not covered"}
+{"id": "d9316bb9a5929207", "relevant": [], "reason": "restart on Azure Key Vault change needs a reloader; not covered"}
+{"id": "48986eaab714fe12", "relevant": [], "reason": "helm dependency update for missing subcharts; out of scope"}
+{"id": "dd42b442acf3a263", "relevant": [], "reason": "etcd disaster recovery on kops; not covered"}
+{"id": "00e6331ca7bbe906", "relevant": [], "reason": "auto-deploy on new registry tag needs CD tooling; not covered"}
+{"id": "9ba8df3ec982c208", "relevant": [], "reason": "Helm chart metadata error from stray file; out of scope"}
+{"id": "ab0e66d633236f21", "relevant": [], "reason": "MLRun job stuck; out of scope"}
+{"id": "22c9b07e111ae4fb", "relevant": [], "reason": "Calico pod network on Azure blocked; not covered"}
+{"id": "4a2cf18031df086c", "relevant": [], "reason": "ELB registers all nodes; needs externalTrafficPolicy Local, not offered"}

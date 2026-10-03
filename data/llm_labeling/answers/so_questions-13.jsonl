@@ -1,0 +1,10 @@
+{"id": "7d0c81400c088159", "relevant": [], "reason": "ingress-nginx custom error pages; not covered"}
+{"id": "760ff83b73d0244e", "relevant": [], "reason": "gRPC through ingress-nginx passthrough; not covered"}
+{"id": "fa9f59da92aa4a7d", "relevant": [], "reason": "Rook crash-collector keyring secret; out of scope"}
+{"id": "007928e916d3c1ac", "relevant": [], "reason": "YAML bomb protection on API server; not covered"}
+{"id": "3fc06acc0de02e21", "relevant": ["E", "I"], "reason": "pod DNS records need hostname and subdomain set"}
+{"id": "2a1e0b483a46c119", "relevant": [], "reason": "interactive shell image needs stdin/tty; not covered"}
+{"id": "05436c3494329c62", "relevant": [], "reason": "cross-namespace pod traffic timing out; no chunk diagnoses it"}
+{"id": "58fdc50c873e71ee", "relevant": [], "reason": "allowing ALB traffic via NetworkPolicy; candidates generic"}
+{"id": "1e13a568d7efb22b", "relevant": [], "reason": "kubectl cannot take several namespaces; not stated"}
+{"id": "619c8a196ac20059", "relevant": [], "reason": "kubelet rejected events; candidates generic event listing"}

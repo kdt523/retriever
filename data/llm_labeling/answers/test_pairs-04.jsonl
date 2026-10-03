@@ -1,0 +1,20 @@
+{"id": "ff1f24f4a41bdb84", "verdict": "correct", "also_relevant": ["C"], "reason": "missing kubeconfig: set KUBECONFIG or --kubeconfig, or regenerate"}
+{"id": "c2b062f959526b8f", "verdict": "correct", "also_relevant": ["A", "C"], "reason": "scheduler uses requests to choose the node"}
+{"id": "f950aee1b870b4ce", "verdict": "ambiguous", "also_relevant": [], "reason": "bare ServiceAccount listing, no problem stated"}
+{"id": "ce7028a97902630c", "verdict": "correct", "also_relevant": [], "reason": "preemption ignores QoS class, uses priority only"}
+{"id": "b74ae2364844e6b1", "verdict": "correct", "also_relevant": [], "reason": "this error means the Service does not exist; create it"}
+{"id": "5403278157e2ea46", "verdict": "correct", "also_relevant": [], "reason": "scheduler does not perform cross-node preemption"}
+{"id": "cc5741524a20ec6c", "verdict": "correct", "also_relevant": ["C"], "reason": "at most 1000 addresses per subset are mirrored"}
+{"id": "18d0df47012fd05c", "verdict": "correct", "also_relevant": ["A", "C"], "reason": "fixed-completion Jobs set .spec.completionMode"}
+{"id": "9ebd7a15068a47c7", "verdict": "correct", "also_relevant": ["C", "E"], "reason": "this FailedScheduling message: no node fits the CPU request"}
+{"id": "f554f1f987e48bcb", "verdict": "correct", "also_relevant": ["C"], "reason": "context chosen by --context flag then current-context"}
+{"id": "a7b30eab6e442f98", "verdict": "ambiguous", "also_relevant": [], "reason": "bare key/value output, no question"}
+{"id": "1c4670e8916b4215", "verdict": "correct", "also_relevant": ["A"], "reason": "one Job per item adds overhead; use a single Job pattern"}
+{"id": "e281bf7867f0aca0", "verdict": "correct", "also_relevant": ["A", "E"], "reason": "verify kubeconfig certificate expiry with openssl"}
+{"id": "211aac2d5b740506", "verdict": "correct", "also_relevant": [], "reason": "lists FailJob, Ignore, Count, FailIndex actions"}
+{"id": "0cb57be0fd99323d", "verdict": "ambiguous", "also_relevant": [], "reason": "a bare command, not a question or symptom"}
+{"id": "ad63513d9c17a220", "verdict": "correct", "also_relevant": ["A", "B"], "reason": "kubeconfig location and how to obtain or regenerate it"}
+{"id": "50019f9216bdfd48", "verdict": "correct", "also_relevant": [], "reason": "explains what ndots in resolv.conf options does"}
+{"id": "94276324c69edcef", "verdict": "correct", "also_relevant": [], "reason": "describes a Job whose pod creates and manages worker pods"}
+{"id": "5238816850619587", "verdict": "correct", "also_relevant": ["A"], "reason": "Indexed Job pods carry the completion index annotation"}
+{"id": "5bbe802a90a967c2", "verdict": "correct", "also_relevant": [], "reason": "milliCPU form makes invalid sub-1m values easy to spot"}
