@@ -7,7 +7,7 @@ RUN := $(UV) run
 .PHONY: help setup check-env lint format typecheck test cov check fetch inspect \
         cluster-up cluster-down faults \
         corpus data review label-export label-import label-spot-check label-agreement \
-        freeze baseline-val baseline train evaluate export serve
+        freeze baseline-val baseline train ablate evaluate export serve
 
 help: ## Show targets
 	@grep -E '^[a-zA-Z_-]+:.*## ' $(MAKEFILE_LIST) | awk 'BEGIN {FS = ":.*## "}; {printf "  %-17s %s\n", $$1, $$2}'
@@ -121,7 +121,14 @@ baseline: ## Score all baselines on the frozen test set -> results/baseline.csv
 train: ## Fine-tune bge-small (configs/train.yaml) -> models/bge-small-rr, selected on val
 	$(RUN) python -m runbook_retriever.train
 
+ablate: ## Train the Phase 5 ablation/seed variants -> models/ablations/ (~45 min on the GPU)
+	sh scripts/ablate.sh
+
+evaluate: ## Phase 5: test-set results table -> results/final.csv + worst-30 error report
+	$(RUN) python -m runbook_retriever.evaluate --split test --out results/final.csv bm25 minilm bge-small bge-base tuned hybrid:bge-small hybrid:tuned
+	$(RUN) python -m runbook_retriever.error_analysis
+
 # --- Later phases --------------------------------------------------------------------
 
-evaluate export serve:
+serve export:
 	@echo "'make $@' is not implemented yet (see docs/PLAN.md for its phase)" >&2; exit 1

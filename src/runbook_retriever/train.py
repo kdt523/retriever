@@ -12,6 +12,7 @@ from __future__ import annotations
 import argparse
 import json
 import logging
+import random
 import shutil
 from pathlib import Path
 from typing import Any
@@ -41,6 +42,7 @@ class TrainConfig(BaseModel):
     batch_size: int = Field(gt=1)
     mini_batch_size: int = Field(gt=0)
     use_hard_negatives: bool = True
+    train_fraction: float = Field(default=1.0, gt=0, le=1)  # row subsample (ablation)
     learning_rate: float = Field(gt=0)
     warmup_ratio: float = Field(ge=0, lt=1)
     epochs: float = Field(gt=0)
@@ -54,18 +56,29 @@ def load_train_config(path: Path) -> TrainConfig:
     return TrainConfig.model_validate(yaml.safe_load(path.read_text(encoding="utf-8")))
 
 
-def load_triplets(path: Path, *, hard_negatives: bool) -> dict[str, list[str]]:
-    """Columns for the trainer: anchor/positive(/negative). Order matters to the loss."""
+def load_triplets(
+    path: Path, *, hard_negatives: bool, fraction: float = 1.0, seed: int = 0
+) -> dict[str, list[str]]:
+    """Columns for the trainer: anchor/positive(/negative). Order matters to the loss.
+
+    ``fraction < 1`` keeps a seeded random subset of rows (training-size ablation).
+    """
+    rows = list(read_jsonl(path))
+    if fraction < 1.0:
+        keep = sorted(
+            random.Random(seed).sample(range(len(rows)), max(1, round(len(rows) * fraction)))
+        )
+        rows = [rows[i] for i in keep]
+    if not rows:
+        raise SystemExit(f"no training rows in {path}")
     columns: dict[str, list[str]] = {"anchor": [], "positive": []}
     if hard_negatives:
         columns["negative"] = []
-    for row in read_jsonl(path):
+    for row in rows:
         columns["anchor"].append(row["anchor"])
         columns["positive"].append(row["positive"])
         if hard_negatives:
             columns["negative"].append(row["negative"])
-    if not columns["anchor"]:
-        raise SystemExit(f"no training rows in {path}")
     return columns
 
 
@@ -119,7 +132,14 @@ def train(
     out_dir = paths.root / cfg.output_dir
     ckpt_dir = out_dir.parent / "checkpoints" / out_dir.name
 
-    data = Dataset.from_dict(load_triplets(train_path, hard_negatives=cfg.use_hard_negatives))
+    data = Dataset.from_dict(
+        load_triplets(
+            train_path,
+            hard_negatives=cfg.use_hard_negatives,
+            fraction=cfg.train_fraction,
+            seed=seed,
+        )
+    )
     corpus = load_corpus(paths.corpus)
     queries, passages, relevant = val_ir_data(paths, corpus)
     log.info(
@@ -215,17 +235,34 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--seed", type=int, default=None, help="default RR_SEED (42)")
     parser.add_argument("--output-dir", help="override output_dir (e.g. for extra seeds)")
     parser.add_argument("--max-steps", type=int, help="stop early (smoke test)")
+    parser.add_argument("--no-hard-negatives", action="store_true", help="ablation: pairs only")
+    parser.add_argument("--train-fraction", type=float, help="ablation: random share of rows")
+    parser.add_argument("--epochs", type=float, help="override epochs")
+    parser.add_argument("--name", default="train", help="run name in runs.csv")
+    parser.add_argument("--phase", default="4", help="phase column in runs.csv")
     args = parser.parse_args(argv)
     setup_logging()
     settings = get_settings()
     paths = settings.paths
     cfg = load_train_config(args.config or paths.configs / "train.yaml")
+    overrides: dict[str, Any] = {}
     if args.output_dir:
-        cfg = cfg.model_copy(update={"output_dir": args.output_dir})
+        overrides["output_dir"] = args.output_dir
+    if args.no_hard_negatives:
+        overrides["use_hard_negatives"] = False
+    if args.train_fraction is not None:
+        overrides["train_fraction"] = args.train_fraction
+    if args.epochs is not None:
+        overrides["epochs"] = args.epochs
+    cfg = TrainConfig.model_validate({**cfg.model_dump(), **overrides})
     seed = settings.seed if args.seed is None else args.seed
 
     with RunTracker(
-        phase="4", name="train", config=cfg.model_dump(), seed=seed, runs_csv=paths.runs_csv
+        phase=args.phase,
+        name=args.name,
+        config=cfg.model_dump(),
+        seed=seed,
+        runs_csv=paths.runs_csv,
     ) as run:
         meta = train(cfg, paths, seed, max_steps=args.max_steps)
         run.metrics = {

@@ -172,3 +172,19 @@ val NDCG@10 is saved to `models/bge-small-rr/` with `train_meta.json` (config, s
 train-file sha256, val curve). The test set is first scored in Phase 5. Corpus embeddings for
 local model directories are cached by file size and mtime, so retraining into the same directory
 cannot reuse stale vectors.
+
+## D22: Phase 5 findings and limits (2026-10-03)
+Main results and ablations are in the README and `results/` (`final.csv`, `ablations_*.csv`,
+`ablations.md`, `error_analysis.md`). The ablation models were chosen before looking at test and
+are all reported, so the test numbers are not selected on. Findings that change later work:
+- Hard negatives gave no measurable gain (D17 mining is kept, but not required for the result).
+- The test gain over untrained bge-small is +5.5 hit@5, below the +10 target; val showed +11.
+  The test set mixes in Stack Overflow questions and real incidents, which the synthetic train
+  queries match less well. Real-query slices are where more training data would help most.
+- Two test pairs are wrong labels (`gen/bb141ad982ce4819`, `gen/289a87657a28a681`), found in the
+  error analysis, plus nine queries where the qrels miss an equally good chunk. The frozen test
+  files are not edited (the manifest guards them); this is stated here instead. A corrected set
+  would be a new, versioned freeze.
+- `make evaluate` writes `results/final.csv` and the worst-30 report; `make ablate` retrains the
+  six variants (about 50 minutes on the RTX 3050) and `python -m runbook_retriever.ablation_report`
+  rebuilds `results/ablations.md` from the two ablation CSVs.

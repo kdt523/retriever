@@ -1,0 +1,771 @@
+[
+  {
+    "qid": "gen/28d14efdcc9a1dd9",
+    "slice": "kubectl_output",
+    "query": "NAME TYPE REASON AGE pi-with-timeout Failed DeadlineExceeded 1m",
+    "rank": 101,
+    "relevant": [
+      "k8s/concepts/workloads/controllers/job#046"
+    ],
+    "relevant_count": 1,
+    "relevant_tokens": 236,
+    "top3": [
+      {
+        "chunk_id": "k8s/concepts/configuration/manage-resources-containers#037",
+        "heading": "Resource Management for Pods and Containers > Troubleshooting > My Pods are pending with event message `FailedScheduling`"
+      },
+      {
+        "chunk_id": "k8s/concepts/workloads/controllers/cron-jobs#008",
+        "heading": "CronJob > Writing a CronJob spec > Deadline for delayed Job start"
+      },
+      {
+        "chunk_id": "k8s/concepts/workloads/controllers/cron-jobs#007",
+        "heading": "CronJob > Writing a CronJob spec > Deadline for delayed Job start"
+      }
+    ]
+  },
+  {
+    "qid": "so/10884",
+    "slice": "stackoverflow",
+    "query": "I am using a Kubernetes Cronjob to run period database restores and post restore scripts which runs against the target environment which include tasks such as working with the database, redis, and file system. The issue I am facing is that I have to re-define all the environment variables I use in my Deployment within the Cronjob (E.g., DATABASE_NAME, DATABASE_PASSWORD, REDIS_HOST etc.). While repeating all the environment variables works, it is error prone as I have already forgotten to update the jobs which results in me having to re-run the entire process which takes 2-4 hours to run depending on what environment. Is there a way to reference an existing Deployment and re-use the defined environment variables within my Cronjob?",
+    "rank": 101,
+    "relevant": [
+      "k8s/tasks/inject-data-application/distribute-credentials-secure#016"
+    ],
+    "relevant_count": 1,
+    "relevant_tokens": 122,
+    "top3": [
+      {
+        "chunk_id": "k8s/concepts/workloads/controllers/cron-jobs#014",
+        "heading": "CronJob > CronJob limitations > Modifying a CronJob"
+      },
+      {
+        "chunk_id": "k8s/tasks/inject-data-application/define-environment-variable-container#002",
+        "heading": "Define Environment Variables for a Container > Define an environment variable for a container"
+      },
+      {
+        "chunk_id": "k8s/tasks/job/automated-tasks-with-cron-jobs#004",
+        "heading": "Running Automated Tasks with a CronJob > Deleting a CronJob"
+      }
+    ]
+  },
+  {
+    "qid": "so/27581",
+    "slice": "stackoverflow",
+    "query": "Hi I have followed this video from starting to end. Using kubectl describe to show the Service that was created yields $ kubectl describe -n ingress-nginx service/ingress-nginx Name: ingress-nginx Namespace: ingress-nginx Labels: <none> Annotations: <none> Selector: app=nginx-ingress Type: LoadBalancer IP: 10.110.231.177 LoadBalancer Ingress: localhost Port: http 80/TCP TargetPort: http/TCP NodePort: http 32352/TCP Endpoints: 10.1.0.12:80,10.1.0.13:80 Port: https 443/TCP TargetPort: https/TCP NodePort: https 30563/TCP Endpoints: 10.1.0.12:443,10.1.0.13:443 Session Affinity: None External Traffic Policy: Local HealthCheck NodePort: 30574 Events: <none> Why did not I get a public IP address as explained by the author of the video? Is that why I am not able to access the link http://marcel.test? Also while doing the same setup on AWS, the external IP stays at Pending for a LoadBalancer service.",
+    "rank": 94,
+    "relevant": [
+      "runbook/loadbalancer-pending#000"
+    ],
+    "relevant_count": 1,
+    "relevant_tokens": 252,
+    "top3": [
+      {
+        "chunk_id": "k8s/concepts/services-networking/ingress#025",
+        "heading": "Ingress > Types of Ingress > Ingress backed by a single Service"
+      },
+      {
+        "chunk_id": "k8s/concepts/services-networking/ingress#001",
+        "heading": "Ingress > What is Ingress?"
+      },
+      {
+        "chunk_id": "runbook/ingress-502-503-504#001",
+        "heading": "Ingress returns 502, 503 or 504 > Checks"
+      }
+    ]
+  },
+  {
+    "qid": "so/11903",
+    "slice": "stackoverflow",
+    "query": "I have a Kafka cluster hosted in GKE. Google updates GKE nodes in weekly basis and whenever this happens Kafka becomes temporarily unavailable and this causes massive error/rebalance to get it backup to healthy state. Currently we rely on K8 retry to eventually succeed once upgrade completes and cluster becomes available. Is there a way to gracefully handle this type of situation in Kafka or avoid it if possible?",
+    "rank": 76,
+    "relevant": [
+      "k8s/concepts/workloads/pods/disruptions#003",
+      "k8s/tasks/run-application/configure-pdb#003"
+    ],
+    "relevant_count": 2,
+    "relevant_tokens": 248,
+    "top3": [
+      {
+        "chunk_id": "k8s/concepts/workloads/pods/disruptions#015",
+        "heading": "Disruptions > PodDisruptionBudget example"
+      },
+      {
+        "chunk_id": "k8s/concepts/architecture/self-healing#000",
+        "heading": "Kubernetes Self-Healing"
+      },
+      {
+        "chunk_id": "k8s/concepts/workloads/pods/pod-lifecycle#018",
+        "heading": "Pod Lifecycle > Container restarts > Container restarts and resilience"
+      }
+    ]
+  },
+  {
+    "qid": "incident/oom-killed/brief",
+    "slice": "real_incident_seen",
+    "query": "inventory-799bw6c8qg-kvbzh 1/1 Running 1 (3s ago) | Warning BackOff Back-off restarting failed container inventory in pod inventory-799bw6c8qg-kvbzh_prod(681d0337-535c-4106-a2ad-eac8c3caf9da)",
+    "rank": 49,
+    "relevant": [
+      "runbook/oomkilled#000",
+      "runbook/oomkilled#001",
+      "runbook/oomkilled#002"
+    ],
+    "relevant_count": 5,
+    "relevant_tokens": 213,
+    "top3": [
+      {
+        "chunk_id": "k8s/concepts/workloads/pods/pod-lifecycle#015",
+        "heading": "Pod Lifecycle > How Pods handle problems with containers"
+      },
+      {
+        "chunk_id": "k8s/concepts/workloads/controllers/job#025",
+        "heading": "Jobs > Handling Pod and container failures"
+      },
+      {
+        "chunk_id": "k8s/concepts/workloads/controllers/job#038",
+        "heading": "Jobs > Handling Pod and container failures > Pod failure policy"
+      }
+    ]
+  },
+  {
+    "qid": "gen/bb141ad982ce4819",
+    "slice": "how_to",
+    "query": "how to verify that deployment pods are up and running with label selectors",
+    "rank": 46,
+    "relevant": [
+      "k8s/tasks/debug/debug-application/debug-service#003"
+    ],
+    "relevant_count": 1,
+    "relevant_tokens": 252,
+    "top3": [
+      {
+        "chunk_id": "k8s/concepts/workloads/controllers/deployment#068",
+        "heading": "Deployments > Writing a Deployment Spec > Selector"
+      },
+      {
+        "chunk_id": "k8s/tasks/debug/debug-application/debug-running-pod#001",
+        "heading": "Debug Running Pods > Using `kubectl describe pod` to fetch details about pods"
+      },
+      {
+        "chunk_id": "k8s/concepts/workloads/controllers/deployment#009",
+        "heading": "Deployments > Creating a Deployment"
+      }
+    ]
+  },
+  {
+    "qid": "so/8622",
+    "slice": "stackoverflow",
+    "query": "We are deploying a spring-boot application using spring-session-hazelcast + hazelcast-kubernetes on an OpenShift/Kubernetes cluster. Due to the nature of our platform, we can only use service-dns configuration. We expose a service on port 5701 for multicasting and set service-dns property to the multicast service name. Below is a snippet for creation of the Hazelcast instance. @Bean public HazelcastInstance hazelcastInstance() { var config = new Config(); config.setClusterName(\"spring-session-cluster\"); var join = config.getNetworkConfig().getJoin(); join.getTcpIpConfig().setEnabled(false); join.getMulticastConfig().setEnabled(false); join.getKubernetesConfig().setEnabled(true) .setProperty(\"service-dns\", \"<multicast-service-name>\"); var attribute = new AttributeConfig() .setName(Hazelcast4IndexedSessionRepository.PRINCIPAL_NAME_ATTRIBUTE) .setExtractorClassName(Hazelcast4PrincipalNameExtractor.class.getName()); config.getMapConfig(Hazelcast4IndexedSessionRepository.DEFAULT_SESSION_MAP_NAME) .addAttributeConfig(attribute) .addIndexConfig(new IndexConfig(IndexType.HASH, Hazelcast4IndexedSessionRepository.PRINCIPAL_NAME_ATTRIBUTE)); var serializer = new SerializerConfig(); serializer.setImplementation(new HazelcastSessionSerializer()) .setTypeClass(MapSession.class); config.getSerializationConfig().addSerializerConfig(serializer); return Hazelcast.newHazelcastInstance(config); } When we run 2 pods for this application, we see the below ERROR log: com.hazelcast.internal.cluster.impl.operations.SplitBrainMergeValidationOp Message: [<private-ip>]:5701 [spring-session-cluster] [4.2] Target is this node! -> [<private-ip>]:5701 Can someone please explain how to fix this error, still using \"service-dns\" configuration?",
+    "rank": 46,
+    "relevant": [
+      "k8s/concepts/services-networking/service#046"
+    ],
+    "relevant_count": 1,
+    "relevant_tokens": 248,
+    "top3": [
+      {
+        "chunk_id": "k8s/concepts/services-networking/service#053",
+        "heading": "Service > Discovering services > DNS"
+      },
+      {
+        "chunk_id": "k8s/concepts/services-networking/dns-pod-service#015",
+        "heading": "DNS for Services and Pods > Pods > Pod's DNS Policy"
+      },
+      {
+        "chunk_id": "k8s/concepts/services-networking/dns-pod-service#000",
+        "heading": "DNS for Services and Pods"
+      }
+    ]
+  },
+  {
+    "qid": "gen/289a87657a28a681",
+    "slice": "how_to",
+    "query": "how to increase memory limit for a container after oomkill",
+    "rank": 17,
+    "relevant": [
+      "k8s/concepts/configuration/manage-resources-containers#047"
+    ],
+    "relevant_count": 1,
+    "relevant_tokens": 245,
+    "top3": [
+      {
+        "chunk_id": "k8s/tasks/configure-pod-container/assign-memory-resource#015",
+        "heading": "Assign Memory Resources to Containers and Pods > If you do not specify a memory limit"
+      },
+      {
+        "chunk_id": "k8s/tasks/configure-pod-container/assign-memory-resource#007",
+        "heading": "Assign Memory Resources to Containers and Pods > Exceed a Container's memory limit"
+      },
+      {
+        "chunk_id": "k8s/tasks/configure-pod-container/assign-memory-resource#008",
+        "heading": "Assign Memory Resources to Containers and Pods > Exceed a Container's memory limit"
+      }
+    ]
+  },
+  {
+    "qid": "so/7449",
+    "slice": "stackoverflow",
+    "query": "We have a deployment with a large replicas number ( > 1 ) that we must deploy in the same zone. We stumbled upon this documentation section: https://kubernetes.io/docs/concepts/scheduling-eviction/assign-pod-node/#an-example-of-a-pod-that-uses-pod-affinity which explains how to schedule pods in zones that already have other pods that match certain labels. however, there are no other pods that our deployment depends upon. all other workloads are replicated and spread across multiple zones, and this is the first deployment that we would like to keep in a single zone. also, we thought about explicitly setting the zone for this deployment, but in case of zone failure, it will become unavailable until we notice and explicitly set it to another zone. so setting the exact zone won't work here. any insights here? and thanks!",
+    "rank": 17,
+    "relevant": [
+      "k8s/concepts/scheduling-eviction/assign-pod-node#018",
+      "k8s/concepts/scheduling-eviction/assign-pod-node#035"
+    ],
+    "relevant_count": 2,
+    "relevant_tokens": 248,
+    "top3": [
+      {
+        "chunk_id": "k8s/concepts/scheduling-eviction/assign-pod-node#023",
+        "heading": "Assigning Pods to Nodes > Inter-pod affinity and anti-affinity > Pod Affinity Example"
+      },
+      {
+        "chunk_id": "k8s/concepts/scheduling-eviction/assign-pod-node#024",
+        "heading": "Assigning Pods to Nodes > Inter-pod affinity and anti-affinity > Pod Affinity Example"
+      },
+      {
+        "chunk_id": "k8s/concepts/scheduling-eviction/topology-spread-constraints#025",
+        "heading": "Pod Topology Spread Constraints > Topology spread constraint examples > Example: topology spread constraints with node affinity"
+      }
+    ]
+  },
+  {
+    "qid": "gen/211aac2d5b740506",
+    "slice": "how_to",
+    "query": "what are the available action values for pod failure policy rules in kubernetes",
+    "rank": 16,
+    "relevant": [
+      "k8s/concepts/workloads/controllers/job#038"
+    ],
+    "relevant_count": 1,
+    "relevant_tokens": 150,
+    "top3": [
+      {
+        "chunk_id": "k8s/concepts/workloads/controllers/job#037",
+        "heading": "Jobs > Handling Pod and container failures > Pod failure policy"
+      },
+      {
+        "chunk_id": "k8s/concepts/workloads/controllers/job#040",
+        "heading": "Jobs > Handling Pod and container failures > Pod failure policy"
+      },
+      {
+        "chunk_id": "k8s/concepts/workloads/controllers/job#035",
+        "heading": "Jobs > Handling Pod and container failures > Pod failure policy"
+      }
+    ]
+  },
+  {
+    "qid": "gen/1ca216c14cd3e8c4",
+    "slice": "how_to",
+    "query": "how to request a custom resource in a pod spec limits",
+    "rank": 15,
+    "relevant": [
+      "k8s/concepts/configuration/manage-resources-containers#035"
+    ],
+    "relevant_count": 1,
+    "relevant_tokens": 253,
+    "top3": [
+      {
+        "chunk_id": "k8s/concepts/configuration/manage-resources-containers#006",
+        "heading": "Resource Management for Pods and Containers > Pod-level resource specification"
+      },
+      {
+        "chunk_id": "k8s/concepts/configuration/manage-resources-containers#005",
+        "heading": "Resource Management for Pods and Containers > Resource requests and limits of Pod and container"
+      },
+      {
+        "chunk_id": "k8s/tasks/configure-pod-container/assign-pod-level-resources#010",
+        "heading": "Assign Pod-level CPU and memory resources > Create a pod with resource requests and limits at both pod-level and container-level"
+      }
+    ]
+  },
+  {
+    "qid": "so/1264",
+    "slice": "stackoverflow",
+    "query": "I have setup a Postgres pod on my Kubernetes cluster, and I am trying to troubleshoot it a bit. I would like to use the official Postgres image and deploy it to my Kubernetes cluster using kubectl. Given that my Postgres server connection details are: host: mypostgres port: 5432 username: postgres password: 12345 And given that I think the command will be something like: kubectl run -i --tty --rm debug --image=postgres --restart=Never -- sh What do I need to do so that I can deploy this image to my cluster, connect to my Postgres server and start running SQL command against it (for troubleshooting purposes)?",
+    "rank": 15,
+    "relevant": [
+      "k8s/tasks/debug/debug-application/debug-service#001",
+      "k8s/tasks/run-application/run-replicated-stateful-application#023"
+    ],
+    "relevant_count": 2,
+    "relevant_tokens": 224,
+    "top3": [
+      {
+        "chunk_id": "runbook/dependency-down#002",
+        "heading": "Downstream dependency unavailable (Redis, Postgres, other services) > Likely causes"
+      },
+      {
+        "chunk_id": "k8s/tasks/run-application/run-single-instance-stateful-application#007",
+        "heading": "Run a Single-Instance Stateful Application > Accessing the MySQL instance"
+      },
+      {
+        "chunk_id": "runbook/dependency-down#000",
+        "heading": "Downstream dependency unavailable (Redis, Postgres, other services) > Symptoms"
+      }
+    ]
+  },
+  {
+    "qid": "incident/pod-stuck-finalizer/full",
+    "slice": "real_incident_seen",
+    "query": "ledger-0 1/1 Terminating 0 | Status: Terminating (lasts 0s) | event: Normal Killing Stopping container ledger",
+    "rank": 14,
+    "relevant": [
+      "runbook/pod-stuck-terminating#000",
+      "runbook/pod-stuck-terminating#001",
+      "runbook/pod-stuck-terminating#002"
+    ],
+    "relevant_count": 5,
+    "relevant_tokens": 168,
+    "top3": [
+      {
+        "chunk_id": "k8s/tasks/debug/debug-application/determine-reason-pod-failure#001",
+        "heading": "Determine the Reason for Pod Failure > Writing and reading a termination message"
+      },
+      {
+        "chunk_id": "k8s/tasks/debug/debug-application/determine-reason-pod-failure#000",
+        "heading": "Determine the Reason for Pod Failure"
+      },
+      {
+        "chunk_id": "k8s/reference/kubectl/docker-cli-to-kubectl#011",
+        "heading": "kubectl for Docker Users > docker stop and docker rm"
+      }
+    ]
+  },
+  {
+    "qid": "so/24911",
+    "slice": "stackoverflow",
+    "query": "I have two clusters NAME LOCATION MASTER_VERSION MASTER_IP MACHINE_TYPE NODE_VERSION NUM_NODES STATUS cassandra-cluster europe-west4-a 1.14.10-gke.36 xx.90.xx.31 n1-standard-1 1.14.10-gke.36 3 RUNNING codingjediweb-cluster europe-west4-a 1.14.10-gke.36 uu.90.uu.182 n1-standard-1 1.14.10-gke.36 2 RUNNING manuchadha25@cloudshell:~ (copper-frame-262317)$ I want to run the following command on cassandra-cluster. How do I make cassandra-cluster my current context? I am getting error CASS_USER=$(kubectl --cluster gke_copper-frame-262317_europe-west4-a_cassandra-cluster get secret cluster1-superuser -o json | jq -r '.data.username' | base64 --decode)kubectl Error from server (NotFound): secrets \"cluster1-superuser\" not found I tried this but it failed. manuchadha25@cloudshell:~ (copper-frame-262317)$ kubectl config use-context cassandra-cluster error: no context exists with the name: \"cassandra-cluster\"",
+    "rank": 14,
+    "relevant": [
+      "k8s/concepts/configuration/organize-cluster-access-kubeconfig#003",
+      "k8s/tasks/debug/debug-cluster/troubleshoot-kubectl#007"
+    ],
+    "relevant_count": 2,
+    "relevant_tokens": 102,
+    "top3": [
+      {
+        "chunk_id": "k8s/concepts/workloads/controllers/statefulset#014",
+        "heading": "StatefulSets > Pod Identity > Stable Network ID"
+      },
+      {
+        "chunk_id": "k8s/reference/kubectl/quick-reference#014",
+        "heading": "kubectl Quick Reference > Create a secret with several keys"
+      },
+      {
+        "chunk_id": "k8s/tasks/debug/debug-cluster/local-debugging#001",
+        "heading": "Developing and debugging services locally using telepresence > Connecting your local machine to a remote Kubernetes cluster"
+      }
+    ]
+  },
+  {
+    "qid": "gen/8983c06ed00dbd64",
+    "slice": "symptom",
+    "query": "why is my kubectl command hitting the wrong cluster",
+    "rank": 11,
+    "relevant": [
+      "k8s/tasks/debug/debug-cluster/troubleshoot-kubectl#007"
+    ],
+    "relevant_count": 1,
+    "relevant_tokens": 85,
+    "top3": [
+      {
+        "chunk_id": "k8s/reference/kubectl#007",
+        "heading": "Command line tool (kubectl) > In-cluster authentication and namespace overrides"
+      },
+      {
+        "chunk_id": "k8s/tasks/debug/debug-cluster#000",
+        "heading": "Troubleshooting Clusters"
+      },
+      {
+        "chunk_id": "k8s/tasks/debug/debug-cluster/troubleshoot-kubectl#000",
+        "heading": "Troubleshooting kubectl"
+      }
+    ]
+  },
+  {
+    "qid": "incident/pod-stuck-finalizer/brief",
+    "slice": "real_incident_seen",
+    "query": "ledger-0 1/1 Terminating 0 | Normal Killing Stopping container ledger",
+    "rank": 11,
+    "relevant": [
+      "runbook/pod-stuck-terminating#000",
+      "runbook/pod-stuck-terminating#001",
+      "runbook/pod-stuck-terminating#002"
+    ],
+    "relevant_count": 5,
+    "relevant_tokens": 168,
+    "top3": [
+      {
+        "chunk_id": "k8s/concepts/workloads/pods/pod-lifecycle#060",
+        "heading": "Pod Lifecycle > Termination of Pods > Stop Signals"
+      },
+      {
+        "chunk_id": "k8s/concepts/containers/container-lifecycle-hooks#005",
+        "heading": "Container Lifecycle Hooks > Container hooks > Hook handler execution"
+      },
+      {
+        "chunk_id": "k8s/concepts/workloads/pods/pod-lifecycle#059",
+        "heading": "Pod Lifecycle > Termination of Pods"
+      }
+    ]
+  },
+  {
+    "qid": "gen/a7a26fc1e6ab9bce",
+    "slice": "error_string",
+    "query": "kubectl.config.k8s.io/v1beta1",
+    "rank": 10,
+    "relevant": [
+      "k8s/reference/kubectl/kuberc#000"
+    ],
+    "relevant_count": 1,
+    "relevant_tokens": 215,
+    "top3": [
+      {
+        "chunk_id": "k8s/tasks/debug/debug-cluster/troubleshoot-kubectl#003",
+        "heading": "Troubleshooting kubectl > Check kubeconfig"
+      },
+      {
+        "chunk_id": "k8s/tasks/configure-pod-container/assign-resources/set-up-dra-cluster#002",
+        "heading": "Set Up DRA in a Cluster > Optional: enable additional DRA API groups"
+      },
+      {
+        "chunk_id": "k8s/concepts/configuration/organize-cluster-access-kubeconfig#001",
+        "heading": "Organizing Cluster Access Using kubeconfig Files"
+      }
+    ]
+  },
+  {
+    "qid": "gen/406362474f40f4c7",
+    "slice": "symptom",
+    "query": "pods get evicted right away when a taint is added instead of waiting the hour we configured",
+    "rank": 9,
+    "relevant": [
+      "k8s/concepts/scheduling-eviction/taint-and-toleration#007",
+      "k8s/concepts/scheduling-eviction/taint-and-toleration#008"
+    ],
+    "relevant_count": 2,
+    "relevant_tokens": 114,
+    "top3": [
+      {
+        "chunk_id": "k8s/concepts/scheduling-eviction/taint-and-toleration#022",
+        "heading": "Taints and Tolerations > Taint based Evictions"
+      },
+      {
+        "chunk_id": "k8s/concepts/scheduling-eviction/taint-and-toleration#017",
+        "heading": "Taints and Tolerations > Taint based Evictions"
+      },
+      {
+        "chunk_id": "k8s/concepts/architecture/nodes#015",
+        "heading": "Nodes > Node controller > Rate limits on eviction"
+      }
+    ]
+  },
+  {
+    "qid": "gen/db74cabd76e38a0b",
+    "slice": "how_to",
+    "query": "how to add imagePullSecrets to the auth-api deployment",
+    "rank": 9,
+    "relevant": [
+      "runbook/image-pull-backoff#005"
+    ],
+    "relevant_count": 1,
+    "relevant_tokens": 152,
+    "top3": [
+      {
+        "chunk_id": "k8s/concepts/configuration/secret#040",
+        "heading": "Secrets > Using imagePullSecrets > Arranging for imagePullSecrets to be automatically attached"
+      },
+      {
+        "chunk_id": "k8s/concepts/containers/images#033",
+        "heading": "Images > Creating a Secret with a Docker config > Referring to `imagePullSecrets` on a Pod"
+      },
+      {
+        "chunk_id": "k8s/concepts/containers/images#032",
+        "heading": "Images > Creating a Secret with a Docker config > Referring to `imagePullSecrets` on a Pod"
+      }
+    ]
+  },
+  {
+    "qid": "incident/ephemeral-storage-eviction/brief",
+    "slice": "real_incident_heldout",
+    "query": "thumbnailer-8fdrp6gkmp-b27qm 0/1 ContainerCreating 0 | Warning Evicted Pod ephemeral local storage usage exceeds the total limit of containers 20Mi.",
+    "rank": 9,
+    "relevant": [
+      "runbook/node-pressure-eviction#000",
+      "runbook/node-pressure-eviction#001",
+      "runbook/node-pressure-eviction#002"
+    ],
+    "relevant_count": 4,
+    "relevant_tokens": 237,
+    "top3": [
+      {
+        "chunk_id": "k8s/concepts/storage/ephemeral-storage#010",
+        "heading": "Local ephemeral storage > Ephemeral storage consumption management"
+      },
+      {
+        "chunk_id": "k8s/concepts/storage/ephemeral-storage#007",
+        "heading": "Local ephemeral storage > Setting requests and limits for local ephemeral storage"
+      },
+      {
+        "chunk_id": "k8s/concepts/storage/ephemeral-storage#011",
+        "heading": "Local ephemeral storage > Ephemeral storage consumption management"
+      }
+    ]
+  },
+  {
+    "qid": "gen/5afce9928773e17d",
+    "slice": "symptom",
+    "query": "pods requesting hardware accelerators are stuck in pending because tolerations are missing",
+    "rank": 8,
+    "relevant": [
+      "k8s/concepts/scheduling-eviction/taint-and-toleration#016"
+    ],
+    "relevant_count": 1,
+    "relevant_tokens": 148,
+    "top3": [
+      {
+        "chunk_id": "runbook/pending-insufficient-resources#000",
+        "heading": "Pods Pending due to insufficient CPU or memory > Symptoms"
+      },
+      {
+        "chunk_id": "k8s/concepts/scheduling-eviction/taint-and-toleration#015",
+        "heading": "Taints and Tolerations > Example Use Cases"
+      },
+      {
+        "chunk_id": "k8s/concepts/scheduling-eviction/taint-and-toleration#026",
+        "heading": "Taints and Tolerations > Device taints and tolerations"
+      }
+    ]
+  },
+  {
+    "qid": "so/23788",
+    "slice": "stackoverflow",
+    "query": "I am trying to test inter-pod communication without expose as service. I have read that a pod does have FQDN in kubedns. kubernetes doc Its default should be (A Record) metadata_name.namespace.svc.cluster.local or hostname.subdomain.namespace.svc.cluster.local But I tried both with curl and nslookup. All failed. The service is healthy, I could curl it with pod IP (172.17.0.5) curl: (6) could not resolve host nslookup: can't resolve '(null)': Name does not resolved What am I missing?",
+    "rank": 8,
+    "relevant": [
+      "k8s/concepts/services-networking/dns-pod-service#009",
+      "k8s/concepts/services-networking/dns-pod-service#012"
+    ],
+    "relevant_count": 2,
+    "relevant_tokens": 253,
+    "top3": [
+      {
+        "chunk_id": "k8s/tasks/debug/debug-application/debug-service#010",
+        "heading": "Debug Services > Does the Service work by DNS name?"
+      },
+      {
+        "chunk_id": "k8s/tasks/debug/debug-application/debug-service#011",
+        "heading": "Debug Services > Does the Service work by DNS name?"
+      },
+      {
+        "chunk_id": "k8s/tasks/debug/debug-application/debug-service#009",
+        "heading": "Debug Services > Does the Service work by DNS name?"
+      }
+    ]
+  },
+  {
+    "qid": "gen/1c50dae0941e087e",
+    "slice": "symptom",
+    "query": "dns resolution fails for ledger-worker service when called across namespaces",
+    "rank": 7,
+    "relevant": [
+      "runbook/dns-resolution-failure#004",
+      "runbook/dns-resolution-failure#005"
+    ],
+    "relevant_count": 2,
+    "relevant_tokens": 85,
+    "top3": [
+      {
+        "chunk_id": "k8s/concepts/services-networking/dns-pod-service#023",
+        "heading": "DNS for Services and Pods > DNS resolution on Windows nodes"
+      },
+      {
+        "chunk_id": "k8s/concepts/services-networking/service#053",
+        "heading": "Service > Discovering services > DNS"
+      },
+      {
+        "chunk_id": "k8s/concepts/services-networking/dns-pod-service#002",
+        "heading": "DNS for Services and Pods > Namespaces of Services"
+      }
+    ]
+  },
+  {
+    "qid": "gen/372b2a842f08aa49",
+    "slice": "symptom",
+    "query": "how do I tell from describe output how long our batch job has been on hold",
+    "rank": 7,
+    "relevant": [
+      "k8s/concepts/workloads/controllers/job#062"
+    ],
+    "relevant_count": 1,
+    "relevant_tokens": 246,
+    "top3": [
+      {
+        "chunk_id": "k8s/tasks/job/automated-tasks-with-cron-jobs#001",
+        "heading": "Running Automated Tasks with a CronJob > Creating a CronJob"
+      },
+      {
+        "chunk_id": "k8s/tasks/job/parallel-processing-expansion#005",
+        "heading": "Parallel Processing using Expansions > Create Jobs based on a template > Create Jobs from the manifests"
+      },
+      {
+        "chunk_id": "k8s/tasks/job/automated-tasks-with-cron-jobs#002",
+        "heading": "Running Automated Tasks with a CronJob > Creating a CronJob"
+      }
+    ]
+  },
+  {
+    "qid": "gen/9ebd7a15068a47c7",
+    "slice": "error_string",
+    "query": "0/42 nodes available: insufficient cpu",
+    "rank": 7,
+    "relevant": [
+      "k8s/concepts/configuration/manage-resources-containers#037",
+      "k8s/concepts/configuration/manage-resources-containers#038",
+      "runbook/pending-insufficient-resources#002"
+    ],
+    "relevant_count": 3,
+    "relevant_tokens": 219,
+    "top3": [
+      {
+        "chunk_id": "k8s/tasks/configure-pod-container/assign-cpu-resource#004",
+        "heading": "Assign CPU Resources to Containers and Pods > Specify a CPU request and a CPU limit"
+      },
+      {
+        "chunk_id": "k8s/tasks/configure-pod-container/assign-cpu-resource#006",
+        "heading": "Assign CPU Resources to Containers and Pods > Specify a CPU request that is too big for your Nodes"
+      },
+      {
+        "chunk_id": "k8s/tasks/configure-pod-container/assign-cpu-resource#008",
+        "heading": "Assign CPU Resources to Containers and Pods > Specify a CPU request that is too big for your Nodes"
+      }
+    ]
+  },
+  {
+    "qid": "so/24551",
+    "slice": "stackoverflow",
+    "query": "I am trying to change priority of an existing Kubernetes Pod using 'patch' command, but it returns error saying that this is not one of the fields that can be modified. I can patch the priority in the Deployment spec, but it would cause the Pod to be recreated (following the defined update strategy). The basic idea is to implement a mechanism conceptually similar to nice levels (for my application), so that certain Pods can be de-prioritized based on certain conditions (by my controller), and preempted by the default scheduler in case of resource congestion. But I don't want them to be restarted if there is no congestion. Is there a way around it, or there is something inherent in the way scheduler works that would prevent something like this from working properly?",
+    "rank": 7,
+    "relevant": [
+      "k8s/concepts/workloads/pods#012"
+    ],
+    "relevant_count": 1,
+    "relevant_tokens": 138,
+    "top3": [
+      {
+        "chunk_id": "k8s/concepts/scheduling-eviction/pod-priority-preemption#004",
+        "heading": "Pod Priority and Preemption > PriorityClass > Notes about PodPriority and existing clusters"
+      },
+      {
+        "chunk_id": "k8s/concepts/scheduling-eviction/pod-priority-preemption#010",
+        "heading": "Pod Priority and Preemption > Pod priority > Effect of Pod priority on scheduling order"
+      },
+      {
+        "chunk_id": "k8s/concepts/workloads/pods/advanced-pod-config#000",
+        "heading": "Advanced Pod Configuration > PriorityClasses"
+      }
+    ]
+  },
+  {
+    "qid": "gen/03bd4ffdc52643e8",
+    "slice": "symptom",
+    "query": "need to run node local daemon pods automatically on every newly added cluster node",
+    "rank": 6,
+    "relevant": [
+      "k8s/concepts/workloads#001",
+      "k8s/concepts/workloads/controllers/daemonset#008"
+    ],
+    "relevant_count": 2,
+    "relevant_tokens": 256,
+    "top3": [
+      {
+        "chunk_id": "k8s/concepts/workloads/controllers#002",
+        "heading": "Workload Management"
+      },
+      {
+        "chunk_id": "k8s/concepts/workloads/controllers/daemonset#000",
+        "heading": "DaemonSet"
+      },
+      {
+        "chunk_id": "k8s/concepts/workloads/controllers/daemonset#020",
+        "heading": "DaemonSet > Alternatives to DaemonSet > Deployments"
+      }
+    ]
+  },
+  {
+    "qid": "gen/a2b91b1e1bbd83b3",
+    "slice": "symptom",
+    "query": "pods are being immediately terminated when a node gets tainted with noExecute",
+    "rank": 6,
+    "relevant": [
+      "k8s/concepts/scheduling-eviction/taint-and-toleration#004"
+    ],
+    "relevant_count": 1,
+    "relevant_tokens": 214,
+    "top3": [
+      {
+        "chunk_id": "k8s/concepts/scheduling-eviction/taint-and-toleration#019",
+        "heading": "Taints and Tolerations > Taint based Evictions"
+      },
+      {
+        "chunk_id": "k8s/concepts/architecture/nodes#015",
+        "heading": "Nodes > Node controller > Rate limits on eviction"
+      },
+      {
+        "chunk_id": "k8s/concepts/workloads/pods/disruptions#017",
+        "heading": "Disruptions > Pod disruption conditions"
+      }
+    ]
+  },
+  {
+    "qid": "so/17625",
+    "slice": "stackoverflow",
+    "query": "I am getting an error message after running some kubectl commands (GCP command line - gcloud). I have a K8S cluster created in GKE. Example: kubectl describe node gke_k8s_cluster_name Error from server (Forbidden): leases.coordination.k8s.io \"gke_k8s_cluster_name\" is forbidden: User \"MY_SERVICE_ACCOUNT\" cannot get resource \"leases\" in API group \"coordination.k8s.io\" in the namespace \"kube-node-lease\": Required \"container.leases.get\" permission. The point is that \"container.leases.get\" permission is not listed in IAM (as custom permissions or regular role). How could I grant that permission to the service account in GCP ? thanks, Jose",
+    "rank": 6,
+    "relevant": [
+      "runbook/rbac-forbidden#001",
+      "runbook/rbac-forbidden#003"
+    ],
+    "relevant_count": 2,
+    "relevant_tokens": 193,
+    "top3": [
+      {
+        "chunk_id": "k8s/concepts/architecture/leases#000",
+        "heading": "Leases"
+      },
+      {
+        "chunk_id": "runbook/rbac-forbidden#000",
+        "heading": "RBAC Forbidden errors from a ServiceAccount or user > Symptoms"
+      },
+      {
+        "chunk_id": "k8s/concepts/architecture/leases#005",
+        "heading": "Leases > API server identity"
+      }
+    ]
+  },
+  {
+    "qid": "gen/0e18c4647285bab6",
+    "slice": "how_to",
+    "query": "how to verify that new pods automatically inherit image pull secrets from the service account",
+    "rank": 5,
+    "relevant": [
+      "k8s/tasks/configure-pod-container/configure-service-account#017"
+    ],
+    "relevant_count": 1,
+    "relevant_tokens": 164,
+    "top3": [
+      {
+        "chunk_id": "k8s/concepts/storage/volumes#030",
+        "heading": "Volumes > The mount into the container is read-only. > image"
+      },
+      {
+        "chunk_id": "k8s/concepts/containers/images#028",
+        "heading": "Images > Using a private registry > Ensure image pull credential verification"
+      },
+      {
+        "chunk_id": "k8s/concepts/containers/images#029",
+        "heading": "Images > Using a private registry > Ensure image pull credential verification"
+      }
+    ]
+  }
+]

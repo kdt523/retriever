@@ -1,0 +1,122 @@
+{
+  "gen/28d14efdcc9a1dd9": {
+    "tag": "ambiguous_query",
+    "note": "Bare `kubectl get` row with no question or context; several Job/CronJob chunks fit equally."
+  },
+  "so/10884": {
+    "tag": "missing_doc",
+    "note": "No chunk explains sharing env vars between a Deployment and a CronJob; the labeled chunk (envFrom a Secret) is only the nearest thing."
+  },
+  "so/27581": {
+    "tag": "model_miss",
+    "note": "Long `kubectl describe` paste hides the question (why no external IP); the LoadBalancer runbook symptoms chunk ranks far down."
+  },
+  "so/11903": {
+    "tag": "model_miss",
+    "note": "Needs the inference Kafka upgrades -> voluntary disruption -> PodDisruptionBudget; the model never connects them."
+  },
+  "incident/oom-killed/brief": {
+    "tag": "ambiguous_query",
+    "note": "The brief snapshot shows only `BackOff`, with no OOMKilled reason, so any crash-loop cause fits."
+  },
+  "gen/bb141ad982ce4819": {
+    "tag": "wrong_label",
+    "note": "The labeled chunk (a Deployment YAML in debug-service) does not explain how to verify pods with label selectors; fix the label."
+  },
+  "so/8622": {
+    "tag": "model_miss",
+    "note": "The answer is the headless Service chunk; the query talks about service-dns and multicast, so the model returns generic DNS pages."
+  },
+  "gen/289a87657a28a681": {
+    "tag": "wrong_label",
+    "note": "The labeled chunk is a describe output of an OOM kill and never says how to raise the limit; the returned chunks come closer."
+  },
+  "so/7449": {
+    "tag": "ambiguous_query",
+    "note": "Rank 1 (pod affinity example with zones) answers the question as well as the labeled chunks; qrels list only two chunks."
+  },
+  "gen/211aac2d5b740506": {
+    "tag": "model_miss",
+    "note": "Right page, neighbouring chunk: the three top results are adjacent Job chunks about pod failure policy."
+  },
+  "gen/1ca216c14cd3e8c4": {
+    "tag": "model_miss",
+    "note": "Right page again; the extended-resources chunk loses to two neighbouring chunks of manage-resources-containers."
+  },
+  "so/1264": {
+    "tag": "missing_doc",
+    "note": "Corpus has a mysql client pod example but nothing for psql; the labeled chunks are the closest analogues."
+  },
+  "incident/pod-stuck-finalizer/full": {
+    "tag": "ambiguous_query",
+    "note": "`Terminating (lasts 0s)` is a normal termination, with no sign of a stuck finalizer."
+  },
+  "so/24911": {
+    "tag": "model_miss",
+    "note": "Pasted GKE cluster table dominates the query; the kubeconfig contexts chunks are not retrieved."
+  },
+  "gen/8983c06ed00dbd64": {
+    "tag": "model_miss",
+    "note": "Query wording is general; the model returns kubectl overview pages instead of the contexts section."
+  },
+  "incident/pod-stuck-finalizer/brief": {
+    "tag": "ambiguous_query",
+    "note": "Same snapshot as the full form with less context: a normal `Killing` event."
+  },
+  "gen/a7a26fc1e6ab9bce": {
+    "tag": "model_miss",
+    "note": "Query is only an apiVersion identifier; a dense model has little signal (BM25 helps here)."
+  },
+  "gen/406362474f40f4c7": {
+    "tag": "model_miss",
+    "note": "Right page (taint and toleration), wrong chunk: the tolerationSeconds example ranks 9th."
+  },
+  "gen/db74cabd76e38a0b": {
+    "tag": "ambiguous_query",
+    "note": "Rank 1 (Secrets: manually specifying an imagePullSecret) also answers the how-to; the runbook chunk is one of several."
+  },
+  "incident/ephemeral-storage-eviction/brief": {
+    "tag": "ambiguous_query",
+    "note": "Rank 1-3 are the Kubernetes ephemeral-storage docs, which explain this event; qrels count only the runbook."
+  },
+  "gen/5afce9928773e17d": {
+    "tag": "model_miss",
+    "note": "Neighbouring chunk of the right page ranks 2nd; the accelerator-toleration chunk is 8th."
+  },
+  "so/23788": {
+    "tag": "model_miss",
+    "note": "Query asks for pod FQDNs; the model returns the Service DNS debugging steps instead of the pod hostname/subdomain section."
+  },
+  "gen/1c50dae0941e087e": {
+    "tag": "model_miss",
+    "note": "Cross-namespace DNS fix chunks of the runbook lose to generic Kubernetes DNS pages."
+  },
+  "gen/372b2a842f08aa49": {
+    "tag": "model_miss",
+    "note": "`on hold` means suspended; the model matches CronJob status output instead of the suspend section."
+  },
+  "gen/9ebd7a15068a47c7": {
+    "tag": "model_miss",
+    "note": "Exact scheduler message; the model returns CPU assignment pages while the FailedScheduling chunks rank 7th."
+  },
+  "so/24551": {
+    "tag": "model_miss",
+    "note": "The answer is Pod immutability; the query's wording about priority pulls in the priority/preemption pages."
+  },
+  "gen/03bd4ffdc52643e8": {
+    "tag": "ambiguous_query",
+    "note": "Rank 1 (workload overview describing DaemonSets) answers it about as well as the labeled chunks."
+  },
+  "gen/a2b91b1e1bbd83b3": {
+    "tag": "model_miss",
+    "note": "Right topic; the NoExecute definition chunk ranks 6th behind other taint chunks."
+  },
+  "so/17625": {
+    "tag": "ambiguous_query",
+    "note": "Rank 2 is the RBAC Forbidden symptoms chunk of the right runbook, which qrels leave out (only 2 of its chunks are listed)."
+  },
+  "gen/0e18c4647285bab6": {
+    "tag": "model_miss",
+    "note": "The service-account imagePullSecrets verification chunk ranks 5th behind general image pages."
+  }
+}

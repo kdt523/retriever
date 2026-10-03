@@ -61,6 +61,72 @@ Test labels were written by Claude and audited by a blind human spot check (24/3
 Val is the model-selection set, so these numbers are optimistic; the frozen test set is scored
 once in Phase 5. Training setup and deviations from the plan: `docs/DECISIONS.md` D21.
 
+### Phase 5 results (frozen test set, 269 queries, from `results/final.csv`)
+
+| Retriever | hit@1 | hit@5 | hit@10 | MRR@10 | NDCG@10 |
+| --- | --- | --- | --- | --- | --- |
+| BM25 | 0.628 | 0.822 | 0.885 | 0.705 | 0.557 |
+| all-MiniLM-L6-v2 | 0.532 | 0.799 | 0.885 | 0.651 | 0.566 |
+| bge-small (base) | 0.565 | 0.833 | 0.892 | 0.684 | 0.626 |
+| bge-base | 0.621 | 0.881 | 0.929 | 0.725 | 0.677 |
+| **bge-small tuned** | 0.639 | 0.892 | 0.941 | 0.746 | 0.664 |
+| Hybrid BM25 + bge-small | 0.665 | 0.881 | 0.941 | 0.760 | 0.658 |
+| **Hybrid BM25 + tuned** | 0.669 | 0.903 | 0.941 | 0.766 | 0.657 |
+
+hit@5 per slice (n in the header row):
+
+| Retriever | low overlap (n=59) | error string (n=27) | symptom (n=61) | how-to (n=64) | kubectl output (n=17) | real incident (seen runbook) (n=54) | real incident (held-out runbook) (n=10) | Stack Overflow (n=32) |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| BM25 | 0.661 | 1.000 | 0.770 | 0.734 | 1.000 | 0.926 | 1.000 | 0.594 |
+| bge-small (base) | 0.831 | 0.926 | 0.803 | 0.859 | 0.824 | 0.907 | 1.000 | 0.594 |
+| bge-base | 0.864 | 0.926 | 0.836 | 0.938 | 0.882 | 0.889 | 0.800 | 0.844 |
+| **bge-small tuned** | 0.932 | 0.926 | 0.885 | 0.922 | 0.941 | 0.944 | 0.900 | 0.688 |
+| **Hybrid BM25 + tuned** | 0.848 | 1.000 | 0.918 | 0.844 | 0.941 | 0.963 | 1.000 | 0.750 |
+
+**What the numbers say**
+
+- Fine-tuning helps, less than val suggested. On the test set the tuned bge-small gains
+  +7.6 points hit@1 and +5.5 points hit@5 over the untuned model (mean over 3 seeds: hit@1
+  0.641 ± 0.006, hit@5 0.888 ± 0.004), and it beats the 3x larger bge-base on hit@1, hit@5 and
+  hit@10 but not on NDCG@10. The plan's target of +10 points hit@5 was met on val (+11.0) and
+  not on test.
+- BM25 is a strong baseline here: it wins hit@5 on error strings and kubectl output, and ties the
+  tuned model on hit@1 overall. The hybrid (RRF of BM25 and the tuned model) has the best hit@1,
+  hit@5 and MRR@10. NDCG@10 understates it on the incident slices (see D19).
+- Stack Overflow questions are the weak spot: tuned hit@5 0.688 against 0.844 for bge-base
+  (n=32, so one query is 3 points).
+- Slices with 4 to 10 queries (incident snapshots, held-out incidents) are too small to rank
+  retrievers; read them as smoke tests.
+
+### Phase 5 ablations (`make ablate`, tables in `results/ablations.md`)
+
+Test hit@5 / NDCG@10 (val in the same file); one run each unless noted.
+
+| Variant | test hit@5 | test NDCG@10 | val NDCG@10 |
+| --- | --- | --- | --- |
+| untrained bge-small | 0.833 | 0.626 | 0.576 |
+| 25% of training pairs | 0.848 | 0.632 | 0.642 |
+| 50% of training pairs | 0.881 | 0.644 | 0.659 |
+| 1 epoch instead of 3 | 0.870 | 0.646 | 0.652 |
+| no hard negatives | 0.896 | 0.673 | 0.672 |
+| full (3 seeds, mean) | 0.888 | 0.664 | 0.676 |
+
+- More data helps steadily (25% to 50% to 100%), and three epochs beat one.
+- Hard negatives did not help: val NDCG@10 is 0.004 lower without them, which is inside the
+  seed spread (sd 0.002), and test is slightly higher without. The mined negatives (D17) are
+  not buying anything at this data size.
+- Seed spread is small (sd about 0.002 NDCG@10 on val).
+- Not run: section-title prefix on/off, synthetic-only vs real queries, and the forgetting check
+  on an MTEB retrieval subset.
+
+### Error analysis (`results/error_analysis.md`)
+
+The 30 test queries where the tuned model ranks the right chunk lowest, tagged by hand:
+17 model misses (mostly the right page but a neighbouring chunk, or a long pasted question hiding
+the real one), 9 ambiguous queries or incomplete answer keys (another returned chunk answers the
+question as well), 2 questions with no good chunk in the corpus, and 2 wrong labels in the test
+set (D22). That is about 4 of the 30 worst cases that are the test set's fault, not the model's.
+
 ## Repo layout
 
 ```

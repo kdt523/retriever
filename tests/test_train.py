@@ -57,3 +57,13 @@ def test_model_fingerprint_changes_when_local_model_changes(tmp_path: Path) -> N
     weights.write_bytes(b"bb")
     os.utime(weights, ns=(1, 1))
     assert model_fingerprint(str(tmp_path)) != before
+
+
+def test_load_triplets_fraction_is_seeded_subset(tmp_path: Path) -> None:
+    rows = [{"anchor": f"q{i}", "positive": f"p{i}", "negative": f"n{i}"} for i in range(20)]
+    path = _write(tmp_path / "t.jsonl", rows)
+    a = load_triplets(path, hard_negatives=True, fraction=0.25, seed=1)
+    b = load_triplets(path, hard_negatives=True, fraction=0.25, seed=1)
+    c = load_triplets(path, hard_negatives=True, fraction=0.25, seed=2)
+    assert len(a["anchor"]) == 5 and a == b and a != c
+    assert all(p[1:] == q[1:] for p, q in zip(a["anchor"], a["positive"], strict=True))

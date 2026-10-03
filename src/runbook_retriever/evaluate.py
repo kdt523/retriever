@@ -30,7 +30,7 @@ import numpy as np
 
 from runbook_retriever.bm25 import BM25Index
 from runbook_retriever.build_review_sets import rrf
-from runbook_retriever.config import Paths, get_settings
+from runbook_retriever.config import REPO_ROOT, Paths, get_settings
 from runbook_retriever.corpus import Chunk, load_corpus
 from runbook_retriever.embed import encode_corpus, encode_queries, load_model
 from runbook_retriever.filter_pairs import overlap
@@ -52,6 +52,7 @@ ALIASES = {
     "minilm": "sentence-transformers/all-MiniLM-L6-v2",
     "bge-small": "BAAI/bge-small-en-v1.5",
     "bge-base": "BAAI/bge-base-en-v1.5",
+    "tuned": str(REPO_ROOT / "models" / "bge-small-rr"),  # `make train` output
 }
 DEFAULT_RETRIEVERS = ("bm25", "minilm", "bge-small", "bge-base", "hybrid:bge-small")
 
