@@ -3,10 +3,13 @@
 Fine-tuned `BAAI/bge-small-en-v1.5` embeddings that retrieve the right Kubernetes runbook or doc
 section from messy incident signals (pod status, events, exit codes, log tails).
 
-> **Status:** Phase 1 (corpus) complete: 3,340 chunks from 197 Kubernetes doc pages + 35 runbooks
-> (`results/corpus_stats.json`). 30 of the 35 runbooks are verified against real failures injected
-> into a k3d cluster (`data/incidents/`). Results tables will appear here once Phases 3-5 run.
-> No numbers are reported until they exist in `results/`.
+**Result on a locked 269-query test set** (generated queries, real incidents, Stack Overflow):
+fine-tuning raises top-5 accuracy from 83.3% to 88.8% (mean of 3 seeds) and top-1 from 56.5% to
+64.1%, matching the 3x larger bge-base. Combined with BM25 it reaches 90.3% top-5 and 66.9% top-1.
+Full tables, ablations and error analysis are below; every number comes from `results/`.
+
+> **Status:** corpus, training data, evaluation, fine-tuning, ablations and error analysis are done
+> (Phases 1-5). Next: ONNX export and a FastAPI search service (Phase 6, not built yet).
 
 The full plan, research and success criteria are in [docs/PLAN.md](docs/PLAN.md).
 
@@ -33,7 +36,7 @@ make check        # lint + typecheck + tests
 | 3 | Baselines | `make baseline` | `results/baseline.csv` |
 | 4 | Fine-tune | `make train` | `models/` |
 | 5 | Ablations, error analysis | `make evaluate` | `results/final.csv` |
-| 6 | ONNX int8 + FastAPI | `make export serve` | `serve/` |
+| 6 | ONNX int8 + FastAPI (planned) | not built yet | — |
 
 Every run appends its config, wall-clock time, peak RAM/VRAM and metrics to `results/runs.csv`.
 
@@ -137,7 +140,8 @@ faults/                  # fault-injection scenarios used to verify runbooks
 data/                    # raw sources, corpus, splits, LLM cache (git-ignored except splits)
 results/                 # CSV results (committed)
 configs/                 # training configs
-serve/                   # FastAPI service (Phase 6)
+scripts/                 # ablation runner
+review/                  # Streamlit app used to check the test labels
 docs/                    # plan and decision log
 ```
 

@@ -38,3 +38,7 @@ data/queries/test_candidates.jsonl
 
 # Claude labeling batches (rebuilt by `make label-export`); answers are committed
 data/llm_labeling/batches/
+
+# Local assistant notes and planning copies (not part of the project)
+CLAUDE.md
+RunbookRetriever*.md
