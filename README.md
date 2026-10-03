@@ -50,6 +50,17 @@ Every run appends its config, wall-clock time, peak RAM/VRAM and metrics to `res
 Test labels were written by Claude and audited by a blind human spot check (24/30 agreement,
 `results/label_agreement.json`); see `docs/DECISIONS.md` D20. Per-slice numbers are in the CSV.
 
+### Phase 4 fine-tuning (val set, 715 queries, from `results/tuned_val.csv`)
+
+| Retriever | hit@1 | hit@5 | hit@10 | MRR@10 | NDCG@10 |
+| --- | --- | --- | --- | --- | --- |
+| bge-small (base) | 0.387 | 0.678 | 0.792 | 0.514 | 0.576 |
+| bge-small tuned (`make train`) | 0.505 | 0.786 | 0.870 | 0.625 | 0.679 |
+| Hybrid BM25 + tuned (RRF) | 0.546 | 0.814 | 0.891 | 0.659 | 0.709 |
+
+Val is the model-selection set, so these numbers are optimistic; the frozen test set is scored
+once in Phase 5. Training setup and deviations from the plan: `docs/DECISIONS.md` D21.
+
 ## Repo layout
 
 ```

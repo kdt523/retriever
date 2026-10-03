@@ -1,0 +1,23 @@
+# Phase 4: fine-tune bge-small on (query, positive, hard negative) triplets.
+# Values follow docs/PLAN.md Phase 4; deviations are explained in docs/DECISIONS.md D21.
+
+base_model: BAAI/bge-small-en-v1.5
+train_file: data/splits/train.jsonl
+output_dir: models/bge-small-rr
+
+# Loss: CachedMultipleNegativesRankingLoss. The batch is the pool of in-batch negatives;
+# mini_batch_size only bounds GPU memory (same gradients as an uncached batch).
+batch_size: 64
+mini_batch_size: 16
+use_hard_negatives: true
+
+learning_rate: 2.0e-5
+warmup_ratio: 0.1
+epochs: 3
+weight_decay: 0.01
+
+# ~73 optimizer steps per epoch with 4.6k triplets, so evaluate every 25 steps
+# (the plan's 200 would give a single evaluation per run).
+eval_steps: 25
+metric_for_best: ndcg@10
+fp16: true

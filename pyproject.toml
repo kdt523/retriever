@@ -18,6 +18,7 @@ dependencies = [
 # Training / evaluation stack (Phases 1-5). Kept out of the base install so the
 # serving image (Phase 6) never pulls in PyTorch.
 ml = [
+    "accelerate>=1.1",  # required by the HF Trainer behind SentenceTransformerTrainer
     "datasets>=3.0",
     "rank-bm25>=0.2.2",
     "sentence-transformers>=3.4",

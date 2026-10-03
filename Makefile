@@ -116,7 +116,12 @@ baseline-val: ## Score all baselines on val (no labels needed) -> results/baseli
 baseline: ## Score all baselines on the frozen test set -> results/baseline.csv
 	$(RUN) python -m runbook_retriever.evaluate --split test
 
+# --- Phase 4: fine-tuning ------------------------------------------------------------
+
+train: ## Fine-tune bge-small (configs/train.yaml) -> models/bge-small-rr, selected on val
+	$(RUN) python -m runbook_retriever.train
+
 # --- Later phases --------------------------------------------------------------------
 
-train evaluate export serve:
+evaluate export serve:
 	@echo "'make $@' is not implemented yet (see docs/PLAN.md for its phase)" >&2; exit 1

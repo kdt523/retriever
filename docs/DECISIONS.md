@@ -155,3 +155,20 @@ At freeze the human verdict replaces Claude's on every spot-checked item, and
 Claude-labeled with a human audit, not fully human-labeled; treat differences of a few points on
 small slices (incident_snapshot n=4, real_incident_heldout n=10) as noise. The train audit found
 19/100 wrong pairs, an estimate of label noise in training data, not something fixed by hand.
+
+## D21: Fine-tuning setup (2026-10-03)
+`make train` (`src/runbook_retriever/train.py`, `configs/train.yaml`) fine-tunes bge-small on the
+4,634 train triplets with CachedMultipleNegativesRankingLoss (batch 64, mini-batch 16, so every
+other positive and hard negative in the batch is a negative), lr 2e-5, 10% warmup, 3 epochs,
+fp16 on the RTX 3050, `NO_DUPLICATES` sampler, seed from `RR_SEED`. Deviations from PLAN.md:
+- Training uses the GPU (peak ~1.4 GB VRAM, ~2 s per step), not the CPU the plan assumed.
+- Evaluation every 25 steps instead of 200: an epoch is only ~73 steps at batch 64.
+- The 617 train pairs with no surviving hard negative are left out, so every batch has the same
+  three columns; the hard-negative ablation in Phase 5 can use all pairs.
+- The query instruction is passed as the trainer's `anchor` prompt and to the val evaluator,
+  both from `QUERY_PREFIX`, so training, evaluation and serving share one constant.
+Model selection uses only the frozen val set (whole corpus, 715 queries); the best checkpoint by
+val NDCG@10 is saved to `models/bge-small-rr/` with `train_meta.json` (config, seed, git sha,
+train-file sha256, val curve). The test set is first scored in Phase 5. Corpus embeddings for
+local model directories are cached by file size and mtime, so retraining into the same directory
+cannot reuse stale vectors.

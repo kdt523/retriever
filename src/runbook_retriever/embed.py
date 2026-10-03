@@ -9,6 +9,7 @@ from __future__ import annotations
 
 import hashlib
 import logging
+import re
 from collections.abc import Sequence
 from pathlib import Path
 from typing import Any
@@ -61,11 +62,27 @@ def encode_queries(model: Any, model_name: str, queries: Sequence[str]) -> Matri
     return encode(model, [prefix + " ".join(q.split()) for q in queries])
 
 
+def model_fingerprint(model_name: str) -> str:
+    """Hub models: the name. Local model dirs: name + size/mtime of every file, so a model
+    retrained into the same directory never reuses stale cached embeddings."""
+    path = Path(model_name)
+    if not path.is_dir():
+        return model_name
+    stats = sorted(
+        f"{p.relative_to(path).as_posix()}:{p.stat().st_size}:{p.stat().st_mtime_ns}"
+        for p in path.rglob("*")
+        if p.is_file()
+    )
+    return "\x00".join([path.resolve().as_posix(), *stats])
+
+
 def encode_corpus(model: Any, model_name: str, chunks: Sequence[Chunk], cache_dir: Path) -> Matrix:
-    """Corpus embeddings, cached by model name + exact passage texts."""
+    """Corpus embeddings, cached by model fingerprint + exact passage texts."""
     passages = [c.passage for c in chunks]
-    digest = hashlib.sha256(("\x00".join([model_name, *passages])).encode("utf-8")).hexdigest()
-    path = cache_dir / f"{model_name.replace('/', '__')}-{digest[:16]}.npy"
+    key = "\x00".join([model_fingerprint(model_name), *passages])
+    digest = hashlib.sha256(key.encode("utf-8")).hexdigest()
+    safe_name = re.sub(r"[^A-Za-z0-9._-]+", "__", model_name).strip("_")
+    path = cache_dir / f"{safe_name}-{digest[:16]}.npy"
     if path.exists():
         cached: Matrix = np.load(path)
         if cached.shape[0] == len(passages):
